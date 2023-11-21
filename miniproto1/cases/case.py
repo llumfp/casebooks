@@ -55,7 +55,6 @@ class Cas:
         self.id = id
         self.descripcio:dict = descripcio
         self.derivacio:list = derivacio
-        self.diagnostic = ... #preguntar ramon, perque per tenir diagnostic hauriem de fer 'abstraccio'
         self.solucio:list = solucio #llista de 3 llibres recomanats
         self.avaluacio:int = avaluacio #num del 1-5
         self.mesura_utilitat:bool = utilitat #mirar els altres casos que tenim i valorar si val la pena
