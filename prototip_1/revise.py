@@ -3,3 +3,7 @@ Funció: Revisa i modifica les recomanacions proposades abans de presentar-les a
 
 Components: Funcions per a la validació i ajust de recomanacions.
 """
+
+def hola(x):
+    """"""
+    
