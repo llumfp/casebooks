@@ -1,13 +1,67 @@
+from typing import Any, List
+from sklearn.preprocessing import MinMaxScaler
+import numpy as np
+from numpy import ndarray
+import random
+
+# Define the Problem class
+class Problem:
+    '''
+    Classe Abstracta de Lector i altres components del problema
+    '''
+    def __init__(self, age: int, time: str, genre: str):
+        self.age = age
+        self.time = time
+        self.genre = genre
+
+    def __repr__(self):
+        return f"Problem(age={self.age}, time='{self.time}', genre='{self.genre}')"
+
+    def encode_problem(self) -> List[int]:
+        '''
+        Function to encode categorical data to numerical values
+        '''
+        time_encoding = {"mucho": 3, "normal": 2, "poco": 1}
+        genre_encoding = {"Ficcion": 1, "No Ficcion": 2}
+
+        return [
+            self.age,
+            time_encoding[self.time],
+            genre_encoding[self.genre]
+        ]
+
+def scale_features(problems: List["Problem"]) -> np.ndarray:
+    '''
+    Function to scale features between 0 and 1
+    '''
+    features = np.array([problem.encode_problem() for problem in problems])
+
+    scaler = MinMaxScaler()
+    scaled_features = scaler.fit_transform(features)
+
+    return scaled_features
+
+
 class Cas:
-    def __init__(self, id:str, descripcio:dict, derivacio = [], solucio = None, avaluacio = None, utilitat = None):
+    def __init__(
+        self,
+        id: str,
+        descripcio: ndarray[Any], # El nostre problema ja preprocessat
+        derivacio: Any = [],
+        solucio: Any | None = None,
+        avaluacio: Any | None = None,
+        utilitat: Any | None = None
+    ) -> None:
         self.id = id
-        self.derivacio:list = derivacio
         self.descripcio:dict = descripcio
+        self.derivacio:list = derivacio
         self.diagnostic = ... #preguntar ramon, perque per tenir diagnostic hauriem de fer 'abstraccio'
         self.solucio:list = solucio #llista de 3 llibres recomanats
         self.avaluacio:int = avaluacio #num del 1-5
         self.mesura_utilitat:bool = utilitat #mirar els altres casos que tenim i valorar si val la pena
     
+    def __repr__(self) -> str:
+        return f"Cas(id={self.id}, problem={self.descripcio})"
     
     def validate(self, casos):
         '''

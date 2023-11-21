@@ -131,7 +131,7 @@ class BinTree:
             #vectors = [cas.descripcio for cas in casos]
 
             # Aplicar KMeans per a dividir els casos en grups.
-            kmeans = KMeans(n_clusters=n_clusters, random_state=0)
+            kmeans = KMeans(n_clusters=n_clusters, random_state=0, n_init='auto')
             kmeans.fit(vectors)
 
             # Dividir els casos segons les etiquetes del clustering.
@@ -186,7 +186,7 @@ class BinTree:
         casos_actuals = [node_actual.get_root(), nou_cas]
 
         # Crear un nou KMeans amb tots els casos.
-        kmeans = KMeans(n_clusters=2, random_state=0)
+        kmeans = KMeans(n_clusters=2, random_state=0, n_init='auto')
         kmeans.fit(casos_actuals)
         
         kmeans.labels_[0]
@@ -209,19 +209,20 @@ class BinTree:
         node_actual.set_right(subarbre2)
 
 
-data = np.array([[2, 3],
-                 [3, 3],
-                 [3, 4],
-                 [6, 5],
-                 [6, 4],
-                 [7, 5],
-                 [8, 7],
-                 [8, 8],
-                 [9, 6],
-                 [9, 9]])
+# data = np.array([[2, 3],
+#                  [3, 3],
+#                  [3, 4],
+#                  [6, 5],
+#                  [6, 4],
+#                  [7, 5],
+#                  [8, 7],
+#                  [8, 8],
+#                  [9, 6],
+#                  [9, 9]])
 
-arbre = BinTree(data)
-arbre.creacio(data)
-print(arbre.get_left())
+# arbre = BinTree(data)
+# arbre.creacio(data)
+# print(arbre.get_left())
+# print(arbre.get_right())
 
 

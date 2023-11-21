@@ -1,10 +1,6 @@
-import math
+from .bintreelinked import BinTree
 
-
-max_valors_fulla = 5 # màxim nombre de casos que poden haver a un node fulla
-distancia = "euclidean" # mètrica de similitud
-
-class Indexacio:
+class Indexacio(BinTree):
     def __init__(self, graf_casos):
         graf_casos.self = graf_casos
 
