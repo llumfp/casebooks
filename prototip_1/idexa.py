@@ -1,11 +1,8 @@
+import math
+
 
 max_valors_fulla = 5 # màxim nombre de casos que poden haver a un node fulla
 distancia = "euclidean" # mètrica de similitud
-
-class Node:
-    def __init__(self, fill_dret=None,fill_esq=None):
-
-        
 
 class Indexacio:
     def __init__(self, graf_casos):
@@ -25,6 +22,4 @@ class Indexacio:
         """
         Treu cas al graf de casos. Per si no es cas rellevant
         """
-
-
 
