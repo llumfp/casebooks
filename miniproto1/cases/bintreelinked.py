@@ -6,6 +6,7 @@ from sklearn.cluster import KMeans
 class BinTree:
 
     #------------------- nested _Node class --------------------------
+    
     class _Node:
         __slots__ = '_element', '_left', '_right'   # streamline memory usage
 
