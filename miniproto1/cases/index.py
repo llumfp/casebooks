@@ -1,20 +1,98 @@
 from .bintreelinked import BinTree
+from typing import List, Any, Tuple
+from .case import Cas
+from sklearn.cluster import KMeans
+
 
 class Indexacio(BinTree):
-    def __init__(self, graf_casos):
-        graf_casos.self = graf_casos
+    def __init__(self, v=None, left=None, right=None):
+        super().__init__(v, left, right)
 
-    def cas_similar(self):
-        """
-        Retorna casos similars -> agafa casos de la llista plana de la fulla
-        """
-    
-    def afegir_cas_al_tree(self):
-        """
-        Afeigeix cas al graf de casos
-        """
+    def creacio(self,casos:List[Cas]) -> None:
+        n_clusters = 2
+        if len(casos) == 1:
+            # Si només hi ha un cas, retorna un arbre amb aquest cas.
+            self.set_root(casos[0])
+        else:
+            # Aplicar KMeans per a dividir els casos en grups.
+            kmeans = KMeans(n_clusters=n_clusters, random_state=0, n_init='auto')
+            kmeans.fit([cas.descripcio for cas in casos])
 
-    def defafegir_cas_al_tree(self):
+            # Dividir els casos segons les etiquetes del clustering.
+            cluster1 = [casos[i] for i in range(len(casos)) if kmeans.labels_[i] == 0]
+            cluster2 = [casos[i] for i in range(len(casos)) if kmeans.labels_[i] == 1]
+
+            # Crear els subarbres per a cada cluster.
+            subarbre1, subarbre2 = Indexacio(), Indexacio()
+
+            subarbre1.creacio(cluster1)
+            subarbre2.creacio(cluster2)
+
+            # Retorna un arbre amb l'objecte KMeans com a arrel i els subarbres com a fills.
+            self.set_root(kmeans)
+            self.set_left(subarbre1)
+            self.set_right(subarbre2)
+
+    def most_similar(self, cas:Cas) -> Tuple[Cas, List]:
+        """
+        Donat un  cas a comparar (Cas), retorna el cas més similar 
+        en l'Indexacio i la llista de labels per després afegir el nou cas.
+        """
+        # Recorre l'arbre per a trobar el cas més similar.
+        node_actual = self
+        labels = []
+        while not node_actual.leaf():
+            kmeans = node_actual.get_root()
+            label = kmeans.predict([cas.descripcio])[0]
+            labels.append(label)
+            
+            # Seleccionar el subarbre adequat segons la predicció de KMeans.
+            if label == 0:
+                node_actual = node_actual.get_left()
+            else:
+                node_actual = node_actual.get_right()
+
+        return node_actual.get_root(), labels
+ 
+    def add(self, new:Cas, ruta:List[Any]):
+        """
+        Afegeix un nou cas a l'arbre utilitzant la ruta del cas més similar.
+        """
+        # Recórrer l'arbre fins al node més similar.
+        node_actual = self
+        for label in ruta:
+            if label == 0:
+                node_actual = node_actual.get_left()
+            else:
+                node_actual = node_actual.get_right()
+
+        # Obtenir el cas del node més similar i afegir el nou cas.
+        leafcases = [node_actual.get_root(), new]
+
+        # Crear un nou KMeans amb tots els casos.
+        kmeans = KMeans(n_clusters=2, random_state=0, n_init='auto')
+        kmeans.fit([cas.descripcio for cas in leafcases])
+        
+        kmeans.labels_[0]
+        # Dividir els casos segons les etiquetes del clustering.
+        for i in range(2):
+            if kmeans.labels_[i] == 0:
+                cluster1 = [leafcases[i]]
+            else:
+                cluster2 = [leafcases[i]]
+        
+        # Crear els nous subarbres.
+        subarbre1, subarbre2 = Indexacio(), Indexacio()
+
+        subarbre1.creacio(cluster1)
+        subarbre2.creacio(cluster2)
+
+        # Actualitzar el node actual amb el nou cluster i subarbres.
+        node_actual.set_root(kmeans)
+        node_actual.set_left(subarbre1)
+        node_actual.set_right(subarbre2)
+
+    def remove(self):
         """
         Treu cas al graf de casos. Per si no es cas rellevant
         """

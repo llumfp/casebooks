@@ -1,6 +1,5 @@
 from scipy.cluster.hierarchy import dendrogram, linkage, fcluster
 import numpy as np
-from sklearn.cluster import KMeans
 
 
 class BinTree:
@@ -121,7 +120,7 @@ class BinTree:
                 return f"BinTree({rt}, left={r_esq}, right={r_dre})"
 
 
-    def creacio(self,casos):
+    '''def creacio(self,casos):
         n_clusters = 2
         if len(casos) == 1:
             # Si només hi ha un cas, retorna un arbre amb aquest cas.
@@ -226,3 +225,4 @@ class BinTree:
 # print(arbre.get_right())
 
 
+'''

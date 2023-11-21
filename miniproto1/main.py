@@ -25,23 +25,20 @@ for p in problems:
 scaled_features = scale_features(problems)
 
 
-cases = [Cas(id=idx, descripcio=p) for idx,p in enumerate(scaled_features)]
-
-db = [c.descripcio for c in cases]
+db = [Cas(id=idx, descripcio=p) for idx,p in enumerate(scaled_features)]
 
 print("--- BASE DE DADES ---")
 for cas in db:
     print(cas)
 
-
-a = BinTree(v=db)
+a = Indexacio(v=db)
 a.creacio(db)
 print(a.get_left())
 print(a.get_right())
 
 newp = Problem(age=25,time='poco',genre='Ficcion')
-newp = scale_features([newp])[0]
+newp = Cas(id=len(db),descripcio=scale_features([newp])[0])
 
-sim = a.trobar_mes_similar(newp)
-print(sim)
+case_sim, ruta = a.most_similar(newp)
+print(case_sim)
 
