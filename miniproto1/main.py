@@ -19,6 +19,7 @@ problems = [
     ) for _ in range(10)
 ]
 
+print("--- PROBLEMES ---")
 for p in problems:
     print(p)
 
@@ -27,18 +28,20 @@ scaled_features = scale_features(problems)
 
 db = [Cas(id=idx, descripcio=p) for idx,p in enumerate(scaled_features)]
 
-print("--- BASE DE DADES ---")
+print("\n--- BASE DE DADES ---")
 for cas in db:
     print(cas)
 
 a = Indexacio(v=db)
 a.creacio(db)
-print(a.get_left())
-print(a.get_right())
 
 newp = Problem(age=25,time='poco',genre='Ficcion')
+print("\n--- PROBLEMA NOU ---")
+print(newp)
 newp = Cas(id=len(db),descripcio=scale_features([newp])[0])
 
 case_sim, ruta = a.most_similar(newp)
+print("\n--- CAS MES SIMILAR ---")
 print(case_sim)
+print(f"Ruta seguida: {ruta}")
 
