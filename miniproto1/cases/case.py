@@ -48,9 +48,9 @@ class Cas:
         id: str,
         descripcio: ndarray[Any], # El nostre problema ja preprocessat
         derivacio: Any = [],
-        solucio: Any | None = None,
-        avaluacio: Any | None = None,
-        utilitat: Any | None = None
+        solucio: None = None,
+        avaluacio: None = None,
+        utilitat: None = None
     ) -> None:
         self.id = id
         self.descripcio:dict = descripcio
