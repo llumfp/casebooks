@@ -45,3 +45,8 @@ print("\n--- CAS MES SIMILAR ---")
 print(case_sim)
 print(f"Ruta seguida: {ruta}")
 
+a_afegir = Cas(id=9, descripcio=[0.6744186, 0.5, 0])
+a.add(a_afegir,ruta)
+
+print("\n--- BASE DE DADES ---")
+print(a)
