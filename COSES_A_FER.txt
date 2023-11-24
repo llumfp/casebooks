@@ -1,0 +1,10 @@
+CURT TERMINI
+-Generacio de casos
+-Adaptacio
+
+LARG TERMINI
+-Prova de distancies de similitud
+-Evaluacio
+-Menteniment base dades (EXCEPTIONAL CASE-REDUNDANT CASES)
+--Eliminar/posar cas nou 
+--Eliminar cas no nous 
