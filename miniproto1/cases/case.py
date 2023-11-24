@@ -1,34 +1,54 @@
 from typing import Any, List
 from sklearn.preprocessing import MinMaxScaler
-import numpy as np
 from numpy import ndarray
+from collections import namedtuple
 import random
+import numpy as np
+
+ValType = namedtuple('ValType', ['value', 'type'])
+
+orders = {
+    'time':['poco','normal','mucho'],
+    ...:...
+}
+
+categories = {
+    'genre':['Ficcion','No Ficcion'],
+    ...:...
+}
 
 # Define the Problem class
 class Problem:
+
     '''
     Classe Abstracta de Lector i altres components del problema
     '''
     def __init__(self, age: int, time: str, genre: str):
-        self.age = age
-        self.time = time
-        self.genre = genre
+        self.age = ValType(age,'integer')
+        self.time = ValType(time,'discrete') # Categòriques amb ordre
+        self.genre = ValType(genre,'categoric') # Categòriques sense ordre
 
     def __repr__(self):
         return f"Problem(age={self.age}, time='{self.time}', genre='{self.genre}')"
-
+    
     def encode_problem(self) -> List[int]:
         '''
         Function to encode categorical data to numerical values
         '''
-        time_encoding = {"mucho": 3, "normal": 2, "poco": 1}
-        genre_encoding = {"Ficcion": 1, "No Ficcion": 2}
+        encoded = []
 
-        return [
-            self.age,
-            time_encoding[self.time],
-            genre_encoding[self.genre]
-        ]
+        for variable,v in self.__dict__.items():
+            if v.type == 'discrete':
+                for idx,value in enumerate(orders[variable]):
+                    if value == v.value:
+                        encoded.append(idx)
+            elif v.type == 'categoric':
+                for category in categories[variable]:
+                    encoded.append(1) if category == v.value else encoded.append(0)
+            else:
+                encoded.append(v.value)
+        
+        return encoded
 
 def scale_features(problems: List["Problem"]) -> np.ndarray:
     '''
