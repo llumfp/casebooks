@@ -80,7 +80,7 @@ class Cas:
         self.mesura_utilitat:bool = utilitat #mirar els altres casos que tenim i valorar si val la pena
     
     def __repr__(self) -> str:
-        return f"Cas(id={self.id}, problem={self.descripcio})"
+        return f"Cas(id={self.id}, descripcio={self.descripcio})"
     
     def validate(self, casos):
         '''
