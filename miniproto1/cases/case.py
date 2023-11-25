@@ -1,15 +1,15 @@
 from typing import Any, List
 from sklearn.preprocessing import MinMaxScaler
 from numpy import ndarray
-from collections import namedtuple
+from collections import namedtuple, Counter
 import random
 import numpy as np
 
 ValType = namedtuple('ValType', ['value', 'type'])
 
-orders = {
-    'time':['poco','normal','mucho'],
-    ...:...
+discrete = {
+    'available':['little','normal','much'],
+    'public':['baby','children','teen','adult'],
 }
 
 categories = {
@@ -17,50 +17,154 @@ categories = {
     ...:...
 }
 
+"""IDEES
+
+INCIAL          -> PREPROCESSAT
+
+Genere buscat   -> genere(categoric)
+
+Autor preferit  -> isactual(boolean)  public(discrete)  genre(categoric)  famous(boolean)
+    - Aixo ens ajudara a l'adaptacio en el cas que l'autor preferit no tingui
+      llibres que s'adaptin al que demana
+
+Llista de llibres llegits -> Counter de generes (ints)  sagas_llegides(int) ??
+
+Subgenere??
+
+Cover -> cover(categoric)
+
+Bestseller -> bestseller(boolean)
+
+Actual i famous jo els deixaria nomes amb lo d'autor
+
+Goal -> goal(categoric)
+
+illustrated -> illustrated(boolean)
+
+Habit de lectura -> hab_lectura(boolean)
+
+Language -> language(categoric)
+    pot ser interessant per s'adaptacio sobretot, de cercar un llibre similar pero en un altre idioma
+
+Age -> age (numeric)
+
+Theme -> theme(categoric)
+
+available -> available(discrete)
+
+Trigger_warnings -> one_hot(booleans)
+
+encode_problem que sigui l'encarregat de preprocessar, per tant tendriem  diferents tipus:
+- categoric
+- boolean
+- discrete
+- numeric 
+- autor
+- llibres
+- triggers
+"""
+
+from miniproto1.ontology import Author, Book
+from miniproto1.constants import *
+
+def encode_discrete(v,variable:str,encoded:List):
+    for idx,value in enumerate(discrete[variable]):
+        if value == v:
+            encoded.append(idx)
+    return encoded
+
+def encode_categoric(v,variable:str,encoded:List):
+    for category in categories[variable]:
+        encoded.append(1) if category == v else encoded.append(0)
+    return encoded
+
 # Define the Problem class
 class Problem:
 
     '''
     Classe Abstracta de Lector i altres components del problema
     '''
-    def __init__(self, age: int, time: str, genre: str):
-        self.age = ValType(age,'integer')
-        self.time = ValType(time,'discrete') # Categòriques amb ordre
-        self.genre = ValType(genre,'categoric') # Categòriques sense ordre
+    def __init__(
+        self, age: int, available: str, genre: str, subgenre: str, cover: str, bestseller: bool,
+        goal: str, illustrated: bool, hab_lectura: bool, language: str, theme: str, trigger_warnings: list,
+        read: list[Book], fav_author:Author
+    ) -> None:
+        self.age = ValType(age, 'integer')
+        self.available = ValType(available, 'discrete') # Categoriques amb ordre
+        self.genre = ValType(genre, 'categoric') # Categoriques sense ordre
+        self.subgenre = ValType(subgenre, 'categoric')
+        self.cover = ValType(cover, 'categoric')
+        self.bestseller = ValType(bestseller, 'boolean')
+        self.goal = ValType(goal, 'categoric')
+        self.illustrated = ValType(illustrated, 'boolean')
+        self.hab_lectura = ValType(hab_lectura, 'boolean')
+        self.language = ValType(language, 'categoric')
+        self.theme = ValType(theme, 'categoric')
+        self.theme = ValType(theme, 'categoric')
+        self.trigger_warnings = ValType(trigger_warnings,'trigger_w')
+        self.read = ValType(read,'books')
+        self.fav_author= ValType(fav_author,'author')
+        
+        self.encoded = []
+        
 
     def __repr__(self):
         return f"Problem(age={self.age}, time='{self.time}', genre='{self.genre}')"
     
-    def encode_problem(self) -> List[int]:
+    def encode_easy(self) -> None:
         '''
         Function to encode categorical data to numerical values
         '''
-        encoded = []
-
         for variable,v in self.__dict__.items():
             if v.type == 'discrete':
-                for idx,value in enumerate(orders[variable]):
-                    if value == v.value:
-                        encoded.append(idx)
+                self.encoded = encode_discrete(v.value, variable, self.encoded)
             elif v.type == 'categoric':
-                for category in categories[variable]:
-                    encoded.append(1) if category == v.value else encoded.append(0)
+                self.encoded = encode_categoric(v.value, variable, self.encoded)
+            elif v.type == 'boolean':
+                self.encoded.append(1) if v.value else self.encoded.append(0)
             else:
-                encoded.append(v.value)
-        
-        return encoded
+                self.encoded.append(v.value)
+
+    def encode_hard(self) -> None:
+        for variable,v in self.__dict__.items():
+            if v.type == 'books':
+                d = {g:0 for g in generes}
+                count = 0
+                for book in v.value:
+                    d[book.genre] += 1
+                    count += 1
+                l = [d[g]/count for g in generes]
+                for percentage in l:
+                    self.encoded.append(percentage)
+            elif v.type == 'author':
+                self.encoded.append(1) if v.value.isactual else self.encoded.append(0)
+                self.encoded = encode_discrete(v.value.public, variable, self.encoded)
+                self.encoded = encode_categoric(v.value.genre, variable, self.encoded)
+                self.encoded.append(1) if v.value.famous else self.encoded.append(0)
+            elif v.type == 'trigger_w':
+                trig_list = [1 if tr in v.value else 0 for tr in trigger_w]
+                self.encoded += trig_list
+            else:
+                continue
 
 def scale_features(problems: List["Problem"]) -> np.ndarray:
     '''
     Function to scale features between 0 and 1
     '''
-    features = np.array([problem.encode_problem() for problem in problems])
+    features = np.array([problem.encoded for problem in problems])
 
     scaler = MinMaxScaler()
     scaled_features = scaler.fit_transform(features)
 
-    return scaled_features
+    for s, p in scaled_features, problems:
+        p.encoded = list(s)
 
+def preprocess(problems:List[Problem]):
+    for p in problems:
+        p.encode_easy()
+    scale_features(problems)
+    for p in problems:
+        p.encode_hard()
 
 class Cas:
     def __init__(
@@ -84,7 +188,7 @@ class Cas:
     
     def validate(self, casos):
         '''
-        mirar tots els casos que tenim a la base de dades
+        mirar tots els casos que tenim a la base de casos
         - Si hi ha un cas molt similar amb mateix resultat no guardem
         - Si el self.avaluacio es molt intermedi (2.5) no ens està aportant 
             informació útil sobre si esta bé o no
