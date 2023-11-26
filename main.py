@@ -5,6 +5,8 @@ Contingut: Inicialització, menú d'usuari, crides a altres mòduls.
 """
 
 from miniproto1 import *
+from ejecutador import *
+import sys
 
 cas1 = Problem(
     public='baby', 
@@ -17,7 +19,7 @@ cas1 = Problem(
     hab_lectura=True, 
     length='medium', 
     theme='Sports', 
-    trigger_warnings=[1,2,3]
+    trigger_warnings=['1','2','3']
 )
 cas2 = Problem(
     public='teen', 
@@ -30,7 +32,7 @@ cas2 = Problem(
     hab_lectura=True, 
     length='short', 
     theme='Daily_life', 
-    trigger_warnings=[4,5,6]
+    trigger_warnings=['4','5','6']
 )
 cas3 = Problem(
     public='adult', 
@@ -43,10 +45,21 @@ cas3 = Problem(
     hab_lectura=False, 
     length='very_long', 
     theme='Daily_life', 
-    trigger_warnings=[7,8,9]
+    trigger_warnings=['7','8','9']
 )
 
-a = preprocess([cas1,cas2,cas3])
 
-for c in a:
-    print(c)
+lectors, problemes = generar_libros_aleatorios(int(sys.argv[1]),int(sys.argv[2]),int(sys.argv[3]),int(sys.argv[4]))
+for i in lectors:
+    with open(f'instancia_lector.clp','w') as f:
+        f.write('(definstances instances')
+        f.write(i)
+        f.write(') \n \n \n')
+    run_clips_with_commands('jp_comandes1.txt', 'llibres_recomanats.txt')
+print(problemes)
+    
+        
+# a = preprocess(problemes)
+
+# for c in a:
+#     print(c,end='\n\n')

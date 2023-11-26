@@ -1,4 +1,5 @@
-from typing import Any
+from typing import Any, Tuple
+from miniproto1.ontology import Book
 from numpy import ndarray
 
 class Cas:
@@ -6,8 +7,8 @@ class Cas:
         self,
         id: str,
         descripcio: ndarray[Any], # El nostre problema ja preprocessat
-        derivacio: Any = [],
-        solucio: None = None,
+        derivacio: None,
+        solucio: Tuple[Book,Book,Book] = None,
         avaluacio: None = None,
         utilitat: None = None
     ) -> None:

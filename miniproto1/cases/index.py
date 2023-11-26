@@ -53,7 +53,38 @@ class Indexacio(BinTree):
                 node_actual = node_actual.get_right()
 
         return node_actual.get_root(), labels
- 
+    
+    
+    def most_n_similars(self, cas:Cas ,n_similars:int) -> Tuple[Cas, List]:
+        """
+        Donat un  cas a comparar (Cas), retorna el cas més similar 
+        en l'Indexacio i la llista de labels per després afegir el nou cas.
+        """
+        # Recorre l'arbre per a trobar el cas més similar.
+        pre_orden = self.preorder()
+        mas_similar = cas.most_similar()
+        posicion = pre_orden.index(mas_similar)
+
+        llista_sim = [mas_similar]
+
+        i = posicion
+        j = posicion - 1
+
+        while i < len(pre_orden) or j >= 0 or n_similars==1:
+            if i < len(pre_orden):
+                if  pre_orden[i].leaf():
+                    llista_sim.append(pre_orden[i])
+                    n_similars -=1
+                i += 1
+            if j >= 0:
+                if  pre_orden[j].leaf():
+                    llista_sim.append(pre_orden[i])
+                    n_similars -=1
+                j -= 1
+        
+        return llista_sim
+
+    
     def add(self, new:Cas, ruta:List[Any]):
         """
         Afegeix un nou cas a l'arbre utilitzant la ruta del cas més similar.
@@ -96,4 +127,5 @@ class Indexacio(BinTree):
         """
         Treu cas al graf de casos. Per si no es cas rellevant
         """
+        
 

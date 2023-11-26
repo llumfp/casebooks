@@ -18,7 +18,6 @@ class Book:
             theme:str = "",
             bestseller:bool = 'FALSE',
             triggerw:List = None,
-
         ) -> None:
 
         # Features
@@ -56,7 +55,6 @@ class Book:
         return self.dict['title'] == other.dict['title']
     
 class Author:
-    
     def __init__(
             self,
             name:str,

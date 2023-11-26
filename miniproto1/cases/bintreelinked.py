@@ -97,6 +97,17 @@ class BinTree:
         returns True if the BinTree is a leaf, False if not. The BinTree is not empty
         """
         return self._root._left is None and self._root._right is None
+    
+    def preorder(self):
+        """
+        returns a list with the elements of the BinTree, ordered
+        as is specified in the definition of the pre-order traversal.
+        """
+        if self.empty():
+            return []
+        
+        else:
+            return [self.get_root()] + self.get_left().preorder() + self.get_right().preorder()
 
 
 

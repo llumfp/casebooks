@@ -1,0 +1,6 @@
+(load main.clp)
+(load instances.clp)
+(load instancia_lector.clp)
+(reset)
+(run)
+(exit)

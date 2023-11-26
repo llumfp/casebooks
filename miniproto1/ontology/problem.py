@@ -55,7 +55,7 @@ class Problem:
         self.encoded = []        
 
     def __repr__(self):
-        return f"Problem(age={self.age}, time='{self.time}', genre='{self.genre}')"
+        return f"Problem(public={self.public}, genre='{self.genre}', cover='{self.cover}')"
     
     def encode_easy(self) -> None:
         '''
