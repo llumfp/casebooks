@@ -1,3 +1,2 @@
-from author import Author
-from book import Book
-from problem import Problem
+from .book import Book, Author
+#from .problem import *

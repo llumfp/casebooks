@@ -4,7 +4,7 @@ CURT TERMINI
 
 LARG TERMINI
 -Prova de distancies de similitud
--Evaluacio
+-Avaluacio
 -Menteniment base dades (EXCEPTIONAL CASE-REDUNDANT CASES)
 --Eliminar/posar cas nou 
 --Eliminar cas no nous 

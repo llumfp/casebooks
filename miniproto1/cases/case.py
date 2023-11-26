@@ -5,67 +5,22 @@ from collections import namedtuple, Counter
 import random
 import numpy as np
 
+from miniproto1 import *
+
 ValType = namedtuple('ValType', ['value', 'type'])
 
 discrete = {
-    'available':['little','normal','much'],
-    'public':['baby','children','teen','adult'],
+    'public':publics,
+    'cover':covers,
+    'length':lengths
 }
 
 categories = {
-    'genre':['Ficcion','No Ficcion'],
-    ...:...
+    'genre':generes,
+    'subgenre':subgenres,
+    'goal': goals,
+    'theme' : themes
 }
-
-"""IDEES
-
-INCIAL          -> PREPROCESSAT
-
-Genere buscat   -> genere(categoric)
-
-Autor preferit  -> isactual(boolean)  public(discrete)  genre(categoric)  famous(boolean)
-    - Aixo ens ajudara a l'adaptacio en el cas que l'autor preferit no tingui
-      llibres que s'adaptin al que demana
-
-Llista de llibres llegits -> Counter de generes (ints)  sagas_llegides(int) ??
-
-Subgenere??
-
-Cover -> cover(categoric)
-
-Bestseller -> bestseller(boolean)
-
-Actual i famous jo els deixaria nomes amb lo d'autor
-
-Goal -> goal(categoric)
-
-illustrated -> illustrated(boolean)
-
-Habit de lectura -> hab_lectura(boolean)
-
-Language -> language(categoric)
-    pot ser interessant per s'adaptacio sobretot, de cercar un llibre similar pero en un altre idioma
-
-Age -> age (numeric)
-
-Theme -> theme(categoric)
-
-available -> available(discrete)
-
-Trigger_warnings -> one_hot(booleans)
-
-encode_problem que sigui l'encarregat de preprocessar, per tant tendriem  diferents tipus:
-- categoric
-- boolean
-- discrete
-- numeric 
-- autor
-- llibres
-- triggers
-"""
-
-from miniproto1.ontology import Author, Book
-from miniproto1.constants import *
 
 def encode_discrete(v,variable:str,encoded:List):
     for idx,value in enumerate(discrete[variable]):
@@ -85,28 +40,26 @@ class Problem:
     Classe Abstracta de Lector i altres components del problema
     '''
     def __init__(
-        self, age: int, available: str, genre: str, subgenre: str, cover: str, bestseller: bool,
-        goal: str, illustrated: bool, hab_lectura: bool, language: str, theme: str, trigger_warnings: list,
-        read: list[Book], fav_author:Author
+        self, age: int, genre: str, subgenre: str, cover: str, bestseller: bool,
+        goal: str, illustrated: bool, hab_lectura: bool, length:str, theme: str, trigger_warnings: list
     ) -> None:
-        self.age = ValType(age, 'integer')
-        self.available = ValType(available, 'discrete') # Categoriques amb ordre
+        self.public = ValType(age, 'discrete')
+        # self.available = ValType(available, 'discrete') # Categoriques amb ordre
         self.genre = ValType(genre, 'categoric') # Categoriques sense ordre
         self.subgenre = ValType(subgenre, 'categoric')
-        self.cover = ValType(cover, 'categoric')
+        self.cover = ValType(cover, 'discrete')
         self.bestseller = ValType(bestseller, 'boolean')
         self.goal = ValType(goal, 'categoric')
         self.illustrated = ValType(illustrated, 'boolean')
         self.hab_lectura = ValType(hab_lectura, 'boolean')
-        self.language = ValType(language, 'categoric')
-        self.theme = ValType(theme, 'categoric')
+        self.length = ValType(length, 'discrete')
+        # self.language = ValType(language, 'categoric')
         self.theme = ValType(theme, 'categoric')
         self.trigger_warnings = ValType(trigger_warnings,'trigger_w')
-        self.read = ValType(read,'books')
-        self.fav_author= ValType(fav_author,'author')
+        # self.read = ValType(read,'books')
+        # self.fav_author= ValType(fav_author,'author')
         
-        self.encoded = []
-        
+        self.encoded = []        
 
     def __repr__(self):
         return f"Problem(age={self.age}, time='{self.time}', genre='{self.genre}')"
@@ -116,34 +69,39 @@ class Problem:
         Function to encode categorical data to numerical values
         '''
         for variable,v in self.__dict__.items():
-            if v.type == 'discrete':
-                self.encoded = encode_discrete(v.value, variable, self.encoded)
-            elif v.type == 'categoric':
-                self.encoded = encode_categoric(v.value, variable, self.encoded)
-            elif v.type == 'boolean':
-                self.encoded.append(1) if v.value else self.encoded.append(0)
+            if variable != 'encoded' and v.value != None:
+                if v.type == 'discrete':
+                    self.encoded = encode_discrete(v.value, variable, self.encoded)
+                elif v.type == 'categoric':
+                    self.encoded = encode_categoric(v.value, variable, self.encoded)
+                elif v.type == 'boolean':
+                    self.encoded.append(1) if v.value else self.encoded.append(0)
+                else:
+                    self.encoded.append(v.value)
             else:
-                self.encoded.append(v.value)
+                continue
 
     def encode_hard(self) -> None:
         for variable,v in self.__dict__.items():
-            if v.type == 'books':
-                d = {g:0 for g in generes}
-                count = 0
-                for book in v.value:
-                    d[book.genre] += 1
-                    count += 1
-                l = [d[g]/count for g in generes]
-                for percentage in l:
-                    self.encoded.append(percentage)
-            elif v.type == 'author':
-                self.encoded.append(1) if v.value.isactual else self.encoded.append(0)
-                self.encoded = encode_discrete(v.value.public, variable, self.encoded)
-                self.encoded = encode_categoric(v.value.genre, variable, self.encoded)
-                self.encoded.append(1) if v.value.famous else self.encoded.append(0)
-            elif v.type == 'trigger_w':
-                trig_list = [1 if tr in v.value else 0 for tr in trigger_w]
-                self.encoded += trig_list
+            if v.value != None:
+                if v.type == 'trigger_w':
+                    trig_list = [1 if tr in v.value else 0 for tr in trigger_w]
+                    self.encoded += trig_list
+            # if v.type == 'books':
+            #     d = {g:0 for g in generes}
+            #     count = 0
+            #     for book in v.value:
+            #         d[book.genre] += 1
+            #         count += 1
+            #     l = [d[g]/count for g in generes]
+            #     for percentage in l:
+            #         self.encoded.append(percentage)
+            # elif v.type == 'author':
+            #     self.encoded.append(1) if v.value.isactual else self.encoded.append(0)
+            #     self.encoded = encode_discrete(v.value.public, variable, self.encoded)
+            #     self.encoded = encode_categoric(v.value.genre, variable, self.encoded)
+            #     self.encoded.append(1) if v.value.famous else self.encoded.append(0)
+            
             else:
                 continue
 
@@ -156,7 +114,7 @@ def scale_features(problems: List["Problem"]) -> np.ndarray:
     scaler = MinMaxScaler()
     scaled_features = scaler.fit_transform(features)
 
-    for s, p in scaled_features, problems:
+    for s, p in zip(scaled_features, problems):
         p.encoded = list(s)
 
 def preprocess(problems:List[Problem]):
@@ -165,6 +123,8 @@ def preprocess(problems:List[Problem]):
     scale_features(problems)
     for p in problems:
         p.encode_hard()
+
+
 
 class Cas:
     def __init__(

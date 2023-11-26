@@ -4,12 +4,10 @@ Funció: Punt d'entrada del programa. Gestiona la interacció amb l'usuari i coo
 Contingut: Inicialització, menú d'usuari, crides a altres mòduls.
 """
 
-from cases import *
-import numpy as np
-import random
+from miniproto1 import *
 
 
-# Creem 10 instancies de Problem aleatòries que seran la nostra Database
+'''# Creem 10 instancies de Problem aleatòries que seran la nostra Database
 random.seed(2003)
 problems = [
     Problem(
@@ -49,4 +47,8 @@ a_afegir = Cas(id=9, descripcio=[0.6744186, 0.5, 0])
 a.add(a_afegir,ruta)
 
 print("\n--- BASE DE DADES ---")
-print(a)
+print(a)'''
+
+cas1 = Problem(6, 'Fansasy', 'Dark_Fantasy', 'soft', True, None, False, True,'short', None, None)
+
+a = preprocess([cas1])
