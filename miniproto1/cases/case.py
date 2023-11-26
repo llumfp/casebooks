@@ -5,7 +5,7 @@ from collections import namedtuple, Counter
 import random
 import numpy as np
 
-from miniproto1 import *
+from miniproto1.constants import *
 
 ValType = namedtuple('ValType', ['value', 'type'])
 
@@ -123,8 +123,6 @@ def preprocess(problems:List[Problem]):
     scale_features(problems)
     for p in problems:
         p.encode_hard()
-
-
 
 class Cas:
     def __init__(
