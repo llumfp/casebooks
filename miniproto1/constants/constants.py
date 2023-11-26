@@ -1,8 +1,3 @@
-'''
-Arxiu contenidor de les constants necessaries per al 
-desenvolupament de la pràctica
-'''
-
 genrestree = {
     "Fantasy": {"High_Fantasy", "Dark_Fantasy", "Urban_Fantasy"},
     "Romance": {"Classic_Romance", "Historical_Romance", "Erotic"},
@@ -13,7 +8,7 @@ genrestree = {
     "Science_Fiction": {"Space_Opera", "Cyberpunk", "Postapocalyptic_Dystopia", "Technological"}
 }
 
-generes = ['Fantasy', 'Romance', 'Contemporary', 'Mystery', 'Horror', 'Historical', 'Science_Fiction'] 
+genres = ['Fantasy', 'Romance', 'Contemporary', 'Mystery', 'Horror', 'Historical', 'Science_Fiction'] 
 subgenres = [s for g,sg in genrestree.items() for s in sg]
 
 themes = ['Sports','Music','Daily_life','Adventures','Magic','Culture']
@@ -23,4 +18,4 @@ covers = ['pocket', 'soft', 'hard']
 lengths = ['short', 'medium', 'long', 'very_long']
 
 
-trigger_w = [str(i+1) for i in range(17)]
+trigger_w = [i+1 for i in range(17)]

@@ -6,49 +6,47 @@ Contingut: Inicialització, menú d'usuari, crides a altres mòduls.
 
 from miniproto1 import *
 
+cas1 = Problem(
+    public='baby', 
+    genre='Fantasy', 
+    subgenre='Dark_Fantasy', 
+    cover='soft', 
+    bestseller=True,
+    goal='Entretainment', 
+    illustrated=False, 
+    hab_lectura=True, 
+    length='medium', 
+    theme='Sports', 
+    trigger_warnings=[1,2,3]
+)
+cas2 = Problem(
+    public='teen', 
+    genre='Horror', 
+    subgenre='Psychological_Horror', 
+    cover='hard', 
+    bestseller=True,
+    goal='Learning', 
+    illustrated=True, 
+    hab_lectura=True, 
+    length='short', 
+    theme='Daily_life', 
+    trigger_warnings=[4,5,6]
+)
+cas3 = Problem(
+    public='adult', 
+    genre='Historical', 
+    subgenre='Realistic', 
+    cover='pocket', 
+    bestseller=False,
+    goal='Learning', 
+    illustrated=True, 
+    hab_lectura=False, 
+    length='very_long', 
+    theme='Daily_life', 
+    trigger_warnings=[7,8,9]
+)
 
-'''# Creem 10 instancies de Problem aleatòries que seran la nostra Database
-random.seed(2003)
-problems = [
-    Problem(
-        age=random.randint(10, 70), 
-        time=random.choice(["mucho", "normal", "poco"]),
-        genre=random.choice(["Ficcion", "No Ficcion"])
-    ) for _ in range(10)
-]
+a = preprocess([cas1,cas2,cas3])
 
-print("--- PROBLEMES ---")
-for p in problems:
-    print(p)
-
-scaled_features = scale_features(problems)
-
-
-db = [Cas(id=idx, descripcio=p) for idx,p in enumerate(scaled_features)]
-
-print("\n--- BASE DE DADES ---")
-for cas in db:
-    print(cas)
-
-a = Indexacio(v=db)
-a.creacio(db)
-
-newp = Problem(age=25,time='poco',genre='Ficcion')
-print("\n--- PROBLEMA NOU ---")
-print(newp)
-newp = Cas(id=len(db),descripcio=scale_features([newp])[0])
-
-case_sim, ruta = a.most_similar(newp)
-print("\n--- CAS MES SIMILAR ---")
-print(case_sim)
-print(f"Ruta seguida: {ruta}")
-
-a_afegir = Cas(id=9, descripcio=[0.6744186, 0.5, 0])
-a.add(a_afegir,ruta)
-
-print("\n--- BASE DE DADES ---")
-print(a)'''
-
-cas1 = Problem(6, 'Fansasy', 'Dark_Fantasy', 'soft', True, None, False, True,'short', None, None)
-
-a = preprocess([cas1])
+for c in a:
+    print(c)
