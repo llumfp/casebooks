@@ -26,9 +26,7 @@ def adaptacio_ponderada(new:Cas) -> None:
 
     books = Counter([book for case in cas_similar for book in case.solution])
 
-    new.solucio = books[0:2]
+    new.solucio = books[0:3]
 
-    sol_similar = cas_similar.solucio
-    new.solucio = sol_similar
-    new.derivacio = cas_similar
+
 
