@@ -70,7 +70,7 @@ class Indexacio(BinTree):
         i = posicion
         j = posicion - 1
 
-        while i < len(pre_orden) or j >= 0 or n_similars==1:
+        while (i < len(pre_orden) and j >= 0) or n_similars==1:
             if i < len(pre_orden):
                 if  pre_orden[i].leaf():
                     llista_sim.append(pre_orden[i])

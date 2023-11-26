@@ -1,0 +1,51 @@
+         CLIPS (6.4.1 4/8/23)
+CLIPS> +#######@!!!!***+**+!!!!!!!*+**********+!!**+**+***+****+*****+********!*+**+!***
+TRUE
+CLIPS> @@
+TRUE
+CLIPS> @
+TRUE
+CLIPS> CLIPS> 
+--------------------------------------------------
+  _________   _________
+ /          |/         |    Recomanador de Llibres
+||          |          ||   
+||          |          ||   Practica 1 - SBC
+||          |          ||
+||          |          ||   By:
+|| ________ | ________ ||     Artur A A
+||/         |/        |||     Llum F P
+                             Paula G S
+                             Oscar M S
+
+--------------------------------------------------
+                   BENVINGUT!
+
+Li farem diverses preguntes i el nostre sistema
+recomanador li oferira els llibres que mes s'adap-
+ten a les seves preferencies.
+
+--------------------------------------------------
+    
+Gracies per haver respost les preguntes!
+
+Els llibres seleccionats son els seguents:
+
+--------------- LLIBRE ---------------
+Aquest llibre pot ser una bona opcio:
+Title: La trampa del laberinto siniestro | Puntuacio: 32.1503315880405
+Hem trobat un llibre de tapa dura tal i com volies.
+Amb aquest llibre estaras intrigat fins al final ja que ens has demanat un llibre de misteri
+
+--------------- LLIBRE ---------------
+Aquest llibre pot ser una bona opcio:
+Title: La traicion del alguacil | Puntuacio: 31.0941351144862
+Hem trobat un llibre de tapa dura tal i com volies.
+Amb aquest llibre estaras intrigat fins al final ja que ens has demanat un llibre de misteri
+
+--------------- LLIBRE ---------------
+Aquest llibre pot ser una bona opcio:
+Title: El misterio de la mente atormentada | Puntuacio: 29.7290927453142
+Amb aquest llibre estaras intrigat fins al final ja que ens has demanat un llibre de misteri
+
+CLIPS> 

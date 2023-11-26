@@ -50,12 +50,13 @@ cas3 = Problem(
 
 
 lectors, problemes = generar_libros_aleatorios(int(sys.argv[1]),int(sys.argv[2]),int(sys.argv[3]),int(sys.argv[4]))
-for i in lectors:
+
+for i,l in enumerate(lectors):
     with open(f'instancia_lector.clp','w') as f:
         f.write('(definstances instances')
-        f.write(i)
+        f.write(l)
         f.write(') \n \n \n')
-    run_clips_with_commands('jp_comandes1.txt', 'llibres_recomanats.txt')
+    run_clips_with_commands('jp_comandes1.txt', f'llibre_recomanat_{i}.txt')
 print(problemes)
     
         

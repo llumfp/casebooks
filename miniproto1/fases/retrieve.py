@@ -20,13 +20,11 @@ def adaptacio_nulla(new:Cas) -> None:
 
 
 def adaptacio_ponderada(new:Cas) -> None:
-
-    
     cas_similar = arbre.most_n_similars(new, 3) #3 mes similars
-
     books = Counter([book for case in cas_similar for book in case.solution])
+    new.solucio = [m[0] for m in books.most_common(3)]
+    new.derivacio = cas_similar
 
-    new.solucio = books[0:3]
-
-
+def un_paper_mes(new:Cas) -> None:
+    pass
 

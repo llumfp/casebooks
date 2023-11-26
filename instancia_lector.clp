@@ -1,10 +1,11 @@
 (definstances instances
     ([lector] of Lector
-        (public "baby")
-        (goal "Learning")
+        (public "teenager")
+        (main_genre [Mystery])
+        (bestseller TRUE)
+        (cover "hard")
         (hab_lectura "Neutral")
-        (illustrated TRUE)
-        (theme "Music")
-    )) 
+        (time_read "very_long")
+        )) 
  
  

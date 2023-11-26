@@ -1,0 +1,52 @@
+         CLIPS (6.4.1 4/8/23)
+CLIPS> +#######@!!!!***+**+!!!!!!!*+**********+!!**+**+***+****+*****+********!*+**+!***
+TRUE
+CLIPS> @@
+TRUE
+CLIPS> @
+TRUE
+CLIPS> CLIPS> 
+--------------------------------------------------
+  _________   _________
+ /          |/         |    Recomanador de Llibres
+||          |          ||   
+||          |          ||   Practica 1 - SBC
+||          |          ||
+||          |          ||   By:
+|| ________ | ________ ||     Artur A A
+||/         |/        |||     Llum F P
+                             Paula G S
+                             Oscar M S
+
+--------------------------------------------------
+                   BENVINGUT!
+
+Li farem diverses preguntes i el nostre sistema
+recomanador li oferira els llibres que mes s'adap-
+ten a les seves preferencies.
+
+--------------------------------------------------
+    
+Gracies per haver respost les preguntes!
+
+Els llibres seleccionats son els seguents:
+
+--------------- LLIBRE ---------------
+Aquest llibre pot ser una bona opcio:
+Title: Descubriendo el Mundo a Traves de Colores | Puntuacio: 39.1025627239264
+Hem trobat un llibre de tapa dura tal i com volies.
+Aquest llibre ofereix un viatge per diferents cultures i tradicions, perfecte per als petits curiosos com tu.
+
+--------------- LLIBRE ---------------
+Aquest llibre pot ser una bona opcio:
+Title: Cuentos de la Abuela en el Mundo Entero | Puntuacio: 37.9021274097225
+Hem trobat un llibre de tapa dura tal i com volies.
+Aquest llibre ofereix un viatge per diferents cultures i tradicions, perfecte per als petits curiosos com tu.
+
+--------------- LLIBRE ---------------
+Aquest llibre pot ser una bona opcio:
+Title: Rituales de la Montana Cantora | Puntuacio: 37.0563823342756
+Hem trobat un llibre de tapa dura tal i com volies.
+Aquest llibre ofereix un viatge per diferents cultures i tradicions, perfecte per als petits curiosos com tu.
+
+CLIPS> 
