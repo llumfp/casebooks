@@ -459,180 +459,183 @@ Els llibres seleccionats son els seguents:
     (import MAIN ?ALL)
 )
 
-; (deffunction JUSTIFY::getRecommendationRange (?lectorType ?puntuacio)
-;     (if (eq ?lectorType "baby")
-;         then 
-;         (if (>= ?puntuacio 50)
-;             then (return "ideal")
-;             else (if (and (>= ?puntuacio 40) (< ?puntuacio 50))
-;                 then (return "good")
-;                 else (return "bad")))
+(deffunction JUSTIFY::getRecommendationRange (?lectorType ?puntuacio)
+    (if (eq ?lectorType "baby")
+        then 
+        (if (>= ?puntuacio 50)
+            then (return "ideal")
+            else (if (and (>= ?puntuacio 40) (< ?puntuacio 50))
+                then (return "good")
+                else (return "bad")))
 
-;     else if (eq ?lectorType "children")
-;         then
-;         (if (>= ?puntuacio 45)
-;             then (return "ideal")
-;             else (if (and (>= ?puntuacio 20) (< ?puntuacio 45))
-;                 then (return "good")
-;                 else (return "bad")))
-;     else if (eq ?lectorType "teen")
-;         then
-;         (if (>= ?puntuacio 55)
-;             then (return "ideal")
-;             else (if (and (>= ?puntuacio 20) (< ?puntuacio 55))
-;                 then (return "good")
-;                 else (return "bad")))
-;     else if (eq ?lectorType "adult")
-;         then
-;         (if (>= ?puntuacio 85)
-;             then (return "ideal")
-;             else (if (and (>= ?puntuacio 20) (< ?puntuacio 85))
-;                 then (return "good")
-;                 else (return "bad")))
-;     )
-; )
+    else if (eq ?lectorType "children")
+        then
+        (if (>= ?puntuacio 45)
+            then (return "ideal")
+            else (if (and (>= ?puntuacio 20) (< ?puntuacio 45))
+                then (return "good")
+                else (return "bad")))
+    else if (eq ?lectorType "teen")
+        then
+        (if (>= ?puntuacio 55)
+            then (return "ideal")
+            else (if (and (>= ?puntuacio 20) (< ?puntuacio 55))
+                then (return "good")
+                else (return "bad")))
+    else if (eq ?lectorType "adult")
+        then
+        (if (>= ?puntuacio 85)
+            then (return "ideal")
+            else (if (and (>= ?puntuacio 20) (< ?puntuacio 85))
+                then (return "good")
+                else (return "bad")))
+    )
+)
 
-; (deffunction JUSTIFY::printRecom (?type)
-;     (switch ?type
-;         (case "ideal" then (printout t "Que be! Aquest llibre es exactament el que estaves buscant:" crlf))
-;         (case "good" then (printout t "Aquest llibre pot ser una bona opcio:" crlf))
-;         (default (printout t "Hmm... Mira veure si t'agrada aquest:" crlf))
-;     )
-; )
+(deffunction JUSTIFY::printRecom (?type)
+    (switch ?type
+        (case "ideal" then (printout t "Nivell: 3" crlf))
+        (case "good" then (printout t "Nivell: 2" crlf))
+        (default (printout t "Nivell: 1" crlf))
+    )
+)
 
 (deffunction JUSTIFY::showProperties (?book ?lector)
     (printout t "--------------- LLIBRE ---------------"crlf)
     (bind ?recommendation (getRecommendationRange (send ?lector get-public) (send ?book get-punctuation)))
     (printRecom ?recommendation)
-    (printout t "Title: " (send ?book get-title) " | Puntuacio: " (send ?book get-punctuation) crlf)
+    (printout t "Title: " (send ?book get-title)  crlf)
+    (printout t "Puntuacio: " (send ?book get-punctuation) crlf)
+    (send ?book print)
+
 )
 
-; (deffunction JUSTIFY::compareBooks (?b1 ?b2)
-;     (bind ?rating1 (send ?b1 get-punctuation))
-;     (bind ?rating2 (send ?b2 get-punctuation))
-;     (if (and (numberp ?rating1) (numberp ?rating2))
-;         then
-;         (if (< ?rating1 ?rating2) then (return TRUE) else (return FALSE))
-;         else
-;         (printout t "Error de Comparacion entre Puntuaciones" crlf)
-;         (return FALSE)
-;     )
-; )
+(deffunction JUSTIFY::compareBooks (?b1 ?b2)
+    (bind ?rating1 (send ?b1 get-punctuation))
+    (bind ?rating2 (send ?b2 get-punctuation))
+    (if (and (numberp ?rating1) (numberp ?rating2))
+        then
+        (if (< ?rating1 ?rating2) then (return TRUE) else (return FALSE))
+        else
+        (printout t "Error de Comparacion entre Puntuaciones" crlf)
+        (return FALSE)
+    )
+)
 
-; (deffunction JUSTIFY::bestbooks (?N)
-;     (bind ?libros (find-all-instances ((?l Libro)) TRUE))
-;     (bind ?sorted-libros (sort compareBooks ?libros))
-;     (bind ?count 0)
-;     (bind ?chosen_books (create$))
-;     (foreach ?book ?sorted-libros
-;         (if (< ?count ?N) then
-;             (bind ?count (+ ?count 1))
-;             (bind ?chosen_books (insert$ ?chosen_books (+ (length$ ?chosen_books) 1) ?book))
+(deffunction JUSTIFY::bestbooks (?N)
+    (bind ?libros (find-all-instances ((?l Libro)) TRUE))
+    (bind ?sorted-libros (sort compareBooks ?libros))
+    (bind ?count 0)
+    (bind ?chosen_books (create$))
+    (foreach ?book ?sorted-libros
+        (if (< ?count ?N) then
+            (bind ?count (+ ?count 1))
+            (bind ?chosen_books (insert$ ?chosen_books (+ (length$ ?chosen_books) 1) ?book))
 
-;         )
-;     )
-;     return ?chosen_books
-; )
+        )
+    )
+    return ?chosen_books
+)
 
-; (deffunction JUSTIFY::tematica (?theme)
-;     (switch ?theme
-;         (case "Sports" then (printout t "Aquest llibre et portara al mon emocionant dels esports, perfecte per als petits atletes com tu." crlf) )
-;         (case "Music" then (printout t "Amb aquesta historia, els sons i melodies cobren vida, ideal per als petits musics amb un cor ple de ritme com tu." crlf) )
-;         (case "Daily_life" then (printout t "Aquest llibre reflecteix les petites aventures i descobertes de la vida quotidiana." crlf) )
-;         (case "Adventures" then (printout t "Amb aquest llibre, els petits llegiran sobre emocionants viatges i desafiaments, ideal per als nens amb un esperit aventurer com el teu." crlf) )
-;         (case "Culture" then (printout t "Aquest llibre ofereix un viatge per diferents cultures i tradicions, perfecte per als petits curiosos com tu." crlf) )
-;         (case "Magic" then (printout t "En aquesta historia, la magia i l'encantament son els protagonistes, ideal per als nens que volen somiadors i creatius com tu." crlf) )
-;     )
-; )
+(deffunction JUSTIFY::tematica (?theme)
+    (switch ?theme
+        (case "Sports" then (printout t "Aquest llibre et portara al mon emocionant dels esports, perfecte per als petits atletes com tu." crlf) )
+        (case "Music" then (printout t "Amb aquesta historia, els sons i melodies cobren vida, ideal per als petits musics amb un cor ple de ritme com tu." crlf) )
+        (case "Daily_life" then (printout t "Aquest llibre reflecteix les petites aventures i descobertes de la vida quotidiana." crlf) )
+        (case "Adventures" then (printout t "Amb aquest llibre, els petits llegiran sobre emocionants viatges i desafiaments, ideal per als nens amb un esperit aventurer com el teu." crlf) )
+        (case "Culture" then (printout t "Aquest llibre ofereix un viatge per diferents cultures i tradicions, perfecte per als petits curiosos com tu." crlf) )
+        (case "Magic" then (printout t "En aquesta historia, la magia i l'encantament son els protagonistes, ideal per als nens que volen somiadors i creatius com tu." crlf) )
+    )
+)
 
-; (deffunction JUSTIFY::genre (?name_genre)
-;     (switch ?name_genre
-;         (case "Contemporary" then (printout t "Aquest llibre reflecteix el mon actual i les seves complexitats, perfecte ja que vols un llibre contemporani" crlf) )
-;         (case "Historical" then (printout t "Amb aquest llibre seras transportat a epoques passades, perfecte per a aquells que volen reviure la historia." crlf))
-;         (case "Mystery" then (printout t "Amb aquest llibre estaras intrigat fins al final ja que ens has demanat un llibre de misteri"crlf) )
-;         (case "Fantasy" then (printout t "Aquest llibre et portara a mons magics i terres desconegudes, ideal per a tu, un somiador apassionat per la fantasia."crlf) )
-;         (case "Romance" then (printout t "Aquest es un llibre romantic perque puguis viure un gran amor." crlf) )
-;         (case "Science_Fiction" then (printout t "Aquest es un llibre et permetra explorar els limits del possible i l'imaginable ja que volies ciencia ficcio." crlf) )
-;         (case "Horror" then (printout t "Prepara't per sentir la pell de gallina amb aquesta historia d'horror que et mantindra en vela tota la nit. Volies Terror? Doncs el tindras!" crlf) )
-;         (case "Adventure" then (printout t "Amb aquest llibre, viuras emocionants aventures i descobertes, perfecte per a aquells amb un esperit intrepid com tu." crlf) )
-;         (case "Dystopia" then (printout t "Aquest llibre et mostrara un futur sombri i pertorbador, veient realitats futures en un mon distopic, tal i com has demanat." crlf) )
-;         (case "Social" then (printout t "Aquest es un llibre esta ambientat en un entorn del dia a dia i reflexe alguns temes socials tal i com has demanat." crlf) )
-;     )
-; )
+(deffunction JUSTIFY::genre (?name_genre)
+    (switch ?name_genre
+        (case "Contemporary" then (printout t "Aquest llibre reflecteix el mon actual i les seves complexitats, perfecte ja que vols un llibre contemporani" crlf) )
+        (case "Historical" then (printout t "Amb aquest llibre seras transportat a epoques passades, perfecte per a aquells que volen reviure la historia." crlf))
+        (case "Mystery" then (printout t "Amb aquest llibre estaras intrigat fins al final ja que ens has demanat un llibre de misteri"crlf) )
+        (case "Fantasy" then (printout t "Aquest llibre et portara a mons magics i terres desconegudes, ideal per a tu, un somiador apassionat per la fantasia."crlf) )
+        (case "Romance" then (printout t "Aquest es un llibre romantic perque puguis viure un gran amor." crlf) )
+        (case "Science_Fiction" then (printout t "Aquest es un llibre et permetra explorar els limits del possible i l'imaginable ja que volies ciencia ficcio." crlf) )
+        (case "Horror" then (printout t "Prepara't per sentir la pell de gallina amb aquesta historia d'horror que et mantindra en vela tota la nit. Volies Terror? Doncs el tindras!" crlf) )
+        (case "Adventure" then (printout t "Amb aquest llibre, viuras emocionants aventures i descobertes, perfecte per a aquells amb un esperit intrepid com tu." crlf) )
+        (case "Dystopia" then (printout t "Aquest llibre et mostrara un futur sombri i pertorbador, veient realitats futures en un mon distopic, tal i com has demanat." crlf) )
+        (case "Social" then (printout t "Aquest es un llibre esta ambientat en un entorn del dia a dia i reflexe alguns temes socials tal i com has demanat." crlf) )
+    )
+)
 
 
-; (defrule JUSTIFY::justify
-;     ?lector <- (object (is-a Lector)
-;                     (actual ?isactual)
-;                     (bestseller ?isbestseller)
-;                     (cover ?coverType)
-;                     (goal ?mainGoal)
-;                     (illustrated ?isIllustrated)
-;                     (time_read ?timeread)
-;                     (theme ?mainTheme)
-;                     (public ?public)
-;                     (main_genre ?genereMain)
-;                     (has_subgenre ?subgenere))
-;     =>
-;     (bind ?llibres_finals (bestbooks 3))
-;     (foreach ?book ?llibres_finals
-;         (showProperties ?book ?lector)
-;         ;actual
-;         (if (and (neq ?isactual nil)(eq ?isactual (send ?book get-actual))) 
-;             then (if (eq ?isactual TRUE) then (printout t "Aquest llibre es actual tal i com has demanat." crlf)
-;                     else (printout t "Aquest llibre ha estat escrit per un gran autor classic, tal i com has demanat." crlf) )
-;         )
-;         ;bestseller
-;         (if (and (neq ?isbestseller nil)(eq ?isbestseller (send ?book get-bestseller))) 
-;             then (if (eq ?isbestseller TRUE) then (printout t "Aquest llibre es un bestseller tal i com has demanat." crlf))
-;         )
-;         ;cover
-;         (if (and (and (neq ?coverType "")(eq ?coverType (send ?book get-cover))) (and (neq ?public "child")(neq ?public "baby"))) 
-;             then (switch ?coverType 
-;                     (case "hard" then (printout t "Hem trobat un llibre de tapa dura tal i com volies." crlf))
-;                     (case "soft" then (printout t "Hem trobat un llibre amb tapa fina tal i com volies." crlf))
-;                     (default (printout t "Hem trobat un llibre de butxaca perque el puguis portar a qualsevol lloc! Tal com volies." crlf))
-;                  )
-;         )
-;         ;goal
-;         (if (and (neq ?mainGoal "")(eq ?mainGoal (send ?book get-goal)) )
-;             then (if (eq ?mainGoal "Entretainment") then (printout t "Segur que amb aquest llibre passes una bona estona entretenint-te amb la lectura!" crlf)
-;                   else (printout t "Segur que si llegeixes aquest llibre aprens moltes coses interessants!" crlf))
-;         )
-;         ;illustrated
-;         (if (and (neq ?isIllustrated nil)(and (eq ?isIllustrated (send ?book get-illustrated))(eq ?public "children")))
-;             then (if (eq ?isbestseller TRUE) then (printout t "Aquest llibre conte dibuixos i ilustracions, tal i com has demanat." crlf)
-;                     else (printout t "Aquest llibre no conte dibuixos, nomes text, tal i com has demanat." crlf) )
-;         )
-;         ;theme
-;         (if (and (neq ?mainTheme "")(eq ?mainTheme (send ?book get-theme)) )
-;             then (tematica ?mainTheme)
-;         )
-;         ;genre
-;         (bind ?g (send ?book get-main_genre))
-;         (if (neq ?genereMain [nil])
-;             then
-;             (bind ?g_name (send ?g get-name_genre))
-;             (bind ?gen_name (send ?genereMain get-name_genre))
-;             (if (eq ?g_name ?gen_name)
-;                 then (genre ?g_name) 
-;             )
-;         )
-;         ;subgenre
-;         (bind ?s (send ?book get-has_subgenre))
-;         (if (neq ?subgenere [nil])
-;         then
-;             (bind ?s_name (send ?s get-name_genre))
-;             (bind ?sub_name (send ?subgenere get-name_genre))
+(defrule JUSTIFY::justify
+    ?lector <- (object (is-a Lector)
+                    (actual ?isactual)
+                    (bestseller ?isbestseller)
+                    (cover ?coverType)
+                    (goal ?mainGoal)
+                    (illustrated ?isIllustrated)
+                    (time_read ?timeread)
+                    (theme ?mainTheme)
+                    (public ?public)
+                    (main_genre ?genereMain)
+                    (has_subgenre ?subgenere))
+    =>
+    (bind ?llibres_finals (bestbooks 3))
+    (foreach ?book ?llibres_finals
+        (showProperties ?book ?lector)
+        ;actual
+        ; (if (and (neq ?isactual nil)(eq ?isactual (send ?book get-actual))) 
+        ;     then (if (eq ?isactual TRUE) then (printout t "Aquest llibre es actual tal i com has demanat." crlf)
+        ;             else (printout t "Aquest llibre ha estat escrit per un gran autor classic, tal i com has demanat." crlf) )
+        ; )
+        ; ;bestseller
+        ; (if (and (neq ?isbestseller nil)(eq ?isbestseller (send ?book get-bestseller))) 
+        ;     then (if (eq ?isbestseller TRUE) then (printout t "Aquest llibre es un bestseller tal i com has demanat." crlf))
+        ; )
+        ; ;cover
+        ; (if (and (and (neq ?coverType "")(eq ?coverType (send ?book get-cover))) (and (neq ?public "child")(neq ?public "baby"))) 
+        ;     then (switch ?coverType 
+        ;             (case "hard" then (printout t "Hem trobat un llibre de tapa dura tal i com volies." crlf))
+        ;             (case "soft" then (printout t "Hem trobat un llibre amb tapa fina tal i com volies." crlf))
+        ;             (default (printout t "Hem trobat un llibre de butxaca perque el puguis portar a qualsevol lloc! Tal com volies." crlf))
+        ;          )
+        ; )
+        ; ;goal
+        ; (if (and (neq ?mainGoal "")(eq ?mainGoal (send ?book get-goal)) )
+        ;     then (if (eq ?mainGoal "Entretainment") then (printout t "Segur que amb aquest llibre passes una bona estona entretenint-te amb la lectura!" crlf)
+        ;           else (printout t "Segur que si llegeixes aquest llibre aprens moltes coses interessants!" crlf))
+        ; )
+        ; ;illustrated
+        ; (if (and (neq ?isIllustrated nil)(and (eq ?isIllustrated (send ?book get-illustrated))(eq ?public "children")))
+        ;     then (if (eq ?isbestseller TRUE) then (printout t "Aquest llibre conte dibuixos i ilustracions, tal i com has demanat." crlf)
+        ;             else (printout t "Aquest llibre no conte dibuixos, nomes text, tal i com has demanat." crlf) )
+        ; )
+        ; ;theme
+        ; (if (and (neq ?mainTheme "")(eq ?mainTheme (send ?book get-theme)) )
+        ;     then (tematica ?mainTheme)
+        ; )
+        ; ;genre
+        ; (bind ?g (send ?book get-main_genre))
+        ; (if (neq ?genereMain [nil])
+        ;     then
+        ;     (bind ?g_name (send ?g get-name_genre))
+        ;     (bind ?gen_name (send ?genereMain get-name_genre))
+        ;     (if (eq ?g_name ?gen_name)
+        ;         then (genre ?g_name) 
+        ;     )
+        ; )
+        ; ;subgenre
+        ; (bind ?s (send ?book get-has_subgenre))
+        ; (if (neq ?subgenere [nil])
+        ; then
+        ;     (bind ?s_name (send ?s get-name_genre))
+        ;     (bind ?sub_name (send ?subgenere get-name_genre))
 
-;             (if (eq ?s_name ?sub_name)
-;                 then (printout t "Com havies demanat, el llibre es del subgenere " ?s_name crlf)
-;             )
-;         )
+        ;     (if (eq ?s_name ?sub_name)
+        ;         then (printout t "Com havies demanat, el llibre es del subgenere " ?s_name crlf)
+        ;     )
+        ; )
         
-;         (printout t crlf)
-;     )
-; )
+        (printout t crlf)
+    )
+)
 
 
 ;;***********************

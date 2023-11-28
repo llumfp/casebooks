@@ -1,6 +1,6 @@
          CLIPS (6.4.1 4/8/23)
-CLIPS> +#######@!!!!***+**+!+**********+!!**+**+***+****+*****+********!*+**+!***
-FALSE
+CLIPS> +#######@!!!!***+**+!!!!!!!*+**********+!!**+**+***+****+*****+********!*+**+!***
+TRUE
 CLIPS> @@
 TRUE
 CLIPS> @
@@ -27,10 +27,77 @@ ten a les seves preferencies.
 
 --------------------------------------------------
     
-De fet, acabem de fer una poda per eliminar de la llista aquells llibres que contenen els Trigger Warnings que has demanat evitar.
-
 Gracies per haver respost les preguntes!
 
 Els llibres seleccionats son els seguents:
+
+--------------- LLIBRE ---------------
+Nivell: 3
+Title: La memoria de la humanidad
+Puntuacio: 49.8392020125029
+[libro_88] of Libro
+(has_subgenre [Realistic])
+(main_genre [Historical])
+(actual "false")
+(bestseller "false")
+(cover "soft")
+(difficulty "nan")
+(goal "nan")
+(illustrated "false")
+(language "nan")
+(length "medium")
+(public "adult")
+(punctuation 49.8392020125029)
+(rating 9.83920201250287)
+(saga "nan")
+(theme "nan")
+(title "La memoria de la humanidad")
+(triggerw "nan")
+
+--------------- LLIBRE ---------------
+Nivell: 2
+Title: La melodia del pasado
+Puntuacio: 42.9489216601824
+[libro_104] of Libro
+(has_subgenre [Realistic])
+(main_genre [Historical])
+(actual "false")
+(bestseller "false")
+(cover "soft")
+(difficulty "nan")
+(goal "nan")
+(illustrated "false")
+(language "nan")
+(length "medium")
+(public "adult")
+(punctuation 42.9489216601824)
+(rating 2.94892166018236)
+(saga "nan")
+(theme "nan")
+(title "La melodia del pasado")
+(triggerw "nan")
+
+--------------- LLIBRE ---------------
+Nivell: 2
+Title: El latido de la memoria
+Puntuacio: 42.9035102343962
+[libro_89] of Libro
+(has_subgenre [Realistic])
+(main_genre [Historical])
+(actual "true")
+(bestseller "false")
+(cover "soft")
+(difficulty "nan")
+(goal "nan")
+(illustrated "false")
+(language "nan")
+(length "medium")
+(public "adult")
+(punctuation 42.9035102343962)
+(rating 2.90351023439622)
+(saga "nan")
+(theme "nan")
+(title "El latido de la memoria")
+(triggerw "nan")
 
 CLIPS> 
