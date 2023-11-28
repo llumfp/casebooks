@@ -1,15 +1,15 @@
 (definstances instances
     ([lector] of Lector
         (public "adult")
-        (main_genre [Historical])
-        (has_subgenre [Realistic])
+        (main_genre [Romance])
+        (has_subgenre [Historical_Romance])
         (actual TRUE)
-        (famous FALSE)
-        (bestseller FALSE)
+        (famous TRUE)
+        (bestseller TRUE)
         (cover "soft")
         (hab_lectura "Neutral")
-        (time_read "medium")        
-        (triggerw )
+        (time_read "short")        
+        (triggerw 5 3 2 )
         )) 
  
  

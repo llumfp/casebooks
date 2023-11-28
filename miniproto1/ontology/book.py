@@ -10,7 +10,7 @@ class Book:
             public:bool,
             cover:str,
             genre:str,
-            author:'Author',
+            #author:'Author',
             rating:float,
             subgenre:str = None,
             goal:str = "",
@@ -30,7 +30,7 @@ class Book:
         self.goal = goal # Objetivo (entretenimiento, aprendizaje)
         self.illustrated = illustrated # Contiene o no ilustraciones.
         self.bestseller = bestseller # Es o no un bestseller.
-        self.author = author # Autor del libro
+        #self.author = author # Autor del libro
         self.triggerw = triggerw # Contiene todos los trigger warnings de este libro. 
         self.genre = genre # Géneros.
         self.subgenre = subgenre # Subgénero.

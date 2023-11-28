@@ -504,8 +504,6 @@ Els llibres seleccionats son els seguents:
     (printout t "--------------- LLIBRE ---------------"crlf)
     (bind ?recommendation (getRecommendationRange (send ?lector get-public) (send ?book get-punctuation)))
     (printRecom ?recommendation)
-    (printout t "Title: " (send ?book get-title)  crlf)
-    (printout t "Puntuacio: " (send ?book get-punctuation) crlf)
     (send ?book print)
 
 )

@@ -50,6 +50,7 @@ cas3 = Problem(
 
 
 lectors, problemes = generar_libros_aleatorios(int(sys.argv[1]),int(sys.argv[2]),int(sys.argv[3]),int(sys.argv[4]))
+casos = []
 
 for i,l in enumerate(lectors):
     with open(f'generador_casos/instancia_lector.clp','w') as f:
@@ -58,10 +59,17 @@ for i,l in enumerate(lectors):
         f.write(') \n \n \n')
     run_clips_with_commands('generador_casos/jp_comandes1.txt', f'generador_casos/llibre_recomanat_{i}.txt')
 
+    #Creem instancies dels 3 llibres recomanats
+    book_instances, nivell = create_book_instances(f'generador_casos/llibre_recomanat_{i}.txt')
+
+    #generem un cas
+    cas = Cas(id= i, descripcio=problemes[i], derivacio=None, solucio= tuple(book_instances), avaluacio=nivell)
+    casos.append(cas)
 
 
+print(casos)
 
-print(problemes)
+
     
         
 # a = preprocess(problemes)

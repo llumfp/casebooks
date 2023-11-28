@@ -32,19 +32,66 @@ Gracies per haver respost les preguntes!
 Els llibres seleccionats son els seguents:
 
 --------------- LLIBRE ---------------
-Aquest llibre pot ser una bona opcio:
-Title: Exilio en la Isla Tecnologica | Puntuacio: 35.7232972346544
-Hem trobat un llibre de tapa dura tal i com volies.
-Aquest llibre et mostrara un futur sombri i pertorbador, veient realitats futures en un mon distopic, tal i com has demanat.
+Nivell: 2
+[libro_241] of Libro
+(has_subgenre [Thriller_Mystery])
+(main_genre [Mystery])
+(actual "true")
+(bestseller "false")
+(cover "hard")
+(difficulty "nan")
+(goal "nan")
+(illustrated "false")
+(language "nan")
+(length "long")
+(public "adult")
+(punctuation 37.7982306280465)
+(rating 7.79823062804654)
+(saga "nan")
+(theme "nan")
+(title "La sombra del pasado eterno")
+(triggerw "nan")
 
 --------------- LLIBRE ---------------
-Aquest llibre pot ser una bona opcio:
-Title: El susurro de la desolacion | Puntuacio: 29.8528302764959
-Hem trobat un llibre de tapa dura tal i com volies.
+Nivell: 2
+[libro_270] of Libro
+(has_subgenre [Paranormal_Mystery])
+(main_genre [Mystery])
+(actual "false")
+(bestseller "false")
+(cover "hard")
+(difficulty "nan")
+(goal "nan")
+(illustrated "false")
+(language "nan")
+(length "long")
+(public "adult")
+(punctuation 37.7078201908602)
+(rating 7.70782019086023)
+(saga "nan")
+(theme "nan")
+(title "El laberinto de los suenos perdidos")
+(triggerw "{ 1 5 13 12}")
 
 --------------- LLIBRE ---------------
-Aquest llibre pot ser una bona opcio:
-Title: El suspiro de la nostalgia | Puntuacio: 29.7908270791754
-Hem trobat un llibre de tapa dura tal i com volies.
+Nivell: 2
+[libro_248] of Libro
+(has_subgenre [Thriller_Mystery])
+(main_genre [Mystery])
+(actual "false")
+(bestseller "false")
+(cover "hard")
+(difficulty "nan")
+(goal "nan")
+(illustrated "false")
+(language "nan")
+(length "long")
+(public "adult")
+(punctuation 35.7349075997776)
+(rating 5.73490759977763)
+(saga "nan")
+(theme "nan")
+(title "El juego del destino implacable")
+(triggerw "nan")
 
 CLIPS> 
