@@ -1,0 +1,6 @@
+(load generador_casos/main.clp)
+(load generador_casos/instances.clp)
+(load generador_casos/instancia_lector.clp)
+(reset)
+(run)
+(exit)

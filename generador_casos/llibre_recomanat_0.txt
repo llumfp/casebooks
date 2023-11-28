@@ -1,0 +1,36 @@
+         CLIPS (6.4.1 4/8/23)
+CLIPS> +#######@!!!!***+**+!+**********+!!**+**+***+****+*****+********!*+**+!***
+FALSE
+CLIPS> @@
+TRUE
+CLIPS> @
+TRUE
+CLIPS> CLIPS> 
+--------------------------------------------------
+  _________   _________
+ /          |/         |    Recomanador de Llibres
+||          |          ||   
+||          |          ||   Practica 1 - SBC
+||          |          ||
+||          |          ||   By:
+|| ________ | ________ ||     Artur A A
+||/         |/        |||     Llum F P
+                             Paula G S
+                             Oscar M S
+
+--------------------------------------------------
+                   BENVINGUT!
+
+Li farem diverses preguntes i el nostre sistema
+recomanador li oferira els llibres que mes s'adap-
+ten a les seves preferencies.
+
+--------------------------------------------------
+    
+De fet, acabem de fer una poda per eliminar de la llista aquells llibres que contenen els Trigger Warnings que has demanat evitar.
+
+Gracies per haver respost les preguntes!
+
+Els llibres seleccionats son els seguents:
+
+CLIPS> 

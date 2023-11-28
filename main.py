@@ -5,7 +5,7 @@ Contingut: Inicialització, menú d'usuari, crides a altres mòduls.
 """
 
 from miniproto1 import *
-from ejecutador import *
+from generador_casos import *
 import sys
 
 cas1 = Problem(
@@ -52,11 +52,15 @@ cas3 = Problem(
 lectors, problemes = generar_libros_aleatorios(int(sys.argv[1]),int(sys.argv[2]),int(sys.argv[3]),int(sys.argv[4]))
 
 for i,l in enumerate(lectors):
-    with open(f'instancia_lector.clp','w') as f:
+    with open(f'generador_casos/instancia_lector.clp','w') as f:
         f.write('(definstances instances')
         f.write(l)
         f.write(') \n \n \n')
-    run_clips_with_commands('jp_comandes1.txt', f'llibre_recomanat_{i}.txt')
+    run_clips_with_commands('generador_casos/jp_comandes1.txt', f'generador_casos/llibre_recomanat_{i}.txt')
+
+
+
+
 print(problemes)
     
         

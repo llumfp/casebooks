@@ -33,19 +33,18 @@ Els llibres seleccionats son els seguents:
 
 --------------- LLIBRE ---------------
 Aquest llibre pot ser una bona opcio:
-Title: La trampa del laberinto siniestro | Puntuacio: 32.1503315880405
+Title: Exilio en la Isla Tecnologica | Puntuacio: 35.7232972346544
 Hem trobat un llibre de tapa dura tal i com volies.
-Amb aquest llibre estaras intrigat fins al final ja que ens has demanat un llibre de misteri
+Aquest llibre et mostrara un futur sombri i pertorbador, veient realitats futures en un mon distopic, tal i com has demanat.
 
 --------------- LLIBRE ---------------
 Aquest llibre pot ser una bona opcio:
-Title: La traicion del alguacil | Puntuacio: 31.0941351144862
+Title: El susurro de la desolacion | Puntuacio: 29.8528302764959
 Hem trobat un llibre de tapa dura tal i com volies.
-Amb aquest llibre estaras intrigat fins al final ja que ens has demanat un llibre de misteri
 
 --------------- LLIBRE ---------------
 Aquest llibre pot ser una bona opcio:
-Title: El misterio de la mente atormentada | Puntuacio: 29.7290927453142
-Amb aquest llibre estaras intrigat fins al final ja que ens has demanat un llibre de misteri
+Title: El suspiro de la nostalgia | Puntuacio: 29.7908270791754
+Hem trobat un llibre de tapa dura tal i com volies.
 
 CLIPS> 
