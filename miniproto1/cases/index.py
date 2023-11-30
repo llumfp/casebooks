@@ -1,3 +1,4 @@
+import numpy as np
 from .bintreelinked import BinTree
 from typing import List, Any, Tuple
 from .case import Cas
@@ -33,7 +34,48 @@ class Indexacio(BinTree):
             self.set_left(subarbre1)
             self.set_right(subarbre2)
 
-    def most_similar(self, cas:Cas) -> Tuple[Cas, List]:
+
+    def creacio2(self, casos: List[Cas]) -> None:
+        n_clusters = 2
+        if len(casos) == 1:
+            self.set_root(casos[0])
+        else:
+            kmeans = KMeans(n_clusters=n_clusters, random_state=0)
+            descriptions = [cas.descripcio for cas in casos]
+            kmeans.fit(descriptions)
+            distances = kmeans.transform(descriptions)
+
+            # Umbral basado en el percentil 95 de todas las distancias
+            threshold = np.percentile(distances, 95)
+
+            cluster1, cluster2 = [], []
+            for i, cas in enumerate(casos):
+                dist_to_cluster1, dist_to_cluster2 = distances[i]
+                assigned_cluster = kmeans.labels_[i]
+
+                # Asignación principal basada en KMeans
+                if assigned_cluster == 0:
+                    cluster1.append(cas)
+                else:
+                    cluster2.append(cas)
+
+                # Asignación a ambos si la distancia es alta para ambos clusters
+                if dist_to_cluster1 >= threshold and dist_to_cluster2 >= threshold:
+                    if assigned_cluster == 0:
+                        cluster2.append(cas)
+                    else:
+                        cluster1.append(cas)
+
+            subarbre1, subarbre2 = Indexacio(), Indexacio()
+            subarbre1.creacio(cluster1)
+            subarbre2.creacio(cluster2)
+
+            self.set_root(kmeans)
+            self.set_left(subarbre1)
+            self.set_right(subarbre2)
+
+
+    def most_similar(self, cas: Cas) -> Tuple[Cas, List]:
         """
         Donat un  cas a comparar (Cas), retorna el cas més similar 
         en l'Indexacio i la llista de labels per després afegir el nou cas.
@@ -84,7 +126,7 @@ class Indexacio(BinTree):
         
         return llista_sim
 
-    
+
     def add(self, new:Cas, ruta:List[Any]):
         """
         Afegeix un nou cas a l'arbre utilitzant la ruta del cas més similar.
