@@ -3,20 +3,20 @@ from .bintreelinked import BinTree
 from typing import List, Any, Tuple
 from .case import Cas
 from sklearn.cluster import KMeans
+from scipy.spatial.distance import euclidean
 
 
 class Indexacio(BinTree):
     def __init__(self, v=None, left=None, right=None):
         super().__init__(v, left, right)
 
-    def creacio(self,casos:List[Cas]) -> None:
-        n_clusters = 2
-        if len(casos) == 1:
+    def creacio(self,casos:List[Cas], num_casos_fulla:int) -> None:
+        if len(casos) <= num_casos_fulla:
             # Si només hi ha un cas, retorna un arbre amb aquest cas.
-            self.set_root(casos[0])
+            self.set_root(casos)
         else:
             # Aplicar KMeans per a dividir els casos en grups.
-            kmeans = KMeans(n_clusters=n_clusters, random_state=0, n_init='auto')
+            kmeans = KMeans(n_clusters=2, random_state=0, n_init='auto')
             kmeans.fit([cas.descripcio for cas in casos])
 
             # Dividir els casos segons les etiquetes del clustering.
@@ -35,12 +35,11 @@ class Indexacio(BinTree):
             self.set_right(subarbre2)
 
 
-    def creacio2(self, casos: List[Cas]) -> None:
-        n_clusters = 2
-        if len(casos) == 1:
-            self.set_root(casos[0])
+    def creacio2(self, casos: List[Cas], num_casos_fulla:int) -> None:
+        if len(casos) <= num_casos_fulla:
+            self.set_root(casos)
         else:
-            kmeans = KMeans(n_clusters=n_clusters, random_state=0)
+            kmeans = KMeans(n_clusters=2, random_state=0)
             descriptions = [cas.descripcio for cas in casos]
             kmeans.fit(descriptions)
             distances = kmeans.transform(descriptions)
@@ -75,7 +74,37 @@ class Indexacio(BinTree):
             self.set_right(subarbre2)
 
 
-    def most_similar(self, cas: Cas) -> Tuple[Cas, List]:
+
+    def creacio_3(self, casos: List[Cas], num_casos_fulla:int) -> None:
+        n_clusters = 2
+        if len(casos) == num_casos_fulla:
+            # Si només hi ha un cas, retorna un arbre amb aquest cas.
+            self.set_root(casos[0])
+        else:
+            # Aplicar KMeans per a dividir els casos en grups.
+            kmeans = KMeans(n_clusters=n_clusters, random_state=0, n_init='auto')
+            kmeans.fit([cas.descripcio for cas in casos])
+
+            # Emagatzemar els centroids dels clústers en lloc del model KMeans sencer.
+            centroids = kmeans.cluster_centers_
+
+            # Dividir els casos segons les etiquetes del clustering.
+            cluster1 = [casos[i] for i in range(len(casos)) if kmeans.labels_[i] == 0]
+            cluster2 = [casos[i] for i in range(len(casos)) if kmeans.labels_[i] == 1]
+
+            # Crear els subarbres per a cada cluster.
+            subarbre1, subarbre2 = Indexacio(), Indexacio()
+
+            subarbre1.creacio(cluster1)
+            subarbre2.creacio(cluster2)
+
+            # Retorna un arbre amb el centroid del clúster com a arrel i els subarbres com a fills.
+            self.set_root(centroids)
+            self.set_left(subarbre1)
+            self.set_right(subarbre2)
+
+
+    def most_similar_1(self, cas: Cas) -> Tuple[Cas, List]:
         """
         Donat un  cas a comparar (Cas), retorna el cas més similar 
         en l'Indexacio i la llista de labels per després afegir el nou cas.
@@ -96,7 +125,65 @@ class Indexacio(BinTree):
 
         return node_actual.get_root(), labels
     
+    def most_similar_3(self, cas: Cas) -> Tuple[Cas, List]:
+        """
+        Donat un cas a comparar (Cas), retorna el cas més similar 
+        en l'Indexacio i la llista de labels per després afegir el nou cas.
+        """
+        # Recorre l'arbre per a trobar el cas més similar.
+        node_actual = self
+        labels = []
+        while not node_actual.leaf():
+            centroids = node_actual.get_root()
+            # Calcula la distància del cas a cada centroid i determina el més proper
+            distancies = [euclidean(cas.descripcio, centroid) for centroid in centroids]
+            label = distancies.index(min(distancies))
+            labels.append(label)
+
+            # Seleccionar el subarbre adequat segons la distància mínima.
+            if label == 0:
+                node_actual = node_actual.get_left()
+            else:
+                node_actual = node_actual.get_right()
+
+        return node_actual.get_root(), labels
+
+
     
+    def most_n_similars_2(self, new_cas:Cas ,n_similars:int) -> Tuple[Cas, List]:
+        if self.leaf():
+            return self._root
+        casos, recorrido = self.most_similar_1(new_cas)
+        
+        if len(casos)>=n_similars:
+            return casos
+        
+        node_actual = self
+
+        recorrido[-1] = 0 if recorrido[-1]== 1 else 1
+        
+        for label in recorrido:
+            if label == 0:
+                node_actual = node_actual.get_left()
+            else:
+                node_actual = node_actual.get_right()
+        num_casos = n_similars-len(casos)
+        total_casos = casos + node_actual.most_n_similars_2(new_cas,num_casos)
+        # aqui falta trobar els n mes ismilars tenint la llista de tots, que pot ser més gran del que volem
+        n_casos = ...
+        return n_casos
+        
+        
+            
+        return most_n_similars_2()
+
+        
+
+    
+        return casos
+
+
+
     def most_n_similars(self, cas:Cas ,n_similars:int) -> Tuple[Cas, List]:
         """
         Donat un  cas a comparar (Cas), retorna el cas més similar 
