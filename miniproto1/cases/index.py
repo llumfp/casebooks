@@ -4,11 +4,17 @@ from typing import List, Any, Tuple
 from .case import Cas
 from sklearn.cluster import KMeans
 from scipy.spatial.distance import euclidean
+from generador_casos import *
 
 
 class Indexacio(BinTree):
     def __init__(self, v=None, left=None, right=None):
         super().__init__(v, left, right)
+
+
+    def creacio_setep1(self, ):
+        pass
+
 
     def creacio(self,casos:List[Cas], num_casos_fulla:int) -> None:
         if len(casos) <= num_casos_fulla:
@@ -258,3 +264,31 @@ class Indexacio(BinTree):
         """
         
 
+
+    def calcular_valor_confianza(casos_similares: List[Cas], new_case: Cas) -> List[Tuple[Book, float]]:
+        # Diccionario para almacenar los valores acumulados de confianza para cada libro
+        valor_confianza_libros = {}
+
+        for caso in casos_similares:
+            # Calcular la distancia (similitud inversa) entre el caso nuevo y cada caso similar
+            distancia = euclidean(new_case.descripcio, caso.descripcio)
+
+            if caso.solucio and caso.avaluacio:
+                for libro in caso.solucio:
+                    # Inicializar el valor de confianza del libro si no existe
+                    if libro not in valor_confianza_libros:
+                        valor_confianza_libros[libro] = [0, 0]  # Suma de ponderaciones, Suma de distancias
+
+                    # Sumar la ponderación (evaluación * similitud) y la distancia (similitud) para cada libro
+                    valor_confianza_libros[libro][0] += caso.avaluacio * (1 / distancia)
+                    valor_confianza_libros[libro][1] += 1 / distancia
+
+        # Calcular el valor final de confianza para cada libro
+        resultado = [(libro, v[0] / v[1]) for libro, v in valor_confianza_libros.items()]
+
+        # Ordenar los libros por su valor de confianza y seleccionar los tres mejores
+        resultado_ordenado = sorted(resultado, key=lambda x: x[1], reverse=True)[:3]
+
+        for i in resultado_ordenado:
+            new_case.solucio = i[0]
+            new_case.avaluacio = i[1]

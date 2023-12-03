@@ -3,9 +3,8 @@ import numpy as np
 
 
 class BinTree:
-
     #------------------- nested _Node class --------------------------
-    
+
     class _Node:
         __slots__ = '_element', '_left', '_right'   # streamline memory usage
 
@@ -13,7 +12,7 @@ class BinTree:
             self._element = element
             self._left    = left
             self._right   = right
-
+        
         
     #--------------- BinTree public methods ------------------------
 
