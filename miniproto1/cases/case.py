@@ -8,8 +8,8 @@ class Cas:
         id: str,
         descripcio: ndarray[Any], # El nostre problema ja preprocessat
         derivacio: None,
-        solucio: Tuple[Book,Book,Book] = None,
-        avaluacio: None = None,
+        solucio: list[Book,Book,Book] = [],
+        avaluacio: list[int,int,int] = [],
         utilitat: None = None
     ) -> None:
         self.id = id

@@ -154,41 +154,27 @@ class Indexacio(BinTree):
 
         return node_actual.get_root(), labels
 
-
-    
-    def most_n_similars_2(self, new_cas:Cas ,n_similars:int) -> Tuple[Cas, List]:
+    def most_n_similars_2(self, new_cas: Cas, n_similars: int) -> List:
         if self.leaf():
-            return self._root
+            return [(self._root, 0)]  # Asumiendo que _root es un Cas
+
         casos, recorrido = self.most_similar_1(new_cas)
-        
-        if len(casos)>=n_similars:
-            return casos
-        
+
+        if len(casos) >= n_similars:
+            return sorted([(cas, euclidean(new_cas.descripcio, cas.descripcio)) for cas in casos], key=lambda x: x[1])[:n_similars]
+
         node_actual = self
+        recorrido[-1] = 0 if recorrido[-1] == 1 else 1
 
-        recorrido[-1] = 0 if recorrido[-1]== 1 else 1
-        
         for label in recorrido:
-            if label == 0:
-                node_actual = node_actual.get_left()
-            else:
-                node_actual = node_actual.get_right()
-        num_casos = n_similars-len(casos)
-        total_casos = casos + node_actual.most_n_similars_2(new_cas,num_casos)
-        # aqui falta trobar els n mes ismilars tenint la llista de tots, que pot ser més gran del que volem
-        n_casos = ...
-        return n_casos
-        
-        
-            
-        return most_n_similars_2()
+            node_actual = node_actual.get_left() if label == 0 else node_actual.get_right()
 
-        
+        num_casos = n_similars - len(casos)
+        total_casos = casos + node_actual.most_n_similars_2(new_cas, num_casos)
+        n_casos = [(cas, self.euclidean(new_cas.descripcio, cas.descripcio)) for cas in total_casos]
 
-    
-        return casos
-
-
+        # Ordenar los casos por distancia y seleccionar los n mejores
+        return sorted(n_casos, key=lambda x: x[1])[:n_similars]
 
     def most_n_similars(self, cas:Cas ,n_similars:int) -> Tuple[Cas, List]:
         """
@@ -265,23 +251,23 @@ class Indexacio(BinTree):
         
 
 
-    def calcular_valor_confianza(casos_similares: List[Cas], new_case: Cas) -> List[Tuple[Book, float]]:
+    def calcular_valor_confianza(casos_similares: List[(Cas,float)], new_case: Cas) -> List[Tuple[Book, float]]:
         # Diccionario para almacenar los valores acumulados de confianza para cada libro
         valor_confianza_libros = {}
 
         for caso in casos_similares:
             # Calcular la distancia (similitud inversa) entre el caso nuevo y cada caso similar
-            distancia = euclidean(new_case.descripcio, caso.descripcio)
+            #distancia = euclidean(new_case.descripcio, caso.descripcio)
 
             if caso.solucio and caso.avaluacio:
-                for libro in caso.solucio:
+                for libro in caso[0].solucio:
                     # Inicializar el valor de confianza del libro si no existe
                     if libro not in valor_confianza_libros:
                         valor_confianza_libros[libro] = [0, 0]  # Suma de ponderaciones, Suma de distancias
 
                     # Sumar la ponderación (evaluación * similitud) y la distancia (similitud) para cada libro
-                    valor_confianza_libros[libro][0] += caso.avaluacio * (1 / distancia)
-                    valor_confianza_libros[libro][1] += 1 / distancia
+                    valor_confianza_libros[libro][0] += caso[0].avaluacio * (1 / caso[1])
+                    valor_confianza_libros[libro][1] += 1 / caso[1]
 
         # Calcular el valor final de confianza para cada libro
         resultado = [(libro, v[0] / v[1]) for libro, v in valor_confianza_libros.items()]
@@ -290,5 +276,5 @@ class Indexacio(BinTree):
         resultado_ordenado = sorted(resultado, key=lambda x: x[1], reverse=True)[:3]
 
         for i in resultado_ordenado:
-            new_case.solucio = i[0]
-            new_case.avaluacio = i[1]
+            new_case.solucio.append(i[0])
+            new_case.avaluacio.append(i[1])
