@@ -6,6 +6,18 @@ _Pràctica de recomanació de llibres amb un CBR_
 - Entendre les dades que tenim
 - Quatre Rs
 
+## Execució de la GUI
+Per a executar la GUI en local deuràs seguir els següents passos:
+
+1. Instal·lar `streamlit` amb `pip`:
+```bash
+pip install streamlit
+```
+2. Executar l'aplicació amb la següent comanda:
+```bash
+streamlit run app.py
+```
+
 <!-- ## Comenzando 🚀
 
 _Estas instrucciones te permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas._
