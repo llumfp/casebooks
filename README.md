@@ -2,7 +2,11 @@
 
 _Pràctica de recomanació de llibres amb un CBR_
 
-## Comenzando 🚀
+## TODO List
+- Entendre les dades que tenim
+- Quatre Rs
+
+<!-- ## Comenzando 🚀
 
 _Estas instrucciones te permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas._
 
@@ -98,4 +102,4 @@ Este proyecto está bajo la Licencia (Tu Licencia) - mira el archivo [LICENSE.md
 * Invita una cerveza 🍺 o un café ☕ a alguien del equipo. 
 * Da las gracias públicamente 🤓.
 * Dona con cripto a esta dirección: `0xf253fc233333078436d111175e5a76a649890000`
-* etc.
+* etc. -->
