@@ -5,6 +5,7 @@ from .case import Cas
 from sklearn.cluster import KMeans
 from scipy.spatial.distance import euclidean
 from generador_casos import *
+from miniproto1.ontology import Book
 
 
 class Indexacio(BinTree):
@@ -154,7 +155,7 @@ class Indexacio(BinTree):
 
         return node_actual.get_root(), labels
 
-    def most_n_similars_2(self, new_cas: Cas, n_similars: int) -> List:
+    def most_n_similars_2(self, new_cas: Cas, n_similars: int) -> List[Tuple[Cas,float]]:
         if self.leaf():
             return [(self._root, 0)]  # Asumiendo que _root es un Cas
 
@@ -174,7 +175,8 @@ class Indexacio(BinTree):
         n_casos = [(cas, self.euclidean(new_cas.descripcio, cas.descripcio)) for cas in total_casos]
 
         # Ordenar los casos por distancia y seleccionar los n mejores
-        return sorted(n_casos, key=lambda x: x[1])[:n_similars]
+        return sorted(n_casos, key=lambda x: x[1])[:n_similars], recorrido
+
 
     def most_n_similars(self, cas:Cas ,n_similars:int) -> Tuple[Cas, List]:
         """
@@ -251,7 +253,7 @@ class Indexacio(BinTree):
         
 
 
-    def calcular_valor_confianza(casos_similares: List[(Cas,float)], new_case: Cas) -> List[Tuple[Book, float]]:
+    def calcular_valor_confianza(casos_similares: List[Tuple[Cas,float]], new_case: Cas) -> Tuple[Tuple['Book', float]]:
         # Diccionario para almacenar los valores acumulados de confianza para cada libro
         valor_confianza_libros = {}
 

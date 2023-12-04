@@ -5,74 +5,46 @@ Contingut: Inicialització, menú d'usuari, crides a altres mòduls.
 """
 
 from miniproto1 import *
-from generador_casos import *
-import sys
+import numpy as np
+import random
+import pandas as pd
 
-cas1 = Problem(
-    public='baby', 
-    genre='Fantasy', 
-    subgenre='Dark_Fantasy', 
-    cover='soft', 
-    bestseller=True,
-    goal='Entretainment', 
-    illustrated=False, 
-    hab_lectura=True, 
-    length='medium', 
-    theme='Sports', 
-    trigger_warnings=['1','2','3']
-)
-cas2 = Problem(
-    public='teen', 
-    genre='Horror', 
-    subgenre='Psychological_Horror', 
-    cover='hard', 
-    bestseller=True,
-    goal='Learning', 
-    illustrated=True, 
-    hab_lectura=True, 
-    length='short', 
-    theme='Daily_life', 
-    trigger_warnings=['4','5','6']
-)
-cas3 = Problem(
-    public='adult', 
-    genre='Historical', 
-    subgenre='Realistic', 
-    cover='pocket', 
-    bestseller=False,
-    goal='Learning', 
-    illustrated=True, 
-    hab_lectura=False, 
-    length='very_long', 
-    theme='Daily_life', 
-    trigger_warnings=['7','8','9']
-)
+#llegim els problemes de la base de dades
+df_problemes = pd.read_csv('data/problems.csv')
+problemes = []
 
-
-lectors, problemes = generar_libros_aleatorios(int(sys.argv[1]),int(sys.argv[2]),int(sys.argv[3]),int(sys.argv[4]))
-casos = []
-
-for i,l in enumerate(lectors):
-    with open(f'generador_casos/instancia_lector.clp','w') as f:
-        f.write('(definstances instances')
-        f.write(l)
-        f.write(') \n \n \n')
-    run_clips_with_commands('generador_casos/jp_comandes1.txt', f'generador_casos/llibre_recomanat_{i}.txt')
-
-    #Creem instancies dels 3 llibres recomanats
-    book_instances, nivell = create_book_instances(f'generador_casos/llibre_recomanat_{i}.txt')
-
-    #generem un cas
-    cas = Cas(id= i, descripcio=problemes[i], derivacio=None, solucio= tuple(book_instances), avaluacio=nivell)
-    casos.append(cas)
-
-
-print(casos)
-
-
+for cas in df_problemes[df_problemes.columns[2:]].values:
+    print(len(cas))
+    problemes.append(Problem(*cas))
     
-        
-# a = preprocess(problemes)
+print(problemes)
 
-# for c in a:
-#     print(c,end='\n\n')
+print("--- PROBLEMES ---")
+for p in problemes:
+    print(p)
+
+scaled_features = scale_features(problemes)
+
+db = [Cas(id=idx, descripcio=p) for idx,p in enumerate(scaled_features)]
+
+print("\n--- BASE DE DADES ---")
+for cas in db:
+    print(cas)
+
+a = Indexacio(v=db)
+a.creacio(db)
+
+newp = Problem(0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.5,0.5,0.5)
+
+newp = Cas(id=len(db),descripcio=scale_features([newp])[0])
+
+# case_sim, ruta = a.most_similar(newp)
+# print("\n--- CAS MES SIMILAR ---")
+# print(case_sim)
+# print(f"Ruta seguida: {ruta}")
+
+# a_afegir = Cas(id=9, descripcio=[0.6744186, 0.5, 0])
+# a.add(a_afegir,ruta)
+
+# print("\n--- BASE DE DADES ---")
+# print(a)
