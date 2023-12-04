@@ -1,6 +1,8 @@
 import pandas as pd
-df = pd.read_csv("data/books.csv")
-libros_posibles = df['title'].unique().tolist()
+
+#df = pd.read_csv("data/books.csv")
+#libros_posibles = df['title'].unique().tolist()
+
 genrestree = {
     "Fantasy": {"High_Fantasy", "Dark_Fantasy", "Urban_Fantasy"},
     "Romance": {"Classic_Romance", "Historical_Romance", "Erotic"},

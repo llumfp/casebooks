@@ -10,18 +10,11 @@ import random
 import pandas as pd
 
 #llegim els problemes de la base de dades
-df_problemes = pd.read_csv('data/problems.csv')
+df_problemes = pd.read_csv('./data/problems.csv')
 problemes = []
 
 for cas in df_problemes[df_problemes.columns[2:]].values:
-    print(len(cas))
     problemes.append(Problem(*cas))
-    
-print(problemes)
-
-print("--- PROBLEMES ---")
-for p in problemes:
-    print(p)
 
 scaled_features = scale_features(problemes)
 
@@ -32,7 +25,7 @@ for cas in db:
     print(cas)
 
 a = Indexacio(v=db)
-a.creacio(db)
+a.creacio_3(db, 10)
 
 newp = Problem(0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.5,0.5,0.5)
 

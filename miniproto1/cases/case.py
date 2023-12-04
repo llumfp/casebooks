@@ -7,7 +7,7 @@ class Cas:
         self,
         id: str,
         descripcio: ndarray[Any], # El nostre problema ja preprocessat
-        derivacio: None,
+        derivacio = None,
         solucio: list[Book,Book,Book] = [],
         avaluacio: list[int,int,int] = [],
         utilitat: None = None

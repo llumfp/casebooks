@@ -9,9 +9,10 @@ from miniproto1.ontology import Book
 
 
 class Indexacio(BinTree):
-    def __init__(self, v=None, left=None, right=None):
+    def __init__(self, v=None, left=None, right=None): # type - str, per a determinar quin tipus
+                                                       # de creacio s'executa.
         super().__init__(v, left, right)
-
+        
 
     def creacio_setep1(self, ):
         pass
@@ -84,7 +85,7 @@ class Indexacio(BinTree):
 
     def creacio_3(self, casos: List[Cas], num_casos_fulla:int) -> None:
         n_clusters = 2
-        if len(casos) == num_casos_fulla:
+        if len(casos) <= num_casos_fulla:
             # Si només hi ha un cas, retorna un arbre amb aquest cas.
             self.set_root(casos[0])
         else:
@@ -102,8 +103,8 @@ class Indexacio(BinTree):
             # Crear els subarbres per a cada cluster.
             subarbre1, subarbre2 = Indexacio(), Indexacio()
 
-            subarbre1.creacio(cluster1)
-            subarbre2.creacio(cluster2)
+            subarbre1.creacio_3(cluster1, num_casos_fulla)
+            subarbre2.creacio_3(cluster2, num_casos_fulla)
 
             # Retorna un arbre amb el centroid del clúster com a arrel i els subarbres com a fills.
             self.set_root(centroids)
@@ -155,7 +156,7 @@ class Indexacio(BinTree):
 
         return node_actual.get_root(), labels
 
-    def most_n_similars_2(self, new_cas: Cas, n_similars: int) -> List[Tuple[Cas,float]]:
+    def most_n_similars_2(self, new_cas: Cas, n_similars: int) -> Tuple[List[Tuple[Cas, float]], List[int]]:
         if self.leaf():
             return [(self._root, 0)]  # Asumiendo que _root es un Cas
 
@@ -178,34 +179,34 @@ class Indexacio(BinTree):
         return sorted(n_casos, key=lambda x: x[1])[:n_similars], recorrido
 
 
-    def most_n_similars(self, cas:Cas ,n_similars:int) -> Tuple[Cas, List]:
-        """
-        Donat un  cas a comparar (Cas), retorna el cas més similar 
-        en l'Indexacio i la llista de labels per després afegir el nou cas.
-        """
-        # Recorre l'arbre per a trobar el cas més similar.
-        pre_orden = self.preorder()
-        mas_similar = cas.most_similar()
-        posicion = pre_orden.index(mas_similar)
-
-        llista_sim = [mas_similar]
-
-        i = posicion
-        j = posicion - 1
-
-        while (i < len(pre_orden) and j >= 0) or n_similars==1:
-            if i < len(pre_orden):
-                if  pre_orden[i].leaf():
-                    llista_sim.append(pre_orden[i])
-                    n_similars -=1
-                i += 1
-            if j >= 0:
-                if  pre_orden[j].leaf():
-                    llista_sim.append(pre_orden[i])
-                    n_similars -=1
-                j -= 1
-        
-        return llista_sim
+    #def most_n_similars(self, cas:Cas ,n_similars:int) -> Tuple[Cas, List]:
+    #    """
+    #    Donat un  cas a comparar (Cas), retorna el cas més similar 
+    #    en l'Indexacio i la llista de labels per després afegir el nou cas.
+    #    """
+    #    # Recorre l'arbre per a trobar el cas més similar.
+    #    pre_orden = self.preorder()
+    #    mas_similar = cas.most_similar()
+    #    posicion = pre_orden.index(mas_similar)
+    #
+    #    llista_sim = [mas_similar]
+    #
+    #    i = posicion
+    #    j = posicion - 1
+    #
+    #    while (i < len(pre_orden) and j >= 0) or n_similars==1:
+    #        if i < len(pre_orden):
+    #            if  pre_orden[i].leaf():
+    #                llista_sim.append(pre_orden[i])
+    #                n_similars -=1
+    #            i += 1
+    #        if j >= 0:
+    #            if  pre_orden[j].leaf():
+    #                llista_sim.append(pre_orden[i])
+    #                n_similars -=1
+    #            j -= 1
+    #    
+    #    return llista_sim
 
 
     def add(self, new:Cas, ruta:List[Any]):
