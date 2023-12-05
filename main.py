@@ -9,39 +9,20 @@ import numpy as np
 import random
 import pandas as pd
 
-#llegim els problemes de la base de dades
 df_problemes = pd.read_csv('./data/problems.csv')
+casesbase = createDB(df=df_problemes) # Mètode a utils.py
+a = Indexacio(casesbase=casesbase, casesxleaf=10)
 
-def createDB(df:pd.DataFrame) -> List[Cas]:
-    '''
-    Funció que donat un csv en format DataFrame de pandas retorna una llista de casos.
-    '''
-    problemes = []
-
-    for cas in df_problemes[df_problemes.columns[2:-2]].values:
-        problemes.append(Problem(*cas))
-
-    recomendations = [eval(i) for i in df_problemes['recomendations'].tolist()]
-    rating_recom = [eval(i) for i in df_problemes['recom_ratings'].tolist()]
-
-    scaled_features = scale_features(problemes)
-
-    db = [Cas(id=idx, descripcio=p, solucio= recomendations[idx], avaluacio= rating_recom[idx]) for idx,p in enumerate(scaled_features)]
-
-    return db
-
-db = createDB(df=df_problemes)
-
-a = Indexacio(v=db)
-a.creacio(db,5)
-
-newp = Problem(0.5,0.5,1,0,0,0,0,0,0,0,0,0,0.5)
-
-newp = Cas(id=len(db),descripcio=scale_features([newp])[0])
+newp = Problem(1,0,0,0,0,0,0,0,0,0,0.5,0.5,0.5)
+newp = Cas(id=len(casesbase),descripcio=scale_features([newp])[0])
 
 similar_cases,path = a.most_similar(newp, 3)
 
-a.calcular_valor_confianza(similar_cases, newp)
+print(similar_cases)
+
+print('\n', path)
+
+#a.calcular_valor_confianza(similar_cases, newp)
 
 
 #a.save("hola2")

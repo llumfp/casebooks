@@ -1,6 +1,7 @@
 from typing import Any, Tuple, List
-from miniproto1.ontology import Book
+from miniproto1.ontology import Book, Problem, scale_features
 from numpy import ndarray
+import pandas as pd
 
 class Cas:
     def __init__(
@@ -44,3 +45,21 @@ class Cas:
         un cop tenim la solució, preguntar a l'usuari, qunant de bona ha sigut la recomanació
         '''
         pass
+
+def createDB(df:pd.DataFrame) -> List[Cas]:
+    '''
+    Funció que donat un csv en format DataFrame de pandas retorna una llista de casos.
+    '''
+    problemes = []
+
+    for cas in df[df.columns[2:-2]].values:
+        problemes.append(Problem(*cas))
+
+    recomendations = [eval(i) for i in df['recomendations'].tolist()]
+    rating_recom = [eval(i) for i in df['recom_ratings'].tolist()]
+
+    scaled_features = scale_features(problemes)
+
+    db = [Cas(id=idx, descripcio=p, solucio= recomendations[idx], avaluacio= rating_recom[idx]) for idx,p in enumerate(scaled_features)]
+
+    return db
