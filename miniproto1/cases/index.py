@@ -4,8 +4,9 @@ from typing import List, Any, Tuple
 from .case import Cas
 from sklearn.cluster import KMeans
 from scipy.spatial.distance import euclidean
-from generador_casos import *
 from miniproto1.ontology import Book
+import pickle
+
 
 
 class Indexacio(BinTree):
@@ -113,7 +114,7 @@ class Indexacio(BinTree):
             all_cases.extend(sibling_cases)
 
         # Calcular distancias y seleccionar los n más cercanos
-        distances = [(euclidean(new_case.descripcio, case.descripcio), case) for case in all_cases]
+        distances = [[euclidean(new_case.descripcio, case.descripcio), case] for case in all_cases]
         distances.sort(key=lambda x: x[0])
         closest_cases = distances[:n]
 
@@ -163,7 +164,7 @@ class Indexacio(BinTree):
             casos_adicionales, _ = nodo_hermano.most_n_similars_3(new_cas, n_similars - len(casos))
             casos.extend(casos_adicionales)
 
-        return (sorted(casos, key=lambda x: x[1])[:n_similars], recorrido)
+        return (recorrido, sorted(casos, key=lambda x: x[1])[:n_similars])
     
     
     def creacio2(self, casos: List[Cas], num_casos_fulla:int) -> None:
@@ -406,3 +407,14 @@ class Indexacio(BinTree):
         for i in resultado_ordenado:
             new_case.solucio.append(i[0])
             new_case.avaluacio.append(i[1])
+
+    def guardar(self, nombre_archivo_sin_extension):
+        nombre_archivo_completo = f"{nombre_archivo_sin_extension}.pkl"
+        with open(nombre_archivo_completo, 'wb') as archivo:
+            pickle.dump(self, archivo)
+
+    @classmethod
+    def cargar_desde_archivo(cls, nombre_archivo):
+        with open(nombre_archivo, 'rb') as archivo:
+            instancia = pickle.load(archivo)
+        return instancia

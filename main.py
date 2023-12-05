@@ -29,10 +29,15 @@ newp = Cas(id=len(db),descripcio=scale_features([newp])[0])
 
 similar_cases,path = a.most_similar(newp, 7)
 
-for cas in similar_cases:
-    print(cas)
-print()
-print(path)
+
+a.guardar("hola2")
+# Cargar la instancia desde un archivo
+indexacio_instancia = Indexacio.cargar_desde_archivo('hola2.pkl')
+
+similar_cases2, path2 = indexacio_instancia.most_similar(newp, 7)
+
+print("hola")
+print(similar_cases2)
 # case_sim, ruta = a.most_similar(newp)
 # print("\n--- CAS MES SIMILAR ---")
 # print(case_sim)
