@@ -20,17 +20,19 @@ scaled_features = scale_features(problemes)
 
 db = [Cas(id=idx, descripcio=p) for idx,p in enumerate(scaled_features)]
 
-print("\n--- BASE DE DADES ---")
-for cas in db:
-    print(cas)
-
 a = Indexacio(v=db)
-a.creacio_3(db, 10)
+a.creacio(db,5)
 
-newp = Problem(0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.5,0.5,0.5)
+newp = Problem(0.5,0.5,1,0,0,0,0,0,0,0,0,0,0.5)
 
 newp = Cas(id=len(db),descripcio=scale_features([newp])[0])
 
+similar_cases,path = a.most_similar(newp, 7)
+
+for cas in similar_cases:
+    print(cas)
+print()
+print(path)
 # case_sim, ruta = a.most_similar(newp)
 # print("\n--- CAS MES SIMILAR ---")
 # print(case_sim)

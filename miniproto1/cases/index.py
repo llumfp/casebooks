@@ -12,11 +12,6 @@ class Indexacio(BinTree):
     def __init__(self, v=None, left=None, right=None): # type - str, per a determinar quin tipus
                                                        # de creacio s'executa.
         super().__init__(v, left, right)
-        
-
-    def creacio_setep1(self, ):
-        pass
-
 
     def creacio(self,casos:List[Cas], num_casos_fulla:int) -> None:
         if len(casos) <= num_casos_fulla:
@@ -34,15 +29,143 @@ class Indexacio(BinTree):
             # Crear els subarbres per a cada cluster.
             subarbre1, subarbre2 = Indexacio(), Indexacio()
 
-            subarbre1.creacio(cluster1)
-            subarbre2.creacio(cluster2)
+            subarbre1.creacio(cluster1, num_casos_fulla)
+            subarbre2.creacio(cluster2, num_casos_fulla)
 
             # Retorna un arbre amb l'objecte KMeans com a arrel i els subarbres com a fills.
             self.set_root(kmeans)
             self.set_left(subarbre1)
             self.set_right(subarbre2)
 
+    def find_leaf(self, cas: Cas) -> Tuple[Cas, List]:
+        
+        node_actual = self
+        labels = []
 
+        while not node_actual.leaf():
+            kmeans = node_actual.get_root()
+            label = kmeans.predict([cas.descripcio])[0]
+            labels.append(label)
+            
+            if label == 0:
+                node_actual = node_actual.get_left()
+            else:
+                node_actual = node_actual.get_right()
+
+        return node_actual, labels # .get_root() si vols la llista de casos
+
+    def collect_cases(self, node):
+        """
+        Recolecta todos los casos de un nodo y sus descendientes.
+        """
+        # Verificar si el nodo es None antes de intentar acceder a sus atributos
+        if node is None:
+            return []
+
+        # Si el nodo actual contiene un modelo KMeans, no recoger casos de este nodo
+        if isinstance(node.get_root(), KMeans):
+            return []
+
+        # Caso base: Si el nodo es una hoja, devolver los casos en este nodo
+        if node.leaf():
+            return [case for case in node.get_root()]
+
+        # Caso recursivo: Recoger casos de los nodos hijos
+        return self.collect_cases(node.get_left()) + self.collect_cases(node.get_right())
+
+    def navigate_to_sibling(self, path):
+        """
+        Navega al nodo hermano basado en el camino proporcionado.
+        """
+        current = self
+        for step in path[:-1]:  # Ignorar el último paso, que es hacia el nodo actual
+            current = current.get_left() if step == 0 else current.get_right()
+        
+        # Si el camino está vacío, no hay hermano al que navegar
+        if not path:
+            return None
+        
+        # Ir al nodo hermano
+        sibling = current.get_right() if path[-1] == 0 else current.get_left()
+        return sibling
+    
+    def most_similar(self, new_case, n) -> Tuple[List[Tuple[Cas, float]], List[int]]:
+        """
+        Encuentra los n casos más similares al new_case.
+        """
+        # Encuentra la hoja más cercana y el recorrido
+        leaf, path = self.find_leaf(new_case)
+
+        originalpath = path.copy()
+
+        # Recolecta casos de la hoja más cercana
+        all_cases = self.collect_cases(leaf)
+
+        # Si no hay suficientes casos, busca en los nodos hermanos
+        while len(all_cases) < n and path:
+            path.pop()  # Retroceder un nivel en el árbol
+
+            if not path:  # Si hemos llegado a la raíz, terminar la búsqueda
+                break
+
+            node_to_explore = self.navigate_to_sibling(path)
+            sibling_cases = self.collect_cases(node_to_explore)
+            all_cases.extend(sibling_cases)
+
+        # Calcular distancias y seleccionar los n más cercanos
+        distances = [(euclidean(new_case.descripcio, case.descripcio), case) for case in all_cases]
+        distances.sort(key=lambda x: x[0])
+        closest_cases = distances[:n]
+
+        return closest_cases, originalpath
+    
+    '''def most_similar(self, new_case, n):
+        """
+        Encuentra los n casos más similares al new_case.
+
+        Problema: sols funciona si n < num_casos_fulla.
+        """
+        leaf, path = self.find_leaf(new_case) # El que retorna la llista de casos
+
+        distances = []
+        for case in leaf:
+            distance = euclidean(new_case.descripcio, case.descripcio)
+            distances.append((distance, case))
+
+        distances.sort(key=lambda x: x[0])
+        closest_cases = distances[:n]
+
+        return closest_cases, path'''
+
+    
+    def most_n_similars_3(self, new_cas: Cas, n_similars: int) -> Tuple[List[Tuple[Cas, float]], List[int]]:
+        if self.leaf():
+            return ([(self._root, euclidean(new_cas.descripcio, self._root.descripcio))], [])
+
+        # Búsqueda del caso más similar y el camino
+        casos, recorrido = self.most_similar_1(new_cas)
+        casos = [(cas, euclidean(new_cas.descripcio, cas.descripcio)) for cas in casos]
+
+        if len(casos) >= n_similars:
+            return (sorted(casos, key=lambda x: x[1])[:n_similars], recorrido)
+
+        # Navegación al nodo hermano del último nodo visitado
+        if recorrido:
+            nodo_padre = self
+            for label in recorrido[:-1]:  # Navegar hasta el nodo padre del último nodo visitado
+                nodo_padre = nodo_padre.get_left() if label == 0 else nodo_padre.get_right()
+
+            # Cambio al nodo hermano
+            nodo_hermano = nodo_padre.get_left() if recorrido[-1] == 1 else nodo_padre.get_right()
+            recorrido[-1] = 0 if recorrido[-1] == 1 else 1  # Actualizar el camino
+
+            # Búsqueda adicional en el nodo hermano
+            casos_adicionales, _ = nodo_hermano.most_n_similars_3(new_cas, n_similars - len(casos))
+            casos.extend(casos_adicionales)
+
+        return (sorted(casos, key=lambda x: x[1])[:n_similars], recorrido)
+    
+    
     def creacio2(self, casos: List[Cas], num_casos_fulla:int) -> None:
         if len(casos) <= num_casos_fulla:
             self.set_root(casos)
@@ -115,7 +238,7 @@ class Indexacio(BinTree):
     def most_similar_1(self, cas: Cas) -> Tuple[Cas, List]:
         """
         Donat un  cas a comparar (Cas), retorna el cas més similar 
-        en l'Indexacio i la llista de labels per després afegir el nou cas.
+        en l'Indexacio i l  a llista de labels per després afegir el nou cas.
         """
         # Recorre l'arbre per a trobar el cas més similar.
         node_actual = self
@@ -155,15 +278,15 @@ class Indexacio(BinTree):
                 node_actual = node_actual.get_right()
 
         return node_actual.get_root(), labels
-
+    
     def most_n_similars_2(self, new_cas: Cas, n_similars: int) -> Tuple[List[Tuple[Cas, float]], List[int]]:
         if self.leaf():
-            return [(self._root, 0)]  # Asumiendo que _root es un Cas
+            return ([(self._root, 0)], recorrido)  # Asumiendo que _root es un Cas y recorrido es accesible
 
         casos, recorrido = self.most_similar_1(new_cas)
 
         if len(casos) >= n_similars:
-            return sorted([(cas, euclidean(new_cas.descripcio, cas.descripcio)) for cas in casos], key=lambda x: x[1])[:n_similars]
+            return (sorted([(cas, euclidean(new_cas.descripcio, cas.descripcio)) for cas in casos], key=lambda x: x[1])[:n_similars], recorrido)
 
         node_actual = self
         recorrido[-1] = 0 if recorrido[-1] == 1 else 1
@@ -172,11 +295,13 @@ class Indexacio(BinTree):
             node_actual = node_actual.get_left() if label == 0 else node_actual.get_right()
 
         num_casos = n_similars - len(casos)
-        total_casos = casos + node_actual.most_n_similars_2(new_cas, num_casos)
+        total_casos, _ = node_actual.most_n_similars_2(new_cas, num_casos)
         n_casos = [(cas, self.euclidean(new_cas.descripcio, cas.descripcio)) for cas in total_casos]
 
         # Ordenar los casos por distancia y seleccionar los n mejores
-        return sorted(n_casos, key=lambda x: x[1])[:n_similars], recorrido
+        return (sorted(n_casos, key=lambda x: x[1])[:n_similars], recorrido)
+
+        # Asumiendo que _root es un Cas y recorrido es accesible
 
 
     #def most_n_similars(self, cas:Cas ,n_similars:int) -> Tuple[Cas, List]:
