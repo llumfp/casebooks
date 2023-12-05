@@ -23,7 +23,7 @@ scaled_features = scale_features(problemes)
 
 db = [Cas(id=idx, descripcio=p, solucio= recomendations[idx], avaluacio= rating_recom[idx]) for idx,p in enumerate(scaled_features)]
 
-print('Exemple cas', db[0])
+#print('Exemple cas', db[0])
 
 a = Indexacio(v=db)
 a.creacio(db,5)
@@ -32,14 +32,17 @@ newp = Problem(0.5,0.5,1,0,0,0,0,0,0,0,0,0,0.5)
 
 newp = Cas(id=len(db),descripcio=scale_features([newp])[0])
 
-similar_cases,path = a.most_similar(newp, 7)
+similar_cases,path = a.most_similar(newp, 3)
 
 
-a.guardar("hola2")
-# Cargar la instancia desde un archivo
-indexacio_instancia = Indexacio.cargar_desde_archivo('hola2.pkl')
 
-similar_cases2, path2 = indexacio_instancia.most_similar(newp, 7)
+a.calcular_valor_confianza(similar_cases, newp)
+
+
+#a.guardar("hola2")
+#indexacio_instancia = Indexacio.cargar_desde_archivo('hola2.pkl')
+
+#similar_cases2, path2 = indexacio_instancia.most_similar(newp, 7)
 
 # print("hola")
 # print(similar_cases2)
@@ -53,3 +56,4 @@ similar_cases2, path2 = indexacio_instancia.most_similar(newp, 7)
 
 # print("\n--- BASE DE DADES ---")
 # print(a)
+

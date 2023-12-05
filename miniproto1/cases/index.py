@@ -380,23 +380,24 @@ class Indexacio(BinTree):
         
 
 
-    def calcular_valor_confianza(casos_similares: List[Tuple[Cas,float]], new_case: Cas) -> Tuple[Tuple['Book', float]]:
+    def calcular_valor_confianza(self, casos_similares: List[Tuple[float,Cas]], new_case: Cas):
         # Diccionario para almacenar los valores acumulados de confianza para cada libro
         valor_confianza_libros = {}
 
-        for caso in casos_similares:
+        for distancia, caso in casos_similares:
             # Calcular la distancia (similitud inversa) entre el caso nuevo y cada caso similar
             #distancia = euclidean(new_case.descripcio, caso.descripcio)
-
             if caso.solucio and caso.avaluacio:
-                for libro in caso[0].solucio:
+                for index, libro in enumerate(caso.solucio):
                     # Inicializar el valor de confianza del libro si no existe
                     if libro not in valor_confianza_libros:
                         valor_confianza_libros[libro] = [0, 0]  # Suma de ponderaciones, Suma de distancias
 
                     # Sumar la ponderación (evaluación * similitud) y la distancia (similitud) para cada libro
-                    valor_confianza_libros[libro][0] += caso[0].avaluacio * (1 / caso[1])
-                    valor_confianza_libros[libro][1] += 1 / caso[1]
+
+                    ###MODIFICAR AIXO
+                    valor_confianza_libros[libro][0] += caso[1].avaluacio * (1 / caso[0])
+                    valor_confianza_libros[libro][1] += 1 / caso[0]
 
         # Calcular el valor final de confianza para cada libro
         resultado = [(libro, v[0] / v[1]) for libro, v in valor_confianza_libros.items()]
