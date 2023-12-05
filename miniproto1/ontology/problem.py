@@ -8,7 +8,6 @@ from miniproto1.constants import *
 class Problem:
     '''
     Classe Abstracta de Lector i altres components del problema:
-    - user_id : cadena de números per identificar l'usuari
     - fantasy : de tots els llibres que ha llegit, el percentatge que són de fantasia
     - fiction : de tots els llibres que ha llegit, el percentatge que són de ficció
     - mystery : de tots els llibres que ha llegit, el percentatge que són de misteri
@@ -29,7 +28,7 @@ class Problem:
     def __init__(
         self,
         fantasy:float, fiction:float, mystery:float, poetry: float, history: float, romance: float,
-        nonfiction: float, children: float, youngadult: float, comics: float, #mean_cover: str, 
+        nonfiction: float, children: float, youngadult: float, comics: float, #major_cover: str, 
         mean_length: float, count_reads: int, avg_rating: float) -> None:
         
         self.fantasy = fantasy

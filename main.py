@@ -13,12 +13,17 @@ import pandas as pd
 df_problemes = pd.read_csv('./data/problems.csv')
 problemes = []
 
-for cas in df_problemes[df_problemes.columns[2:]].values:
+for cas in df_problemes[df_problemes.columns[2:-2]].values:
     problemes.append(Problem(*cas))
+
+recomendations = [eval(i) for i in df_problemes['recomendations'].tolist()]
+rating_recom = [eval(i) for i in df_problemes['recom_ratings'].tolist()]
 
 scaled_features = scale_features(problemes)
 
-db = [Cas(id=idx, descripcio=p) for idx,p in enumerate(scaled_features)]
+db = [Cas(id=idx, descripcio=p, solucio= recomendations[idx], avaluacio= rating_recom[idx]) for idx,p in enumerate(scaled_features)]
+
+print('Exemple cas', db[0])
 
 a = Indexacio(v=db)
 a.creacio(db,5)
@@ -36,8 +41,8 @@ indexacio_instancia = Indexacio.cargar_desde_archivo('hola2.pkl')
 
 similar_cases2, path2 = indexacio_instancia.most_similar(newp, 7)
 
-print("hola")
-print(similar_cases2)
+# print("hola")
+# print(similar_cases2)
 # case_sim, ruta = a.most_similar(newp)
 # print("\n--- CAS MES SIMILAR ---")
 # print(case_sim)

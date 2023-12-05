@@ -1,4 +1,4 @@
-from typing import Any, Tuple
+from typing import Any, Tuple, List
 from miniproto1.ontology import Book
 from numpy import ndarray
 
@@ -8,8 +8,8 @@ class Cas:
         id: str,
         descripcio: ndarray[Any], # El nostre problema ja preprocessat
         derivacio = None,
-        solucio: list[Book,Book,Book] = [],
-        avaluacio: list[int,int,int] = [],
+        solucio: List[int] = [],
+        avaluacio: List[int] = [],
         utilitat: None = None
     ) -> None:
         self.id = id
@@ -20,7 +20,7 @@ class Cas:
         self.mesura_utilitat:bool = utilitat # mirar els altres casos que tenim i valorar si val la pena
     
     def __repr__(self) -> str:
-        return f"Cas(id={self.id}, descripcio={self.descripcio})"
+        return f"Cas(id={self.id}, descripcio={self.descripcio}, solucio={self.solucio}, avaluacio={self.avaluacio})"
     
     def validate(self, casos): 
         # Òscar: potser seria millor això posar-ho al RecommenderSystem, 
