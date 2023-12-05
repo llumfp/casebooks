@@ -44,8 +44,8 @@ similar_cases,path = a.most_similar(newp, 3)
 a.calcular_valor_confianza(similar_cases, newp)
 
 
-#a.guardar("hola2")
-#indexacio_instancia = Indexacio.cargar_desde_archivo('hola2.pkl')
+#a.save("hola2")
+#indexacio_instancia = Indexacio.load('hola2.pkl')
 
 #similar_cases2, path2 = indexacio_instancia.most_similar(newp, 7)
 

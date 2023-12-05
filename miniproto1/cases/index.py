@@ -377,8 +377,6 @@ class Indexacio(BinTree):
         """
         Treu cas al graf de casos. Per si no es cas rellevant
         """
-        
-
 
     def calcular_valor_confianza(self, casos_similares: List[Tuple[float,Cas]], new_case: Cas):
         # Diccionario para almacenar los valores acumulados de confianza para cada libro
@@ -409,13 +407,13 @@ class Indexacio(BinTree):
             new_case.solucio.append(i[0])
             new_case.avaluacio.append(i[1])
 
-    def guardar(self, nombre_archivo_sin_extension):
+    def save(self, nombre_archivo_sin_extension):
         nombre_archivo_completo = f"{nombre_archivo_sin_extension}.pkl"
         with open(nombre_archivo_completo, 'wb') as archivo:
             pickle.dump(self, archivo)
 
     @classmethod
-    def cargar_desde_archivo(cls, nombre_archivo):
+    def load(cls, nombre_archivo):
         with open(nombre_archivo, 'rb') as archivo:
             instancia = pickle.load(archivo)
         return instancia
