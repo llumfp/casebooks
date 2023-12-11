@@ -8,6 +8,8 @@ from miniproto1 import *
 import numpy as np
 import random
 import pandas as pd
+import time
+import matplotlib.pyplot as plt
 
 df_problemes = pd.read_csv('./data/problems.csv')
 casesbase = createDB(df=df_problemes) # Mètode a utils.py
@@ -16,11 +18,33 @@ a = Indexacio(casesbase=casesbase, casesxleaf=10)
 newp = Problem(1,0,0,0,0,0,0,0,0,0,0.5,0.5,0.5)
 newp = Cas(id=len(casesbase),descripcio=scale_features([newp])[0])
 
-similar_cases,path = a.most_similar(newp, 3)
+tiempos = []
+for x in range(1,990):
+    
+    inicio = time.time()
+    similar_cases,path = a.most_similar(newp,x)
+    fin = time.time()
+    tiempos.append(fin - inicio)
 
-print(similar_cases)
+# Graficar los resultados
+plt.figure(figsize=(20, 5))
+plt.plot(range(1,990), tiempos, marker='o')
+plt.xlabel('Valor de x')
+#plt.xticks(range(1,101), rotation=75)
+plt.ylabel('Tiempo de ejecución (s)')
+plt.title('Tiempo de Ejecución de most_similar() en función de x')
+plt.grid(True)
+#plt.subplots_adjust(left=0.1, right=0.9)
+plt.savefig('./images/most_similar_times')
 
-print('\n', path)
+#a.calcular_valor_confianza(similar_cases,newp)
+
+# print(similar_cases)
+
+# print('\n', path)
+
+# print(newp.solucio)
+# print(newp.avaluacio)
 
 #a.calcular_valor_confianza(similar_cases, newp)
 
@@ -42,4 +66,3 @@ print('\n', path)
 
 # print("\n--- BASE DE DADES ---")
 # print(a)
-

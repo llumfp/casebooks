@@ -11,14 +11,16 @@ class Cas:
         derivacio = None,
         solucio: List[int] = [],
         avaluacio: List[int] = [],
+        cops_us: int = 0,
         utilitat: None = None
     ) -> None:
         self.id = id
-        self.descripcio:dict = descripcio
-        self.derivacio:list = derivacio
-        self.solucio:list = solucio # llista de 3 llibres recomanats
-        self.avaluacio:int = avaluacio # num del 1-5
-        self.mesura_utilitat:bool = utilitat # mirar els altres casos que tenim i valorar si val la pena
+        self.descripcio = descripcio
+        self.derivacio = derivacio
+        self.solucio = solucio # llista de 3 llibres recomanats
+        self.avaluacio = avaluacio # num del 1-5
+        self.cops_us = cops_us
+        self.mesura_utilitat = utilitat # mirar els altres casos que tenim i valorar si val la pena
     
     def __repr__(self) -> str:
         return f"Cas(id={self.id}, descripcio={self.descripcio}, solucio={self.solucio}, avaluacio={self.avaluacio})"
@@ -60,6 +62,6 @@ def createDB(df:pd.DataFrame) -> List[Cas]:
 
     scaled_features = scale_features(problemes)
 
-    db = [Cas(id=idx, descripcio=p, solucio= recomendations[idx], avaluacio= rating_recom[idx]) for idx,p in enumerate(scaled_features)]
-
+    db = [Cas(id=df['user_id'][idx], descripcio=p, solucio= recomendations[idx], avaluacio= rating_recom[idx]) for idx,p in enumerate(scaled_features)]
+    
     return db

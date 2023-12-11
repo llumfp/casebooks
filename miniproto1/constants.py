@@ -1,7 +1,17 @@
 import pandas as pd
+import json
 
-#df = pd.read_csv("data/books.csv")
-#libros_posibles = df['title'].unique().tolist()
+# Ruta al archivo JSON con el diccionario
+file_path = '~/UNI/SBC/casebooks/data/books_dict.json'
+
+# Función para cargar el diccionario desde un archivo JSON
+def cargar_diccionario(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        return json.load(file)
+
+books_dict = cargar_diccionario(file_path)
+book_ids = list(books_dict.keys())
+book_titles = list(books_dict.values())
 
 genrestree = {
     "Fantasy": {"High_Fantasy", "Dark_Fantasy", "Urban_Fantasy"},

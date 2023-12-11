@@ -8,9 +8,7 @@ st.title("Recomanador de llibres CBR")
 with st.form("Introdueix el teu perfil"):
     # Campo de texto
     name = st.text_input("Introdueix el teu nom")
-
     age = st.number_input("Quina és la teva edat", min_value=0, max_value=100)
-    
 
     if age > 17:
         generes = genres
@@ -21,7 +19,7 @@ with st.form("Introdueix el teu perfil"):
     if generes:
         genere = st.selectbox("Elegeix el teu gènere preferit", generes)
 
-    llibres = st.multiselect("Elegeix els llibres que has llegit i que més t'han agradat", libros_posibles)
+    llibres = st.multiselect("Elegeix els llibres que has llegit i que més t'han agradat", book_titles)
 
     user_id = st.text_input("Introdueix el teu identificador d'usuari. Deixa-ho en blanc si ets un nou usuari")
     nou_perfil = st.checkbox("Sóc un nou perfil",False)

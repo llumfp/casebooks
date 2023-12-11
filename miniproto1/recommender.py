@@ -1,12 +1,13 @@
 from miniproto1.fases import *
 from miniproto1.cases import *
 from miniproto1.ontology import *
+from typing import Set
 
 class RecommenderSystem:
     def __init__(self) -> None:
         pass
 
-    def retrieve(self) -> set(Cas):
+    def retrieve(self) -> Set[Cas]:
         pass
 
     def reuse(self):
