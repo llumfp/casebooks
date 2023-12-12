@@ -272,31 +272,66 @@ class Indexacio(BinTree):
         # Obtenir el cas del node més similar i afegir el nou cas.
         leafcases = [node_actual.get_root(), new]
 
-        # Crear un nou KMeans amb tots els casos.
-        kmeans = KMeans(n_clusters=2, random_state=0, n_init='auto')
-        kmeans.fit([cas.descripcio for cas in leafcases])
+        if len(leafcases) >= self.casesxleaf:
+            # Crear un nou KMeans amb tots els casos.
+            kmeans = KMeans(n_clusters=2, random_state=0, n_init='auto')
+            kmeans.fit([cas.descripcio for cas in leafcases])
+            
+            kmeans.labels_[0]
+            # Dividir els casos segons les etiquetes del clustering.
+            for i in range(2):
+                if kmeans.labels_[i] == 0:
+                    cluster1 = [leafcases[i]]
+                else:
+                    cluster2 = [leafcases[i]]
+            
+            # Crear els nous subarbres.
+            subarbre1 = Indexacio(casesbase=cluster1, casesxleaf=self.casesxleaf) 
+            subarbre2 = Indexacio(casesbase=cluster2, casesxleaf=self.casesxleaf)
+
+            # Actualitzar el node actual amb el nou cluster i subarbres.
+            node_actual.set_root(kmeans)
+            node_actual.set_left(subarbre1)
+            node_actual.set_right(subarbre2)
         
-        kmeans.labels_[0]
-        # Dividir els casos segons les etiquetes del clustering.
-        for i in range(2):
-            if kmeans.labels_[i] == 0:
-                cluster1 = [leafcases[i]]
+        else:
+            node_actual.set_root(leafcases)
+
+
+    def removee(self, cas, ruta):
+        """
+        Elimina un caso del árbol de casos. Si al eliminar el caso, el nodo hoja correspondiente
+        queda vacío, el árbol se reestructura para eliminar dicho nodo hoja.
+        """
+        node_padre = self
+        for label in ruta[:-1]:  # Ir al nodo padre del nodo hoja
+            if label == 0:
+                node_padre = node_padre.get_left()
             else:
-                cluster2 = [leafcases[i]]
-        
-        # Crear els nous subarbres.
-        subarbre1 = Indexacio(casesbase=cluster1, casesxleaf=self.casesxleaf) 
-        subarbre2 = Indexacio(casesbase=cluster2, casesxleaf=self.casesxleaf)
+                node_padre = node_padre.get_right()
 
-        # Actualitzar el node actual amb el nou cluster i subarbres.
-        node_actual.set_root(kmeans)
-        node_actual.set_left(subarbre1)
-        node_actual.set_right(subarbre2)
+        # Nodo hoja donde se encuentra el caso
+        node_hoja = node_padre.get_left(
+        ) if ruta[-1] == 0 else node_padre.get_right()
 
-    def remove(self):
-        """
-        Treu cas al graf de casos. Per si no es cas rellevant
-        """
+        # Eliminar el caso
+        casos = node_hoja.get_root()
+        casos.remove(cas)
+
+        # Si el nodo hoja queda vacío después de eliminar el caso
+        if not casos:
+            # Reestructurar el árbol
+            if ruta[-1] == 0:
+                node_padre._root._left = None
+            else:
+                node_padre._root._right = None
+
+            # Si el nodo padre ahora es una hoja, reemplazarlo por su nodo padre
+            if node_padre.leaf():
+                self._root = node_padre.get_root()
+
+
+
     def save(self, nombre_archivo_sin_extension):
         nombre_archivo_completo = f"{nombre_archivo_sin_extension}.pkl"
         with open(nombre_archivo_completo, 'wb') as archivo:
