@@ -28,7 +28,7 @@ class Problem:
     def __init__(
         self,
         fantasy:float, fiction:float, mystery:float, poetry: float, history: float, romance: float,
-        nonfiction: float, children: float, youngadult: float, comics: float, #major_cover: str, 
+        nonfiction: float, children: float, youngadult: float, comics: float, 
         mean_length: float, count_reads: int, avg_rating: float) -> None:
         
         self.fantasy = fantasy
@@ -41,7 +41,6 @@ class Problem:
         self.children = children
         self.youngadult = youngadult
         self.comics = comics
-        # self.mean_cover = mean_cover
         self.mean_length = mean_length
         self.count_reads = count_reads
         self.avg_rating =  avg_rating

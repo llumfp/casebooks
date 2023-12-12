@@ -18,6 +18,7 @@ a = Indexacio(casesbase=casesbase, casesxleaf=10)
 newp = Problem(1,0,0,0,0,0,0,0,0,0,0.5,0.5,0.5)
 newp = Cas(id=len(casesbase),descripcio=scale_features([newp])[0])
 
+
 tiempos = []
 for x in range(1,990):
     
