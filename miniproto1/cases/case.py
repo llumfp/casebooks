@@ -88,75 +88,83 @@ def createDB(df:pd.DataFrame) -> List[Cas]:
     rating_recom = [eval(i) for i in df['recom_ratings'].tolist()]
 
     scaled_features = scale_features(problemes)
-    create_clustering(scaled_features, read_books, recomendations, rating_recom)
-
 
     db = [Cas(id=df['user_id'][idx], descripcio=p, solucio= recomendations[idx], avaluacio= rating_recom[idx]) for idx,p in enumerate(scaled_features)]
     
     return db
 
 
-def create_clustering(clustering_data, read_books, recomendations, rating_recoms):
-    """crea un clustering amb totes les dades inicials. Aquest clustering
-        servirà per a eliminar aquells casos redundants"""
 
-    # Z = linkage(clustering_data, method='ward')
-    # # Plotting the dendrogram to find the appropriate level for cutting
-    # plt.figure(figsize=(10, 7))
-    # dendrogram(Z, truncate_mode='lastp', p=15, show_contracted=True)
-    # plt.title("Dendrogram")
-    # plt.xlabel("Cluster Size")
-    # plt.ylabel("Distance")
-    # plt.show()
-    # estimated_distance_threshold = int(input("Veient el dendograma, per quina distància vols retallar l'arbre per a fer clusters?"))
-
-    estimated_distance_threshold = 2
-    # Creem un arbre jerarquic a partir d'obserbar el dendograma
-    final_model_adjusted = AgglomerativeClustering(n_clusters=None,  
-                                                   distance_threshold= estimated_distance_threshold,
-                                                linkage='ward')
-    final_model_adjusted.fit(clustering_data)
-
-    #indica a quin cluster pertany cada cas. Llista de etiquetes
-    clusters_adjusted = final_model_adjusted.labels_ 
-
-    # Comprovació per veure que efectivament a cada clus
-    cluster_counts = np.unique(clusters_adjusted, return_counts=True)
-    print('Casos en cada cluster:', cluster_counts[1])
-
-    cluster_to_analyze = 15  # Assuming cluster 15 is one of the clusters
-    distance_threshold = 0.3
-
-    # Agafem els índex casos del cluster a estudiar i els casos com a tal
-    cluster_indices= np.where(clusters_adjusted == cluster_to_analyze)[0]
-    cluster_data = clustering_data[cluster_indices]
-
-    # Calculem la distancia entre tots els casos del cluster
-    pairwise_distances = pdist(cluster_data, metric='euclidean')
+def redundant_optim(similar_cases: List[Cas], indices_cases:List[int]):
+    
+    pairwise_distances = pdist([i.descripcio for i in similar_cases], metric='euclidean')
     distance_matrix = squareform(pairwise_distances)
 
-    #Calculem la similitud de les variables categòriques
-    print('recomendations', recomendations[0])
-
-    # Mirem quins casos son massa semblants, i ens quedem únicament amb aquells que
-    
     redundant_cases = set()
+
+    print('distancies', distance_matrix.shape[0], len(indices_cases))
 
     for i in range(distance_matrix.shape[0]):
         for j in range(i + 1, distance_matrix.shape[0]):
-            #Quantitat de llibres que coincideixen
+            punt = 0
             common_read_books = len(set(read_books[i]) & set(read_books[j]))
             common_recom = len(set(recomendations[i]) & set(recomendations[j]))
-            common_rating = (abs(np.mean(rating_recoms[i]) - np.mean(rating_recoms[j])))        
+            common_rating = (abs(np.mean(rating_recoms[i]) - np.mean(rating_recoms[j]))) 
+            if common_read_books >= 2:
+                punt += 1
+            if common_recom >= 1:
+                punt += 1
+            if common_rating <= 1:
+                punt += 1
             if distance_matrix[i, j] < distance_threshold:
-                # Add one of the redundant cases to the set
-                redundant_cases.add(j)
+                punt += 1
+            if punt >= 2: redundant_cases.add()
 
-    # Removing redundant cases
-    #filtered_cluster_data = cluster_data(cluster_data.index[list(redundant_cases)])
+    T = 1
+    dicc = {new.solution[i]: new.avaluacio[i] for i in range(3)}
+    dicc_keys_set = set(dicc.keys())  # Convertir las claves en un conjunto
 
-    # Showing the result
-    print("Number of original cases in the cluster:", cluster_data.shape[0])
-    #print("Number of cases after removing redundancies:", filtered_cluster_data.shape[0])
-    print("Cases removed:", redundant_cases)
+    for dist, case in most_similars:
+        if dist < T:
+            coincident_books = 0
+            for book in dicc_keys_set.intersection(case.solution):
+                if abs(dicc[book] - case.avaluacio[case.solution.index(book)]) <= 1.5:
+                    coincident_books += 1
+                    if coincident_books >= 2:
+                        return True
+        else:
+            return False
+    return False
+
+def redundant_clustering(clustering_cases: List[Cas]):
+    """crea un clustering amb totes les dades inicials. Aquest clustering
+        servirà per a eliminar aquells casos redundants"""
+    new_cases = clustering_cases
+    numeric_data = [case.descripcio for case in clustering_cases]
+
+    Z = linkage(numeric_data, method='ward')
+    plt.figure(figsize=(10, 7))
+    dendrogram(Z, truncate_mode='lastp', p=15, show_contracted=True)
+    plt.title("Dendrogram")
+    plt.xlabel("Cluster Size")
+    plt.ylabel("Distance")
+    plt.show()
+    estimated_distance_threshold = float(input("Veient el dendograma, per quina distància vols retallar l'arbre per a fer clusters?"))
+
+    # Creem un arbre jerarquic a partir d'obserbar el dendograma
+    final_model_adjusted = AgglomerativeClustering(n_clusters=None,  
+                                                    distance_threshold= estimated_distance_threshold,
+                                                linkage='ward')
+    final_model_adjusted.fit(numeric_data)
+
+    #indica a quin cluster pertany cada cas. Llista de etiquetes
+    clusters_adjusted = final_model_adjusted.labels_ 
+    cluster_counts = np.unique(clusters_adjusted, return_counts=True)
+
+    for cluster in range(len(cluster_counts[1])):
+        cluster_indices = np.where(clusters_adjusted == cluster)[0]
+        cluster_data = [clustering_cases[idx] for idx in cluster_indices]
+        delete_index = redundant_optim(cluster_data, cluster_indices)
+        for idx in delete_index:
+            new_cases.pop(idx)
 

@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 
 df_problemes = pd.read_csv('./data/problems.csv')
 casesbase = createDB(df=df_problemes) # Mètode a utils.py
+casesbase = redundant_clustering(casesbase)
 a = Indexacio(casesbase=casesbase, casesxleaf=10)
 
 newp = Problem(1,0,0,0,0,0,0,0,0,0,0.5,0.5,0.5)
