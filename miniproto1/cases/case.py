@@ -44,6 +44,11 @@ class Cas:
     def __repr__(self) -> str:
         return f"Cas(id={self.id}, descripcio={self.descripcio}, solucio={self.solucio}, avaluacio={self.avaluacio})"
     
+
+    def actualitzar_Utilitat_normalitzada(self):
+        self.UM = ((self.UaS/self.S)-(self.UaS/self.F)+1)/2
+    
+    
     def validate(self, casos): 
         # Òscar: potser seria millor això posar-ho al RecommenderSystem, 
         # llavors la funció seria def validate(self, cas:Cas) i ja 
