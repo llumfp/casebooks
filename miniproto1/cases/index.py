@@ -54,6 +54,7 @@ class Indexacio(BinTree):
             self.set_left(subarbre1)
             self.set_right(subarbre2)
 
+    # ========================================================================
     def find_leaf(self, cas: Cas) -> Tuple[Cas, List]:
         
         node_actual = self
@@ -147,7 +148,7 @@ class Indexacio(BinTree):
         closest_cases = distances[:n]
 
         return closest_cases, originalpath
-    
+    #========================================================================
     #Reuse
     def calcular_valor_confianza(casos_similares: List[Tuple[float, 'Cas']], new_case: 'Cas'):
         # Diccionario para almacenar los valores acumulados de confianza para cada libro
@@ -186,12 +187,13 @@ class Indexacio(BinTree):
 
         return listas_casos_utilitzats, puntuaciones_confianza
 
+    # ========================================================================
     #Revise
     #...............................MODEL AI
     def assingar_valoracions_a_ma(cas, valoracio1:int=None, valoracio2:int=None, valoracio3:int=None):
         cas.avaluacio([valoracio1, valoracio2, valoracio3])
 
-
+    # ========================================================================
     #Retain
     # CALCUL Utilitat Normalitzada
     def recompte_valors_utilitxats(self, cas, casos_similares, listas_casos_utilitzats):
@@ -254,7 +256,7 @@ class Indexacio(BinTree):
                 return False
         return False
 
-
+    # ========================================================================
     def add(self, new:Cas, ruta:List[Any]):
         """
         Afegeix un nou cas a l'arbre utilitzant la ruta del cas més similar.
