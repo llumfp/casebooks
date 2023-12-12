@@ -17,8 +17,10 @@ class Cas:
         solucio: List[int] = [],
         avaluacio: List[int] = [],
         cops_us: int = 0,
+        
         utilitat: None = None,
         UM: int = None,
+
         UaS: int = 0,
         S: int = 0,
         UaF: int = 0,

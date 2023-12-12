@@ -100,6 +100,7 @@ class Indexacio(BinTree):
         # Caso recursivo: Recoger casos de los nodos hijos
         return self.collect_cases(node.get_left()) + self.collect_cases(node.get_right())
 
+    #Retrive
     def navigate_to_sibling(self, path):
         """
         Navega al nodo hermano basado en el camino proporcionado.
@@ -116,6 +117,7 @@ class Indexacio(BinTree):
         sibling = current.get_right() if path[-1] == 0 else current.get_left()
         return sibling
     
+    #Retrive
     def most_similar(self, new_case, n) -> Tuple[List[Tuple[float, Cas]], List[int]]:
         """
         Encuentra los n casos más similares al new_case.
@@ -146,8 +148,8 @@ class Indexacio(BinTree):
 
         return closest_cases, originalpath
     
-
-    def calcular_valor_confianza(self, casos_similares: List[Tuple[float, 'Cas']], new_case: 'Cas'):
+    #Reuse
+    def calcular_valor_confianza(casos_similares: List[Tuple[float, 'Cas']], new_case: 'Cas'):
         # Diccionario para almacenar los valores acumulados de confianza para cada libro
         valor_confianza_libros = {}
 
@@ -184,6 +186,11 @@ class Indexacio(BinTree):
 
         return listas_casos_utilitzats, puntuaciones_confianza
 
+    #Revise
+    #...............................MODEL AI
+
+
+    #Retain
     # CALCUL Utilitat Normalitzada
     def recompte_valors_utilitxats(self, cas, casos_similares, listas_casos_utilitzats):
         pos, neg = 0, 0
@@ -227,8 +234,7 @@ class Indexacio(BinTree):
     def actualixar_NMAE(self):
         self.NMAE= (self.Sum_Dif_Abs/self.num_casos_valorats)/4
 
-
-
+    # Retain
     def redundant_optim(new: Cas, most_similars: List[Tuple[float, Cas]]):
         T = 1
         dicc = {new.solution[i]: new.avaluacio[i] for i in range(3)}
