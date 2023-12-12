@@ -188,6 +188,8 @@ class Indexacio(BinTree):
 
     #Revise
     #...............................MODEL AI
+    def assingar_valoracions_a_ma(cas, valoracio1:int=None, valoracio2:int=None, valoracio3:int=None):
+        cas.avaluacio([valoracio1, valoracio2, valoracio3])
 
 
     #Retain
