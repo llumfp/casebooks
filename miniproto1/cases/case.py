@@ -1,5 +1,5 @@
 from typing import Any, Tuple, List
-from miniproto1.ontology import Problem, scale_features
+from miniproto1.cases.problem import Problem, scale_features
 from numpy import ndarray
 import numpy as np
 import pandas as pd
@@ -47,7 +47,7 @@ class Cas:
         
     
     def __repr__(self) -> str:
-        return f"Cas(id={self.id}, descripcio={self.descripcio}, solucio={self.solucio}, avaluacio={self.avaluacio})"
+        return f"Cas(id={self.id}, solucio={self.solucio}, avaluacio={self.avaluacio})"
     
 
     def actualitzar_Utilitat_normalitzada(self):
@@ -96,14 +96,12 @@ def createDB(df:pd.DataFrame) -> List[Cas]:
     
     return db
 
-
-
 def redundant_optim(similar_cases: List[Cas], indices_cases:List[int]):
     
     pairwise_distances = pdist([i.descripcio for i in similar_cases], metric='euclidean')
     distance_matrix = squareform(pairwise_distances)
 
-    print(distance_matrix)
+    # print(distance_matrix)
 
     redundant_cases = set()
 

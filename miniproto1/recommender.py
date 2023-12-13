@@ -1,6 +1,5 @@
 from miniproto1.fases import *
 from miniproto1.cases import *
-from miniproto1.ontology import *
 from typing import Set
 
 class RecommenderSystem:

@@ -13,31 +13,33 @@ import matplotlib.pyplot as plt
 
 df_problemes = pd.read_csv('./data/problems.csv')
 casesbase = createDB(df=df_problemes) # Mètode a utils.py
-casesbase = redundant_clustering(casesbase)
+# casesbase = redundant_clustering(casesbase)
 a = Indexacio(casesbase=casesbase, casesxleaf=10)
 
 newp = Problem(1,0,0,0,0,0,0,0,0,0,0.5,0.5,0.5)
 newp = Cas(id=len(casesbase),descripcio=scale_features([newp])[0])
 
+similar_cases,path = most_similar(a,newp,10)
+print(similar_cases,path)
 
-tiempos = []
-for x in range(1,990):
+# tiempos = []
+# for x in range(1,990):
     
-    inicio = time.time()
-    similar_cases,path = a.most_similar(newp,x)
-    fin = time.time()
-    tiempos.append(fin - inicio)
+#     inicio = time.time()
+#     similar_cases,path = a.most_similar(newp,x)
+#     fin = time.time()
+#     tiempos.append(fin - inicio)
 
-# Graficar los resultados
-plt.figure(figsize=(20, 5))
-plt.plot(range(1,990), tiempos, marker='o')
-plt.xlabel('Valor de x')
-#plt.xticks(range(1,101), rotation=75)
-plt.ylabel('Tiempo de ejecución (s)')
-plt.title('Tiempo de Ejecución de most_similar() en función de x')
-plt.grid(True)
-#plt.subplots_adjust(left=0.1, right=0.9)
-plt.savefig('./images/most_similar_times')
+# # Graficar los resultados
+# plt.figure(figsize=(20, 5))
+# plt.plot(range(1,990), tiempos, marker='o')
+# plt.xlabel('Valor de x')
+# #plt.xticks(range(1,101), rotation=75)
+# plt.ylabel('Tiempo de ejecución (s)')
+# plt.title('Tiempo de Ejecución de most_similar() en función de x')
+# plt.grid(True)
+# #plt.subplots_adjust(left=0.1, right=0.9)
+# plt.savefig('./images/most_similar_times')
 
 #a.calcular_valor_confianza(similar_cases,newp)
 
