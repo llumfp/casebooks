@@ -4,7 +4,6 @@ RETRIEVE CYCLE PART
 from miniproto1.cases.index import Indexacio
 from miniproto1.cases.case import Cas
 from typing import Tuple, List
-from sklearn.cluster import KMeans
 from scipy.spatial.distance import euclidean
 
 def find_leaf(indexacio: Indexacio, cas: Cas) -> Tuple[Cas, List]:
@@ -23,81 +22,101 @@ def find_leaf(indexacio: Indexacio, cas: Cas) -> Tuple[Cas, List]:
 
     return node_actual, labels # .get_root() si vols la llista de casos
 
-def collect_cases(node):
-    """
-    Recolecta todos los casos de un nodo y sus descendientes.
-    """
-    # Verificar si el nodo es None antes de intentar acceder a sus atributos
-    if node is None:
-        return []
-
-    # Si el nodo actual contiene un modelo KMeans, no recoger casos de este nodo
-    if isinstance(node.get_root(), KMeans):
-        return []
-
-    # Caso base: Si el nodo es una hoja, devolver los casos en este nodo
+def collect_cases(node:Indexacio, new_case:Cas, cases:List[Cas], n:int):
     if node.leaf():
-        for case in node.get_root():
-            case.cops_us +=1
+        return cases + node.get_root()
+    else:
+        kmeans = node.get_root()
+        label = kmeans.predict([new_case.descripcio])[0]
+        if label == 0:
+            cases = collect_cases(node.get_left(), new_case, cases, n)
+            if len(cases) >= n:
+                return cases
+            else:
+                cases = collect_cases(node.get_right(), new_case, cases, n)
+                return cases
+        else:
+            cases = collect_cases(node.get_right(), new_case, cases, n)
+            if len(cases) >= n:
+                return cases
+            else:
+                cases = collect_cases(node.get_left(), new_case, cases, n)
+                return cases
 
-        return [case for case in node.get_root()]
+def most_similar(indexacio: Indexacio, new_case:Cas):
+    n = indexacio.casesxleaf
 
-    # if node.leaf():
-    #     cas=[]
-    #     for case in node.get_root():
-    #         case.cops_us +=1
-    #         cas.append(case)
-    # return cas
+    leaf, path = find_leaf(indexacio,new_case)
+    originalpath = path.copy()
+    cases = leaf.get_root()
 
-    # # Caso recursivo: Recoger casos de los nodos hijos
-    return collect_cases(node.get_left()) + collect_cases(node.get_right())
-
-def navigate_to_sibling(indexacio: Indexacio, path):
-    """
-    Navega al nodo hermano basado en el camino proporcionado.
-    """
-    current = indexacio
-    for step in path[:-1]:  # Ignorar el último paso, que es hacia el nodo actual
-        current = current.get_left() if step == 0 else current.get_right()
+    if len(cases) < n:
+        last_label = path.pop()
+        node_actual = indexacio
+        for label in path:
+            node_actual = node_actual.get_left() if label == 0 else node_actual.get_right()
+        neighbor = node_actual.get_left() if last_label == 1 else node_actual.get_right()
+        
+        cases = collect_cases(neighbor, new_case, cases, n)
     
-    # Si el camino está vacío, no hay hermano al que navegar
-    if not path:
-        return None
-    
-    # Ir al nodo hermano
-    sibling = current.get_right() if path[-1] == 0 else current.get_left()
-    return sibling
+    distances = [[euclidean(new_case.descripcio, case.descripcio), case] for case in cases]
+    distances.sort(key=lambda x: x[0])
+    most_n_similars = distances[:n]
 
-def most_similar(indexacio: Indexacio, new_case, n) -> Tuple[List[Tuple[float, Cas]], List[int]]:
+    return most_n_similars, originalpath
+
+#############################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''def most_similar_original_Artur(indexacio, new_case, n):
     """
     Encuentra los n casos más similares al new_case.
     """
     # Encuentra la hoja más cercana y el recorrido
-    leaf, path = find_leaf(indexacio,new_case)
-
+    leaf_node, path = find_leaf(indexacio, new_case)
     originalpath = path.copy()
 
     # Recolecta casos de la hoja más cercana
-    all_cases = collect_cases(leaf)
+    all_cases = collect_cases_original(indexacio, leaf_node)
 
     # Si no hay suficientes casos, busca en los nodos hermanos
-    while len(all_cases) <= n+3 and path:
-        path.pop()  # Retroceder un nivel en el árbol
+    pila = []
 
-        if not path:  # Si hemos llegado a la raíz, terminar la búsqueda
-            break
+    while len(all_cases) < n and path:
+          # Retroceder un nivel en el árbol
+        node_to_explore = navigate_to_sibling_original(indexacio, path)
 
-        node_to_explore = navigate_to_sibling(indexacio,path)
-        sibling_cases = collect_cases(node_to_explore)
+        if node_to_explore.leaf():
+            sibling_cases = collect_cases_original(indexacio, node_to_explore)
+        
+        else:
+            node_to_explore.get_root()
+         
         all_cases.extend(sibling_cases)
 
-    print(len(all_cases))
+        path.pop()
+
     # Calcular distancias y seleccionar los n más cercanos
-    distances = [[euclidean(new_case.descripcio, case.descripcio), case] for case in all_cases]
+    distances = [(euclidean(new_case.descripcio, case.descripcio), case) for case in all_cases]
     distances.sort(key=lambda x: x[0])
     closest_cases = distances[:n]
 
-    print(len(distances)) # 9
-
-    return closest_cases, originalpath
-
+    return closest_cases, originalpath'''

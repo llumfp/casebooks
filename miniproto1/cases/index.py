@@ -51,9 +51,7 @@ class Indexacio(BinTree):
             self.set_root(kmeans)
             self.set_left(subarbre1)
             self.set_right(subarbre2)
-
-    # ========================================================================
-    
+            
     #========================================================================
     #Reuse
     def calcular_valor_confianza(casos_similares: List[Tuple[float, 'Cas']], new_case: 'Cas'):
