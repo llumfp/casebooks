@@ -6,8 +6,6 @@ from sklearn.cluster import KMeans, AgglomerativeClustering
 from scipy.spatial.distance import euclidean
 import pickle
 
-
-
 class Indexacio(BinTree):
     def __init__(
         self, 
@@ -55,99 +53,7 @@ class Indexacio(BinTree):
             self.set_right(subarbre2)
 
     # ========================================================================
-    def find_leaf(self, cas: Cas) -> Tuple[Cas, List]:
-        
-        node_actual = self
-        labels = []
-
-        while not node_actual.leaf():
-            kmeans = node_actual.get_root()
-            label = kmeans.predict([cas.descripcio])[0]
-            labels.append(label)
-            
-            if label == 0:
-                node_actual = node_actual.get_left()
-            else:
-                node_actual = node_actual.get_right()
-
-        return node_actual, labels # .get_root() si vols la llista de casos
-
-    def collect_cases(self, node):
-        """
-        Recolecta todos los casos de un nodo y sus descendientes.
-        """
-        # Verificar si el nodo es None antes de intentar acceder a sus atributos
-        if node is None:
-            return []
-
-        # Si el nodo actual contiene un modelo KMeans, no recoger casos de este nodo
-        if isinstance(node.get_root(), KMeans):
-            return []
-
-        # Caso base: Si el nodo es una hoja, devolver los casos en este nodo
-        if node.leaf():
-            for case in node.get_root():
-                case.cops_us +=1
-
-        return [case for case in node.get_root()]
-
-        if node.leaf():
-            cas=[]
-            for case in node.get_root():
-                case.cops_us +=1
-                cas.append(case)
-        return cas
     
-        # Caso recursivo: Recoger casos de los nodos hijos
-        return self.collect_cases(node.get_left()) + self.collect_cases(node.get_right())
-
-    #Retrive
-    def navigate_to_sibling(self, path):
-        """
-        Navega al nodo hermano basado en el camino proporcionado.
-        """
-        current = self
-        for step in path[:-1]:  # Ignorar el último paso, que es hacia el nodo actual
-            current = current.get_left() if step == 0 else current.get_right()
-        
-        # Si el camino está vacío, no hay hermano al que navegar
-        if not path:
-            return None
-        
-        # Ir al nodo hermano
-        sibling = current.get_right() if path[-1] == 0 else current.get_left()
-        return sibling
-    
-    #Retrive
-    def most_similar(self, new_case, n) -> Tuple[List[Tuple[float, Cas]], List[int]]:
-        """
-        Encuentra los n casos más similares al new_case.
-        """
-        # Encuentra la hoja más cercana y el recorrido
-        leaf, path = self.find_leaf(new_case)
-
-        originalpath = path.copy()
-
-        # Recolecta casos de la hoja más cercana
-        all_cases = self.collect_cases(leaf)
-
-        # Si no hay suficientes casos, busca en los nodos hermanos
-        while len(all_cases) < n and path:
-            path.pop()  # Retroceder un nivel en el árbol
-
-            if not path:  # Si hemos llegado a la raíz, terminar la búsqueda
-                break
-
-            node_to_explore = self.navigate_to_sibling(path)
-            sibling_cases = self.collect_cases(node_to_explore)
-            all_cases.extend(sibling_cases)
-
-        # Calcular distancias y seleccionar los n más cercanos
-        distances = [[euclidean(new_case.descripcio, case.descripcio), case] for case in all_cases]
-        distances.sort(key=lambda x: x[0])
-        closest_cases = distances[:n]
-
-        return closest_cases, originalpath
     #========================================================================
     #Reuse
     def calcular_valor_confianza(casos_similares: List[Tuple[float, 'Cas']], new_case: 'Cas'):
@@ -298,7 +204,7 @@ class Indexacio(BinTree):
             node_actual.set_root(leafcases)
 
 
-    def removee(self, cas, ruta):
+    def delete(self, cas, ruta):
         """
         Elimina un caso del árbol de casos. Si al eliminar el caso, el nodo hoja correspondiente
         queda vacío, el árbol se reestructura para eliminar dicho nodo hoja.
