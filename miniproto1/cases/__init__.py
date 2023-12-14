@@ -1,4 +1,4 @@
 from .bintreelinked import BinTree
 from .case import *
-from .index import Indexacio
+from .index import *
 from .problem import Problem

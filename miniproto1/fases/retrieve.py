@@ -43,7 +43,7 @@ def collect_cases(node:Indexacio, new_case:Cas, cases:List[Cas], n:int):
                 cases = collect_cases(node.get_left(), new_case, cases, n)
                 return cases
 
-def most_similar(indexacio: Indexacio, new_case:Cas):
+def most_similar(indexacio: Indexacio, new_case:Cas) -> Tuple[List[Tuple[float, Cas]], List[int]]:
     n = indexacio.casesxleaf
 
     leaf, path = find_leaf(indexacio,new_case)
@@ -65,6 +65,53 @@ def most_similar(indexacio: Indexacio, new_case:Cas):
 
     return most_n_similars, originalpath
 
+
+def collect_cases2(node, new_case, cases, n, path):
+    """
+    Collect cases from the tree, keeping track of the path taken to reach each case.
+    """
+    if node.leaf():
+        return cases + node.get_root(), path
+    else:
+        kmeans = node.get_root()
+        label = kmeans.predict([new_case.descripcio])[0]
+        if label == 0:
+            cases, path = collect_cases2(node.get_left(), new_case, cases, n, path + [0])
+            if len(cases) >= n:
+                return cases, path
+            else:
+                return collect_cases2(node.get_right(), new_case, cases, n, path + [1])
+        else:
+            cases, path = collect_cases2(node.get_right(), new_case, cases, n, path + [1])
+            if len(cases) >= n:
+                return cases, path
+            else:
+                return collect_cases2(node.get_left(), new_case, cases, n, path + [0])
+
+def most_similar2(indexacio, new_case):
+    """
+    Find the most similar cases to a new case, along with the path taken to find them.
+    """
+    n = indexacio.casesxleaf
+
+    leaf, path = find_leaf(indexacio, new_case)
+    originalpath = path.copy()
+    cases = leaf.get_root()
+
+    if len(cases) < n:
+        last_label = path.pop()
+        node_actual = indexacio
+        for label in path:
+            node_actual = node_actual.get_left() if label == 0 else node_actual.get_right()
+        neighbor = node_actual.get_left() if last_label == 1 else node_actual.get_right()
+        
+        cases, path = collect_cases2(neighbor, new_case, cases, n, path)
+    
+    distances = [[euclidean(new_case.descripcio, case.descripcio), case] for case in cases]
+    distances.sort(key=lambda x: x[0])
+    most_n_similars = distances[:n]
+
+    return most_n_similars, originalpath
 #############################################################################
 
 
