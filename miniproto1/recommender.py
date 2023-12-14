@@ -24,10 +24,10 @@ class RecommenderSystem:
         self.indexacio.save(nom)
 
 
-
     def retrieve(self, newp:Problem) -> Set[Cas]:
-        newp = Cas(id=len(self.casebase),descripcio=scale_features([newp])[0])
-        return most_similar(self.indexacio, newp)
+        newp = Cas(id=(self.indexacio.Num_casos+1),descripcio=scale_features([newp])[0])
+        return most_similar2(self.indexacio, newp)
+    
 
     def reuse(self, ):
         pass

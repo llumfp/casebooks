@@ -36,11 +36,22 @@ newp = Problem(1,0,0,0,0,0,0,0,0,0,0.5,0.5,0.5)
 
 
 
-#Retrieve
+# Retrieve
 most_similar_cases, path = rs.retrieve(newp)
-print(most_similar_cases, path)
+"""print(f"most_similar_cases: {most_similar_cases}")
+
+print(f"Path: {path}")
+
+for i in most_similar_cases:
+    print(len(i[2]))
+print(len(most_similar_cases))
+"""
+
+# Reuse
 
 
+"""
 print("ara guardare")
 rs.guardar("primer_arbre")
 print("he guadat")
+"""

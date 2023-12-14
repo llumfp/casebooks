@@ -14,6 +14,8 @@ class Indexacio(BinTree):
         type:str='', 
         casesxleaf:int = 10,
 
+        Num_casos:int = None,
+
         #Calcualr com de real es la prediccio
         NMAE: int = None,  # Error Absoluto Medio Normalizado
         Sum_Dif_Abs:int = None, # Sumatorio de las diferencias absolutas entre las puntuaciones predichas y las reales para todos los libros y todos los usuarios
@@ -27,6 +29,7 @@ class Indexacio(BinTree):
         self.NMAE=NMAE
         self.Sum_Dif_Abs= Sum_Dif_Abs
         self.num_casos_valorats=num_casos_valorats
+        self.Num_casos = len(casesbase)
         self.creacio(casos=casesbase)
 
 
