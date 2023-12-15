@@ -22,16 +22,12 @@ resposta = input('Precarregar (marca True) o de 0 False:  ')
 
 if eval(resposta):
     rs = RecommenderSystem(indexacio="primer_arbre.pkl")
-
 else:
     try:
         df_problemes.drop('Unnamed: 0',axis=1,inplace=True)
-        
-
     except:
         pass
-
-    rs = RecommenderSystem(55,df_problemes)
+    rs = RecommenderSystem(maxcasesxleaf=10,casebase=df_problemes)
 
 
 #rs.indexacio.save("primera")
@@ -58,8 +54,14 @@ print(f'llibres recomanat: {newcas.solucio}')
 
 # Revise
 #revise()
-valoracio1 = float('-inf')
+def valorate(new_case:Cas):
+    val = float('-inf')
+    while val not in list(range(1,6))+['-']:
+        val = int(input(f"Què t'ha semblat el llibre {newcas.solucio[0]}, quantes estrelles li dones? (1-5): "))
+    return val
+        
 
+valoracio1 = float('-inf')
 while valoracio1 not in ['1','2','3','4','5','-']:
     valoracio1 = input(f'Com valores {newcas.solucio[0]}, si vols saltar la valoracio escriu -:  ')
 if valoracio1 != '-':
@@ -89,7 +91,7 @@ if valoracio1 or valoracio2 or valoracio3:
 
 
 # Evaluacio
-real = evaluation(newcas, puntuaciones_confianza, casos_para_confianza)
+real = rs.evaluation(newcas, puntuaciones_confianza, casos_para_confianza)
 print(f"es {real} real")
 
 
