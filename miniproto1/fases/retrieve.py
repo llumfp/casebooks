@@ -94,7 +94,7 @@ def collect_cases2(node, new_case, cases, n):
 
 
 
-def most_similar2(indexacio, new_case):
+def most_similar2(indexacio, new_case)-> Tuple[List[Tuple[float, Cas, "Path"]], List[int]]:
     """
     Find the most similar cases to a new case, and return them along with the path taken to find them.
     """
@@ -114,8 +114,7 @@ def most_similar2(indexacio, new_case):
         cases = collect_cases2(neighbor, new_case, cases, n)
 
     # Calculate distances and associate each case with the original path
-    distances = [[euclidean(new_case.descripcio, case.descripcio),
-                  case, originalpath] for case in cases]
+    distances = [[euclidean(new_case.descripcio, case.descripcio), case, originalpath] for case in cases]
     distances.sort(key=lambda x: x[0])
     most_n_similars_with_paths = distances[:n]
 

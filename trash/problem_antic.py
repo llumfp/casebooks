@@ -128,6 +128,7 @@ def scale_features(problems: List["Problem"]) -> np.ndarray:
     for s, p in zip(scaled_features, problems):
         p.encoded = list(s)
 
+
 def preprocess(problems:List[Problem]):
     for p in problems:
         p.encode_easy()

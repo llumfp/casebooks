@@ -14,24 +14,27 @@ class Indexacio(BinTree):
         type:str='', 
         casesxleaf:int = 10,
 
-        Num_casos:int = None,
+
 
         #Calcualr com de real es la prediccio
         NMAE: int = None,  # Error Absoluto Medio Normalizado
         Sum_Dif_Abs:int = None, # Sumatorio de las diferencias absolutas entre las puntuaciones predichas y las reales para todos los libros y todos los usuarios
-        num_casos_valorats: int=0 #Numero de casos valorats
+        num_casos_valorats: int=0 # Numero de casos valorats
 
     ) -> None: # type - str, per a determinar quin tipus de creacio s'executa.
         
         super().__init__(casesbase, left, right)
+        self.casesbase = casesbase
+        self.__length = len(self.casesbase)
         self.type = type
         self.casesxleaf = casesxleaf
         self.NMAE=NMAE
         self.Sum_Dif_Abs= Sum_Dif_Abs
         self.num_casos_valorats=num_casos_valorats
-        self.Num_casos = len(casesbase)
         self.creacio(casos=casesbase)
 
+    def __len__(self):
+        return self.__length
 
     def creacio(self,casos:List[Cas]) -> None:
         if len(casos) <= self.casesxleaf:
@@ -169,6 +172,7 @@ class Indexacio(BinTree):
         Afegeix un nou cas a l'arbre utilitzant la ruta del cas més similar.
         """
         # Recórrer l'arbre fins al node més similar.
+        self._length += 1
         node_actual = self
         for label in ruta:
             if label == 0:

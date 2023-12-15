@@ -19,7 +19,6 @@ class Cas:
         avaluacio: List[int] = [],
         cops_us: int = 0,
         
-        
         utilitat: None = None,
         UM: int = None,
 
