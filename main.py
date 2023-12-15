@@ -21,10 +21,9 @@ newp = Problem(1,0,0,0,0,0,0,0,0,0,0.5,0.5,0.5)
 newcas = Cas(id=(len(rs.indexacio)),descripcio=scale_features([newp])[0])
 
 # Retrieve
-most_similar_cases = rs.retrieve(newp) 
-print(most_similar_cases)
-# Reuse
+most_similar_cases = rs.retrieve(newp)
 
+# Reuse
 distancies, casos, paths = zip(*most_similar_cases)
 cas_dists = list(zip(distancies, casos))
 

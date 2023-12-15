@@ -23,7 +23,7 @@ def find_leaf(indexacio: Indexacio, cas: Cas) -> Tuple[Cas, List]:
 
     return node_actual, labels # .get_root() si vols la llista de casos       
 
-def collect_cases(node:Indexacio, new_case:Cas, cases:List[Cas], n:int):
+def collect_cases(node:Indexacio, new_case:Cas, cases:List[Cas], n:int, path:List[int]):
     """
     Collect cases from the tree, keeping track of the path taken to reach each case.
     Each case is associated with its unique path.
@@ -31,45 +31,52 @@ def collect_cases(node:Indexacio, new_case:Cas, cases:List[Cas], n:int):
     """
     Collect cases from the tree. This function remains as in the original implementation.
     """
+    path = path.copy()
+
     if node.leaf():
-        return cases + node.get_root()
+        return cases + [(c, path) for c in node.get_root()]
     else:
         kmeans = node.get_root()
         label = kmeans.predict([new_case.descripcio])[0]
         if label == 0:
-            cases = collect_cases(node.get_left(), new_case, cases, n)
+            cases = collect_cases(node.get_left(), new_case, cases, n, path+[0])
             if len(cases) >= n:
                 return cases
             else:
-                return collect_cases(node.get_right(), new_case, cases, n)
+                return collect_cases(node.get_right(), new_case, cases, n, path+[1])
         else:
-            cases = collect_cases(node.get_right(), new_case, cases, n)
+            cases = collect_cases(node.get_right(), new_case, cases, n, path+[1])
             if len(cases) >= n:
                 return cases
             else:
-                return collect_cases(node.get_left(), new_case, cases, n)
+                return collect_cases(node.get_left(), new_case, cases, n, path+[0])
 
 def most_similar(indexacio, new_case)-> List[Tuple[float, Cas, List[int]]]:
     """
-    Find the most similar cases to a new case, and return them along with the path taken to find them.
+    Find the most similar cases to a new case, and return them along with the distance 
+    to the new_case and the path taken to find them.
     """
     n = indexacio.casesxleaf
 
     leaf, path = find_leaf(indexacio, new_case)
     originalpath = path.copy()
-    cases = leaf.get_root()
+    
+    cases = [(c, originalpath) for c in leaf.get_root()]
 
     if len(cases) < n:
-        last_label = path.pop()
+        new_last_label = int(not(path.pop()))
+        new_path = path + [new_last_label]
+        
         node_actual = indexacio
         for label in path:
             node_actual = node_actual.get_left() if label == 0 else node_actual.get_right()
-        neighbor = node_actual.get_left() if last_label == 1 else node_actual.get_right()
+        
+        neighbor = node_actual.get_left() if new_last_label == 0 else node_actual.get_right()
 
-        cases = collect_cases(neighbor, new_case, cases, n)
+        cases = collect_cases(neighbor, new_case, cases, n, new_path)
 
     # Calculate distances and associate each case with the original path
-    distances = [[euclidean(new_case.descripcio, case.descripcio), case, originalpath] for case in cases]
+    distances = [[euclidean(new_case.descripcio, case.descripcio), case, path] for case, path in cases]
     distances.sort(key=lambda x: x[0])
     most_n_similars_with_paths = distances[:n]
 

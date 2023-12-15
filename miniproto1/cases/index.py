@@ -4,7 +4,6 @@ from typing import List, Any, Tuple
 from .case import Cas
 from sklearn.cluster import KMeans, AgglomerativeClustering
 from scipy.spatial.distance import euclidean
-import pickle
 
 class Indexacio(BinTree):
     def __init__(
@@ -13,9 +12,6 @@ class Indexacio(BinTree):
         left=None, right=None, 
         type:str='', 
         casesxleaf:int = 10,
-
-
-
         #Calcualr com de real es la prediccio
         NMAE: int = None,  # Error Absoluto Medio Normalizado
         Sum_Dif_Abs:int = None, # Sumatorio de las diferencias absolutas entre las puntuaciones predichas y las reales para todos los libros y todos los usuarios
@@ -240,16 +236,3 @@ class Indexacio(BinTree):
             # Si el nodo padre ahora es una hoja, reemplazarlo por su nodo padre
             if node_padre.leaf():
                 self._root = node_padre.get_root()
-
-
-
-    def save(self, nombre_archivo_sin_extension):
-        nombre_archivo_completo = f"{nombre_archivo_sin_extension}.pkl"
-        with open(nombre_archivo_completo, 'wb') as archivo:
-            pickle.dump(self, archivo)
-
-    @classmethod
-    def load(cls, nombre_archivo):
-        with open(nombre_archivo, 'rb') as archivo:
-            instancia = pickle.load(archivo)
-        return instancia
