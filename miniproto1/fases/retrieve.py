@@ -1,6 +1,7 @@
 """
 RETRIEVE CYCLE PART 
 """
+
 from miniproto1.cases.index import Indexacio
 from miniproto1.cases.case import Cas
 from typing import Tuple, List
@@ -20,53 +21,9 @@ def find_leaf(indexacio: Indexacio, cas: Cas) -> Tuple[Cas, List]:
         else:
             node_actual = node_actual.get_right()
 
-    return node_actual, labels # .get_root() si vols la llista de casos
+    return node_actual, labels # .get_root() si vols la llista de casos       
 
 def collect_cases(node:Indexacio, new_case:Cas, cases:List[Cas], n:int):
-    if node.leaf():
-        return cases + node.get_root()
-    else:
-        kmeans = node.get_root()
-        label = kmeans.predict([new_case.descripcio])[0]
-        if label == 0:
-            cases = collect_cases(node.get_left(), new_case, cases, n)
-            if len(cases) >= n:
-                return cases
-            else:
-                cases = collect_cases(node.get_right(), new_case, cases, n)
-                return cases
-        else:
-            cases = collect_cases(node.get_right(), new_case, cases, n)
-            if len(cases) >= n:
-                return cases
-            else:
-                cases = collect_cases(node.get_left(), new_case, cases, n)
-                return cases
-
-def most_similar(indexacio: Indexacio, new_case:Cas) -> Tuple[List[Tuple[float, Cas]], List[int]]:
-    n = indexacio.casesxleaf
-
-    leaf, path = find_leaf(indexacio,new_case)
-    originalpath = path.copy()
-    cases = leaf.get_root()
-
-    if len(cases) < n:
-        last_label = path.pop()
-        node_actual = indexacio
-        for label in path:
-            node_actual = node_actual.get_left() if label == 0 else node_actual.get_right()
-        neighbor = node_actual.get_left() if last_label == 1 else node_actual.get_right()
-        
-        cases = collect_cases(neighbor, new_case, cases, n)
-    
-    distances = [[euclidean(new_case.descripcio, case.descripcio), case] for case in cases]
-    distances.sort(key=lambda x: x[0])
-    most_n_similars = distances[:n]
-
-    return most_n_similars, originalpath
-       
-
-def collect_cases2(node, new_case, cases, n):
     """
     Collect cases from the tree, keeping track of the path taken to reach each case.
     Each case is associated with its unique path.
@@ -80,21 +37,19 @@ def collect_cases2(node, new_case, cases, n):
         kmeans = node.get_root()
         label = kmeans.predict([new_case.descripcio])[0]
         if label == 0:
-            cases = collect_cases2(node.get_left(), new_case, cases, n)
+            cases = collect_cases(node.get_left(), new_case, cases, n)
             if len(cases) >= n:
                 return cases
             else:
-                return collect_cases2(node.get_right(), new_case, cases, n)
+                return collect_cases(node.get_right(), new_case, cases, n)
         else:
-            cases = collect_cases2(node.get_right(), new_case, cases, n)
+            cases = collect_cases(node.get_right(), new_case, cases, n)
             if len(cases) >= n:
                 return cases
             else:
-                return collect_cases2(node.get_left(), new_case, cases, n)
+                return collect_cases(node.get_left(), new_case, cases, n)
 
-
-
-def most_similar2(indexacio, new_case)-> Tuple[List[Tuple[float, Cas, "Path"]], List[int]]:
+def most_similar(indexacio, new_case)-> List[Tuple[float, Cas, List[int]]]:
     """
     Find the most similar cases to a new case, and return them along with the path taken to find them.
     """
@@ -111,17 +66,14 @@ def most_similar2(indexacio, new_case)-> Tuple[List[Tuple[float, Cas, "Path"]], 
             node_actual = node_actual.get_left() if label == 0 else node_actual.get_right()
         neighbor = node_actual.get_left() if last_label == 1 else node_actual.get_right()
 
-        cases = collect_cases2(neighbor, new_case, cases, n)
+        cases = collect_cases(neighbor, new_case, cases, n)
 
     # Calculate distances and associate each case with the original path
     distances = [[euclidean(new_case.descripcio, case.descripcio), case, originalpath] for case in cases]
     distances.sort(key=lambda x: x[0])
     most_n_similars_with_paths = distances[:n]
 
-    return most_n_similars_with_paths, originalpath
-
-
-
+    return most_n_similars_with_paths
 
 #############################################################################
 

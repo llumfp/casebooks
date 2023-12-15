@@ -13,21 +13,19 @@ from scipy.spatial.distance import euclidean
 import pickle
 import xgboost as xgb
 
-
-def assingar_valoracions_a_ma(cas, args):
-        cas.avaluacio([args[0], args[1], args[2]])
+def assign(cas):
+        vals = [int(input(f'Valoració {i+1}: ')) for i in range(3)]
+        cas.avaluacio = [int(vals[0]), int(vals[1]), int(vals[2])]
 
 def automatic(cas):
         with open('xgb_model.pkl', 'rb') as file:
                 loaded_model = pickle.load(file)
         
         valoracions = []
-
         for i in cas.solucio:
                 predictions = loaded_model.predict(i) #FALTEN COSES NO ES I
-                valoracions.add(predictions)
-
-        cas.avaluacio(valoracions)
+                valoracions.append(predictions)
+        cas.avaluacio = valoracions
 
 def predict_valoration(new_case):
     with open('xgb_model.pkl', 'rb') as file:

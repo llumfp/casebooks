@@ -62,4 +62,4 @@ def scale_features(problems: List["Problem"]) -> np.ndarray:
     for s, p in zip(scaled_features, problems):
         p.array = list(s)
 
-    return scaled_features
+    return scaler, scaled_features

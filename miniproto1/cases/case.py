@@ -89,11 +89,11 @@ def createDB(df:pd.DataFrame) -> List[Cas]:
     recomendations = [eval(i) for i in df['recomendations'].tolist()]
     rating_recom = [eval(i) for i in df['recom_ratings'].tolist()]
 
-    scaled_features = scale_features(problemes)
+    scaler, scaled_features = scale_features(problemes)
 
     db = [Cas(id=df['user_id'][idx], descripcio=p, historial=read_books[idx] ,solucio= recomendations[idx], avaluacio= rating_recom[idx]) for idx,p in enumerate(scaled_features)]
     
-    return db
+    return db, scaler
 
 def redundant_optim(similar_cases: List[Cas], indices_cases:List[int]):
     

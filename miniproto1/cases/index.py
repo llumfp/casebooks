@@ -132,7 +132,7 @@ class Indexacio(BinTree):
 
 
     # CALCUL Error Absoluto Medio Normalizado
-    def calcul__Sum_Dif_Abs__num_casos_valorats(self, new: Cas, puntuaciones_confianza):
+    def realness(self, new: Cas, puntuaciones_confianza):
         num_punt = 0
         for index, valoracio in enumerate(new.avaluacio):
             if valoracio is not None and puntuaciones_confianza[index] is not None:
