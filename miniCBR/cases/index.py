@@ -168,7 +168,7 @@ class Indexacio(BinTree):
         Afegeix un nou cas a l'arbre utilitzant la ruta del cas més similar.
         """
         # Recórrer l'arbre fins al node més similar.
-        self._length += 1
+        self.__length += 1
         node_actual = self
         for label in ruta:
             if label == 0:

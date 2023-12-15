@@ -7,10 +7,10 @@ import matplotlib.pyplot as plt
 import ast
 
 df_problemes = pd.read_csv('./data/problems4000(real).csv')
-
+df_problemes.drop('Unnamed: 0',axis=1,inplace=True)
 rs = createRS(casebase=df_problemes, maxcasesxleaf=10)
 
-# Exemple de prova: Problem(1,0,0,0,0,0,0,0,0,0,0.5,0.5,0.5)
+# Exemple de prova: Problem(1,0,0,0,0,0.3,0,0,0,0,0.5,0.5,0.5)
 
 while True:
     newp = eval(input('Introdueix la nova instancia de Problem()')) 
