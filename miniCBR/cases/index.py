@@ -177,7 +177,7 @@ class Indexacio(BinTree):
                 node_actual = node_actual.get_right()
 
         # Obtenir el cas del node més similar i afegir el nou cas.
-        leafcases = [node_actual.get_root(), new]
+        leafcases = node_actual.get_root() + [new]
 
         if len(leafcases) > self.casesxleaf:
             # Crear un nou KMeans amb tots els casos.

@@ -18,7 +18,7 @@ from_model = eval(input('Precarregar RecommenderSystem? (True/False):  '))
 rs = createRS(from_model, path="", maxcasesxleaf=10, casebase=df_problemes)
 
 newp = Problem(1,0,0,0,0,0,0,0,0,0,0.5,0.5,0.5)
-newcas = Cas(id=(len(rs.indexacio)),descripcio=scale_features([newp])[0])
+newcas = Cas(id=(len(rs.indexacio)),descripcio=rs.scaler.transform([newp])[0])
 
 # Retrieve
 most_similar_cases = rs.retrieve(newp)
@@ -28,6 +28,7 @@ distancies, casos, paths = zip(*most_similar_cases)
 cas_dists = list(zip(distancies, casos))
 
 listas_casos_utilitzats, puntuaciones_confianza  = rs.reuse(cas_dists, newcas)
+
 
 """# Revise
 rs.revise(newcas,3,4,5,metode=False)

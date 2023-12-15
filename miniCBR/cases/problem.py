@@ -48,7 +48,7 @@ class Problem:
         self.array = list(self.__dict__.values())
 
     def __repr__(self):
-        return f"Problem()"
+        return f"Problem({self.array})"
 
 def scale_features(problems: List["Problem"]) -> np.ndarray:
     '''

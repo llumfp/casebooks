@@ -28,65 +28,10 @@ def most_similar(indexacio, new_case)-> List[Tuple[float, Cas, List[int]]]:
 
     leaf, path = find_leaf(indexacio, new_case)
     originalpath = path.copy()
-    
     cases = [(c, originalpath) for c in leaf.get_root()]
-
+    
     distances = [[euclidean(new_case.descripcio, case.descripcio), case, path] for case, path in cases]
     distances.sort(key=lambda x: x[0])
     most_similar_case = distances[0]
 
     return most_similar_case
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-'''def most_similar_original_Artur(indexacio, new_case, n):
-    """
-    Encuentra los n casos más similares al new_case.
-    """
-    # Encuentra la hoja más cercana y el recorrido
-    leaf_node, path = find_leaf(indexacio, new_case)
-    originalpath = path.copy()
-
-    # Recolecta casos de la hoja más cercana
-    all_cases = collect_cases_original(indexacio, leaf_node)
-
-    # Si no hay suficientes casos, busca en los nodos hermanos
-    pila = []
-
-    while len(all_cases) < n and path:
-          # Retroceder un nivel en el árbol
-        node_to_explore = navigate_to_sibling_original(indexacio, path)
-
-        if node_to_explore.leaf():
-            sibling_cases = collect_cases_original(indexacio, node_to_explore)
-        
-        else:
-            node_to_explore.get_root()
-         
-        all_cases.extend(sibling_cases)
-
-        path.pop()
-
-    # Calcular distancias y seleccionar los n más cercanos
-    distances = [(euclidean(new_case.descripcio, case.descripcio), case) for case in all_cases]
-    distances.sort(key=lambda x: x[0])
-    closest_cases = distances[:n]
-
-    return closest_cases, originalpath'''

@@ -29,6 +29,8 @@ class RecommenderSystem:
         l'opció a no llegir el llibre.
         '''
         newcas.avaluacio = [random.randint(1,5) for _ in range(3)]
+        # real = predict_valoration(newcas,'xgb_1500_6.pkl')
+        return newcas.avaluacio #, real
 
     def retain(self, dist, newcas, path, T=0.9):
         '''
