@@ -28,9 +28,9 @@ class RecommenderSystem:
         newcase = Cas(id=(len(self.indexacio)),descripcio=self.scaler.transform([newp.array])[0])
         return most_similar(self.indexacio, newcase)
     
-    def reuse(self, casos, newp):
-        casos_utilitzats, puntuacions = calcular_valor_confianza(casos, newp)
-        return casos_utilitzats, puntuacions
+    def reuse(self, casos_sim, newc):
+        result = calcular_valor_confianza(casos_sim, newc)
+        return result
 
     def revise(self, cas, metode:bool = True):
         if metode:
