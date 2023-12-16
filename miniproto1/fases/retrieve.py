@@ -28,9 +28,6 @@ def collect_cases(node:Indexacio, new_case:Cas, cases:List[Cas], n:int, path:Lis
     Collect cases from the tree, keeping track of the path taken to reach each case.
     Each case is associated with its unique path.
     """
-    """
-    Collect cases from the tree. This function remains as in the original implementation.
-    """
     path = path.copy()
 
     if node.leaf():

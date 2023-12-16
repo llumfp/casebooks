@@ -129,18 +129,18 @@ def redundant_clustering(clustering_cases: List[Cas]):
         servirà per a eliminar aquells casos redundants"""
     numeric_data = [case.descripcio for case in clustering_cases]
 
-    Z = linkage(numeric_data, method='ward')
-    plt.figure(figsize=(10, 7))
-    dendrogram(Z, truncate_mode='lastp', p=15, show_contracted=True)
-    plt.title("Dendrogram")
-    plt.xlabel("Cluster Size")
-    plt.ylabel("Distance")
-    plt.show()
-    estimated_distance_threshold = float(input("Veient el dendograma, per quina distància vols retallar l'arbre per a fer clusters?"))
+    # Z = linkage(numeric_data, method='ward')
+    # plt.figure(figsize=(10, 7))
+    # dendrogram(Z, truncate_mode='lastp', p=15, show_contracted=True)
+    # plt.title("Dendrogram")
+    # plt.xlabel("Cluster Size")
+    # plt.ylabel("Distance")
+    # plt.show()
+    # estimated_distance_threshold = float(input("Veient el dendograma, per quina distància vols retallar l'arbre per a fer clusters?"))
 
     # Creem un arbre jerarquic a partir d'obserbar el dendograma
     final_model_adjusted = AgglomerativeClustering(n_clusters=None,  
-                                                    distance_threshold= estimated_distance_threshold,
+                                                    distance_threshold= 2,
                                                 linkage='ward')
     final_model_adjusted.fit(numeric_data)
 

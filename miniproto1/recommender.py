@@ -57,7 +57,7 @@ class RecommenderSystem:
 
 
 
-def createRS(from_model, path:str = None, maxcasesxleaf:int = 10, casebase:pd.DataFrame = None):
+def createRS(from_model:bool, path:str = None, maxcasesxleaf:int = 10, casebase:pd.DataFrame = None):
     if from_model:
         rs = RecommenderSystem.load(path)
     else:

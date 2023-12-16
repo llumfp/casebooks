@@ -9,7 +9,7 @@ class RecommenderSystem:
             casebase:pd.DataFrame=None
         ) -> None:
         db, self.scaler = createDB(casebase)
-        self.casebase = db #redundant_clustering(db)
+        self.casebase = db 
         self.indexacio = Indexacio(casesbase=self.casebase, casesxleaf=maxcasesxleaf)
 
     def retrieve(self, newcase:Cas) -> Tuple[float, Cas, List[int]]:
@@ -29,8 +29,7 @@ class RecommenderSystem:
         l'opció a no llegir el llibre.
         '''
         newcas.avaluacio = [random.randint(1,5) for _ in range(3)]
-        # real = predict_valoration(newcas,'xgb_1500_6.pkl')
-        return newcas.avaluacio #, real
+        return newcas.avaluacio 
 
     def retain(self, dist, newcas, path, T=0.9):
         '''
