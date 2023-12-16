@@ -12,8 +12,10 @@ from scipy.spatial.distance import euclidean
 
 def calcular_valor_confianza(casos_similares: List[Tuple[float, 'Cas']], new_case: 'Cas'):
     """
+
     A partir d'una llista de casos similars i un nou cas, retorna un diccionari amb la informació dels 3 llibres a recomanar
     -> {id_llibre: [valoracions_predita,[casos_similar_que_contenen_el_llibre]]}
+
     """
 
     valor_confianza_libros = defaultdict(
@@ -30,17 +32,15 @@ def calcular_valor_confianza(casos_similares: List[Tuple[float, 'Cas']], new_cas
                 valor_confianza_libros[libro][0] += valor
                 valor_confianza_libros[libro][1] += similitud
                 valor_confianza_libros[libro][2].append(caso)
-
+    print(valor_confianza_libros)
     # Conversión y Ordenación en un paso
     diccionario_ordenado = sorted(
-        ((id_llibre, [1 + ((valor / simil - (-2.5)) * 0.8), cases])
+        ((id_llibre, [1 + ((valor / (simil+0.05) - (-2.5)) * 0.8), cases])
          for id_llibre, (valor, simil, cases) in valor_confianza_libros.items()),
         key=lambda item: item[1][0], reverse=True
     )
-
+    
     tres_primers = dict(diccionario_ordenado[:3])
-    print(tres_primers)
     new_case.solucio = list(tres_primers.keys())
 
     return tres_primers
-

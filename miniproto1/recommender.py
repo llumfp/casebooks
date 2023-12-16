@@ -32,37 +32,29 @@ class RecommenderSystem:
         result = calcular_valor_confianza(casos_sim, newc)
         return result
 
-    def revise(self, cas, metode:bool = True):
+    def revise(self, cas, casos, diccion, metode:bool = True):
         if metode:
             assign(cas) # Forma manual
         else:
-            automatic(cas) # Usant predictiu
-
-    # def retain(self, Cas, cas_dist:  List[Tuple[float, Cas]], list_path: List[path]):
-    #     '''
-    #     Per una banda necesitem "Tuple[List[Tuple[float, Cas]" per "redundant_optim", pero per l'altre banda "delete" necesita el path que realmet esta calula en " List[Tuple[float, Cas, path]]"
-
-    #     E
-    #     '''
-    #     # CALCUL DE REDUNDANCIA
-    #     if redundant_optim(Cas, cas_dist):
-    #         print("Cas redundant")
-
-    #     else:
-    #         print("Cas no redundant")
-    #         # CALCUL Utilitat Normalitzada
-    #         recompte_valors_utilitxats(cas, casos_similares, listas_casos_utilitzats)
-    #         actualitzar_Utilitat_normalitzada_casos(llista_casos_similars)
-
-    #         for cas in casos_similares:
-    #             if cas.UM < threshold:
-    #                 print(f"S'ha eliminat: {cas}")
-    #                 self.indexacio.delete(cas, path)
+            predict_valoration(cas) # Usant predictiu
+        recompte_valors_utilitxats(cas,casos,diccion)
+        calcul__Sum_Dif_Abs__num_casos_valorats(self.indexacio,cas,diccion)
 
 
-    # def evaluation(self, cas, puntuaciones_confianza):
-    #     realness(self.indexacio, Cas, puntuaciones_confianza)
-    #     return actualixar_NMAE(self.indexacio)
+    def retain(self, cas, cas_dist:  List[Tuple[float, Cas]], list_path: List[int]):
+        '''
+        Per una banda necesitem "Tuple[List[Tuple[float, Cas]" per "redundant_optim", pero per l'altre banda "delete" necesita el path que realmet esta calula en " List[Tuple[float, Cas, path]]"
+
+        E
+        '''
+        # CALCUL DE REDUNDANCIA
+        if redundant_cas(cas, cas_dist):
+            print("Cas redundant")
+
+        else:
+            print("Cas no redundant i s'ha indexat")
+            self.indexacio.add(cas,list_path)
+
 
 
 def createRS(from_model, path:str = None, maxcasesxleaf:int = 10, casebase:pd.DataFrame = None):

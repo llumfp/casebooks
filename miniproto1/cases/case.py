@@ -50,7 +50,10 @@ class Cas:
     
 
     def actualitzar_Utilitat_normalitzada(self):
-        self.UM = ((self.UaS/self.S)-(self.UaS/self.F)+1)/2
+
+        s_div = 0 if self.S==0 else self.UaS/self.S
+        f_div = 0 if self.F==0 else  self.UaF/self.F
+        self.UM = ((s_div)-(f_div)+1)/2
     
     
     def validate(self, casos): 

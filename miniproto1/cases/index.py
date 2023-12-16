@@ -14,7 +14,7 @@ class Indexacio(BinTree):
         casesxleaf:int = 10,
         #Calcualr com de real es la prediccio
         NMAE: int = None,  # Error Absoluto Medio Normalizado
-        Sum_Dif_Abs:int = None, # Sumatorio de las diferencias absolutas entre las puntuaciones predichas y las reales para todos los libros y todos los usuarios
+        Sum_Dif_Abs:int = 0, # Sumatorio de las diferencias absolutas entre las puntuaciones predichas y las reales para todos los libros y todos los usuarios
         num_casos_valorats: int=0 # Numero de casos valorats
 
     ) -> None: # type - str, per a determinar quin tipus de creacio s'executa.
@@ -144,23 +144,6 @@ class Indexacio(BinTree):
     def actualixar_NMAE(self):
         self.NMAE= (self.Sum_Dif_Abs/self.num_casos_valorats)/4
 
-    # Retain
-    def redundant_optim(new: Cas, most_similars: List[Tuple[float, Cas]]):
-        T = 1
-        dicc = {new.solution[i]: new.avaluacio[i] for i in range(3)}
-        dicc_keys_set = set(dicc.keys())  # Convertir las claves en un conjunto
-
-        for dist, case in most_similars:
-            if dist < T:
-                coincident_books = 0
-                for book in dicc_keys_set.intersection(case.solution):
-                    if abs(dicc[book] - case.avaluacio[case.solution.index(book)]) <= 1.5:
-                        coincident_books += 1
-                        if coincident_books >= 2:
-                            return True
-            else:
-                return False
-        return False
 
     # ========================================================================
     def add(self, new:Cas, ruta:List[Any]):
@@ -168,7 +151,7 @@ class Indexacio(BinTree):
         Afegeix un nou cas a l'arbre utilitzant la ruta del cas més similar.
         """
         # Recórrer l'arbre fins al node més similar.
-        self._length += 1
+        self.__length += 1
         node_actual = self
         for label in ruta:
             if label == 0:

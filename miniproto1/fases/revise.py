@@ -17,15 +17,6 @@ def assign(cas):
         vals = [int(input(f'Valoració {i+1}: ')) for i in range(3)]
         cas.avaluacio = [int(vals[0]), int(vals[1]), int(vals[2])]
 
-def automatic(cas):
-        with open('xgb_model.pkl', 'rb') as file:
-                loaded_model = pickle.load(file)
-        
-        valoracions = []
-        for i in cas.solucio:
-                predictions = loaded_model.predict(i) #FALTEN COSES NO ES I
-                valoracions.append(predictions)
-        cas.avaluacio = valoracions
 
 # Funció per convertir un Cas a una representació vàlida per a obtenir la predicció del model xgboost
 def convert_case_to_data(newcas):
@@ -52,12 +43,12 @@ def convert_case_to_data(newcas):
     final_dataset.drop(['book_id'],axis=1,inplace=True)
     return final_dataset
 
-def predict_valoration(newcas,model_path): # Se pot canviar el paràmetre per un path fixe si decidim quedarnos amb un model
-    with open(model_path, 'rb') as file:
+def predict_valoration(newcas): # Se pot canviar el paràmetre per un path fixe si decidim quedarnos amb un model
+    with open('xgb_model.pkl', 'rb') as file:
         loaded_model = pickle.load(file)
     dataset = convert_case_to_data(newcas)
-    estimacio = np.clip(np.round(np.array(loaded_model.predict(dataset))), 0, 5).astype(int)
-    return estimacio.tolist()
+    estimacio = np.clip(np.round(np.array(loaded_model.predict(dataset))), 0, 5).astype(int).tolist()
+    newcas.avaluacio = estimacio
 
 def valorate(new_case:Cas, idx:int):
     '''
@@ -71,4 +62,42 @@ def valorate(new_case:Cas, idx:int):
 def user_evaluation(new_case:Cas):
     for i in range(3):
         new_case.avaluacio = valorate(new_case, i)
+
+
+# CALCUL Utilitat Normalitzada
+def recompte_valors_utilitxats(cas, llista_casos_similars, dic_casos_utilitzats):
+    pos, neg = 0, 0
+    for i, key in enumerate(dic_casos_utilitzats.keys()):
+        if cas.avaluacio[i] > 3.5:
+            pos += 1
+            for cas in dic_casos_utilitzats[key][1]:
+                cas.UaS += 1
+            
+        else:
+            neg += 1
+            for cas in dic_casos_utilitzats[key][1]:
+                cas.UaF += 1
+
+    for cas in llista_casos_similars:
+        cas.S += pos
+        cas.F += neg
+ 
+        cas.actualitzar_Utilitat_normalitzada()
+
+
+# CALCUL Error Absoluto Medio Normalizado
+def calcul__Sum_Dif_Abs__num_casos_valorats(indexacio: Indexacio, new: Cas, dic_casos_utilitzats):
     
+    num_punt = 0
+    for index, llibre in enumerate(new.solucio):
+        if new.avaluacio[index] is not None and dic_casos_utilitzats[llibre][0] is not None:
+            num_punt += abs(new.avaluacio[index] - dic_casos_utilitzats[llibre][0])
+            indexacio.num_casos_valorats += 1
+
+    if num_punt > 0:
+        indexacio.Sum_Dif_Abs += num_punt
+
+
+def actualixar_NMAE(indexacio: Indexacio):
+    indexacio.NMAE = (indexacio.Sum_Dif_Abs/indexacio.num_casos_valorats)/4
+
