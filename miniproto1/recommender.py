@@ -44,7 +44,7 @@ class RecommenderSystem:
 
     #     E
     #     '''
-    #     # CALCUL DE REBUNDANCIA
+    #     # CALCUL DE REDUNDANCIA
     #     if redundant_optim(Cas, cas_dist):
     #         print("Cas redundant")
 
