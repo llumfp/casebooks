@@ -25,8 +25,8 @@ class Indexacio(BinTree):
         '''
 
         super().__init__(casesbase, left, right)
-        self.casesbase = casesbase
-        self.__length = len(self.casesbase)
+        
+        self.ultim_id = len(casesbase)
         self.type = type
         self.casesxleaf = casesxleaf
         self.AE = AE
@@ -34,11 +34,13 @@ class Indexacio(BinTree):
         self.creacio(casos=casesbase)
         self.r_max = 5
         self.r_min = 1
+        self.ultims_casos = []
 
     def __len__(self):
         return self.__length
 
     def creacio(self,casos:List[Cas]) -> None:
+        self.__length = len(casos)
         if len(casos) <= self.casesxleaf:
             # Si només hi ha un cas, retorna un arbre amb aquest cas.
             self.set_root(casos)
@@ -66,7 +68,16 @@ class Indexacio(BinTree):
         Afegeix un nou cas a l'arbre utilitzant la ruta del cas més similar.
         """
         # Recórrer l'arbre fins al node més similar.
+        new.ultim = True
+        if len(self.ultims_casos) == 50:
+            self.ultims_casos[0].ultim = False
+            self.ultims_casos = self.ultims_casos[1:] + [new]
+        else:
+            self.ultims_casos = self.ultims_casos + [new]
+
+
         self.__length += 1
+        self.ultim_id += 1
         node_actual = self
         for label in ruta:
             if label == 0:
@@ -75,8 +86,8 @@ class Indexacio(BinTree):
                 node_actual = node_actual.get_right()
 
         # Obtenir el cas del node més similar i afegir el nou cas.
-        leafcases = [node_actual.get_root(), new]
-        self.casesbase.append(new)
+        leafcases = node_actual.get_root() + [new]
+        #self.casesbase.append(new)
 
         if len(leafcases) >= self.casesxleaf:
             # Crear un nou KMeans amb tots els casos.
@@ -143,12 +154,34 @@ class Indexacio(BinTree):
     def NMAE(self):
         return (self.AE/self.num_casos_valorats)/(self.r_max - self.r_min)
 
+    def llista_casos(self,llindar_utilitat=0): 
+        """Retorna la llista de casos. 
+            En cas de definir el llindar de utilitat serveix per trobar 
+            els casos amb una utilitat superior a aquesta
+        """
+        def dfs(node):
+            # Si el árbol está vacío, no hacer nada
+            if node.empty():
+                print('I got empty')
+                return []
+
+            # Si es un nodo hoja, procesar los casos
+            if node.leaf():
+                return [cas for cas in node.get_root() if (cas.UM >= llindar_utilitat) and (not cas.ultim)]
+            # Si no es un nodo hoja, continuar con el recorrido
+            return dfs(node.get_left()) + dfs(node.get_right())
+        return dfs(self)
+
+    def find_casos_utils(self):
+        llindar_utilitat = 0.00000001
+        return self.llista_casos(llindar_utilitat)
+
     def refer_base(self):
-        '''TODO
-        self.casebase = funció(self.casebase):
+        '''TODO # I què li passa a la llista? ps q ha de ser un cas, i de vegades es cas i de vegades es llista xdd
+        self.casebase = funció(self.casebase): JAJAJA vale emmm node.get_root() hauria de ser sempre una llista
             retorna la llista de casos utils
         '''
-        llista_casos_utils = find_high_utility_cases(BinTree)
+        llista_casos_utils = self.find_casos_utils()
         self.creacio(llista_casos_utils)
 
     @property

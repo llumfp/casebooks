@@ -12,13 +12,14 @@ import time
 import matplotlib.pyplot as plt
 import ast
 
-df_problemes = pd.read_csv('./data/problems4000(real).csv')
+df_problemes = pd.read_csv(f'./data/problems4000(real).csv')
 
-from_model = eval(input('Precarregar RecommenderSystem? (True/False):  '))
+#from_model = eval(input('Precarregar RecommenderSystem? (True/False):  '))
+from_model = False
 rs = createRS(from_model, path="", maxcasesxleaf=10, casebase=df_problemes)
 
-newp = Problem(8,5,9,10,2,1,3,6,4,7,10,70,4.897)
-newcas = Cas(id=(len(rs.indexacio)),descripcio=rs.scaler.transform([newp.array])[0])
+newp = Problem(4,9,5,8,2,1,3,10,6,7,381,114,2.8026479371165514)
+newcas = Cas(id=rs.indexacio.ultim_id,descripcio=rs.scaler.transform([newp.array])[0])
 
 # Retrieve
 most_similar_cases = rs.retrieve(newp)
@@ -33,13 +34,19 @@ cas_dists = list(zip(distancies, casos))
 dicc_most_sim = rs.reuse(cas_dists, newcas)
 
 
-rs.revise(newcas, casos, dicc_most_sim, True)
-print(f"La teva recmanacio es: {newcas.solucio}")
+rs.revise(newcas, casos, dicc_most_sim, False)
+#print(f"La teva recmanacio es: {newcas.solucio}")
 
 rs.retain(newcas, cas_dists,paths[0])
 
-tempo = calcular_temps(rs.indexacio)
-print(tempo)
+
+print(f'Tenim {len(rs.indexacio)} casos a la indexacio')
+
+rs.maintenance(T=0.000001)
+
+print(f'Després del manteniment tenim {len(rs.indexacio)} casos a la indexacio')
+
+
 """# Revise
 rs.revise(newcas,3,4,5,metode=False)
 

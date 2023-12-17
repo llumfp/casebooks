@@ -1,12 +1,3 @@
-CURT TERMINI
--Generacio de casos
--Adaptacio
+Afegir mesura d'accuracy: mitjana de les avaluacions de les prediccions
 
-LARG TERMINI
--Prova de distancies de similitud
--Avaluacio
--Imputacio missings
-
--Menteniment base dades (EXCEPTIONAL CASE-REDUNDANT CASES)
---Eliminar/posar cas nou 
---Eliminar cas no nous 
+Fer experimentacio

@@ -20,7 +20,7 @@ class Cas:
         cops_us: int = 0,
         
         utilitat: None = None,
-        UM: int = None,
+        UM: int = 0,
 
         UaS: int = 0,
         S: int = 0,
@@ -44,9 +44,11 @@ class Cas:
         self.UaF = UaF #número de vegades que s’ha utilitzat el cas i va ser un fracàs, quan el cas es trobava entre els casos recuperats
         self.F = F #número total de fracassos quan el cas es trobava entre els casos recuperats
         
+        
+        self.ultim = False
     
     def __repr__(self) -> str:
-        return f"Cas(id={self.id}, solucio={self.solucio}, avaluacio={self.avaluacio})"
+        return f"Cas(id={self.id}, descripcio={self.descripcio}, solucio={self.solucio}, avaluacio={self.avaluacio})"
     
 
     def actualitzar_Utilitat_normalitzada(self):

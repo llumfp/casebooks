@@ -10,8 +10,8 @@ class RecommenderSystem:
             casebase:pd.DataFrame=None
         ) -> None:
         db, self.scaler = createDB(casebase)
-        self.casebase = db #redundant_clustering(db)
-        self.indexacio = Indexacio(casesbase=self.casebase, casesxleaf=maxcasesxleaf)
+        #self.casebase = db #redundant_clustering(db)
+        self.indexacio = Indexacio(casesbase=db, casesxleaf=maxcasesxleaf)
 
     def save(self, nombre_archivo_sin_extension):
         nombre_archivo_completo = f"{nombre_archivo_sin_extension}.pkl"
@@ -25,7 +25,7 @@ class RecommenderSystem:
         return instancia
 
     def retrieve(self, newp:Problem) -> List[Tuple[float, Cas, List[int]]]:
-        newcase = Cas(id=(len(self.indexacio)),descripcio=self.scaler.transform([newp.array])[0])
+        newcase = Cas(id=self.indexacio.ultim_id,descripcio=self.scaler.transform([newp.array])[0])
         return most_similar(self.indexacio, newcase)
     
     def reuse(self, casos_sim, newc):
@@ -53,13 +53,14 @@ class RecommenderSystem:
             print("Cas no redundant i s'ha indexat")
             self.indexacio.add(cas,list_path)
 
-    def maintenance(self, T = 999, E = 999):
+    def maintenance(self, T = 0.1, E = 999):
         '''
         T -> timesteps
         E -> spacesteps
         '''
-        if calcular_temps(self.indexacio) >= T or self.indexacio.space >= E:
-            refer_base(self.indexacio)
+        if calcular_temps(self) >= T or self.indexacio.space >= E:
+            print('Realitzant manteniment de la base de dades...')
+            self.indexacio.refer_base()
 
 def createRS(from_model:bool, path:str = None, maxcasesxleaf:int = 10, casebase:pd.DataFrame = None):
     if from_model:
