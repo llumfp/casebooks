@@ -11,15 +11,13 @@ class RecommenderSystem:
             
             #Experimentacio redundant
             distance_threshold: float = 2.0,
-            # Eval
+            # Calcular Eval
             n_correct: int = 0, #numero de prediccions correctes
             n_predictons: int = 0, #numero de casos evaluats
 
             #Calcualr com de real es la prediccio
-            NMAE: int = None,  # Error Absoluto Medio Normalizado
             AE:int = 0, # Sumatorio de las diferencias absolutas entre las puntuaciones predichas y las reales para todos los libros y todos los usuarios
             num_casos_valorats: int=0, # Numero de casos valorats
-
 
         ) -> None:
         

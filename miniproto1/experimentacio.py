@@ -28,6 +28,9 @@ def exp_redundancia_inicial(dist_threshold):
         avaluacio.append(rs.evaluation())
         qualitat.append(rs.NMAE())
 
+
+
+
 """
 Per a cada valor de threshold, es genera un problema, i s'afegeixen 1000 casos nous.
 Per a cada cas nou es mira:
