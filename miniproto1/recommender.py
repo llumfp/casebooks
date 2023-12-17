@@ -7,11 +7,34 @@ class RecommenderSystem:
     def __init__(
             self, 
             maxcasesxleaf:int = 5,
-            casebase:pd.DataFrame=None
+            casebase:pd.DataFrame=None,
+            
+            #Experimentacio redundant
+            distance_threshold: float = 2.0,
+            # Eval
+            n_correct: int = 0, #numero de prediccions correctes
+            n_predictons: int = 0, #numero de casos evaluats
+
+            #Calcualr com de real es la prediccio
+            NMAE: int = None,  # Error Absoluto Medio Normalizado
+            AE:int = 0, # Sumatorio de las diferencias absolutas entre las puntuaciones predichas y las reales para todos los libros y todos los usuarios
+            num_casos_valorats: int=0, # Numero de casos valorats
+
+
         ) -> None:
+        
         db, self.scaler = createDB(casebase)
-        #self.casebase = db #redundant_clustering(db)
+        self.casebase = redundant_clustering(db, distance_threshold)
         self.indexacio = Indexacio(casesbase=db, casesxleaf=maxcasesxleaf)
+        
+        # Eval
+        self.n_correct: n_correct
+        self.n_predictons: n_predictons
+        
+
+        
+        self.AE = AE
+        self.num_casos_valorats = num_casos_valorats
 
     def save(self, nombre_archivo_sin_extension):
         nombre_archivo_completo = f"{nombre_archivo_sin_extension}.pkl"
@@ -34,11 +57,11 @@ class RecommenderSystem:
 
     def revise(self, cas, casos, diccion, metode:bool = True):
         if metode:
-            user_evaluation(cas)  # Forma manual
+            user_evaluation(cas, self)  # Forma manual
         else:
             predict_evaluation(cas) # Usant predictiu
         recompte_valors_utilitzats(cas, casos, diccion)
-        calcAE(self.indexacio,cas,diccion)
+        calcAE(cas,diccion,self)
 
     def retain(self, cas, cas_dist:List[Tuple[float, Cas]], list_path:List[int]):
         '''
@@ -59,10 +82,18 @@ class RecommenderSystem:
         E -> spacesteps
         '''
         if calcular_temps(self) >= T or self.indexacio.space >= E:
-            print('Realitzant manteniment de la base de dades...')
             self.indexacio.refer_base()
 
-def createRS(from_model:bool, path:str = None, maxcasesxleaf:int = 10, casebase:pd.DataFrame = None):
+    @property
+    def evaluation(self):
+        return (self.n_correct/self.n_predictons)*2 if self.n_predictons != 0 else 0
+
+    @property
+    def NMAE(self):
+        return (self.AE/self.num_casos_valorats)/(self.r_max - self.r_min)
+
+
+def createRS(from_model:bool, path:str = None, maxcasesxleaf:int = 10, dist_threshold:float = 2.0, casebase:pd.DataFrame = None):
     if from_model:
         rs = RecommenderSystem.load(path)
     else:
@@ -70,5 +101,6 @@ def createRS(from_model:bool, path:str = None, maxcasesxleaf:int = 10, casebase:
             casebase.drop('Unnamed: 0',axis=1,inplace=True)
         except:
             pass
-        rs = RecommenderSystem(maxcasesxleaf=maxcasesxleaf,casebase=casebase)
+        rs = RecommenderSystem(maxcasesxleaf=maxcasesxleaf,casebase=casebase, distance_threshold=dist_threshold)
     return rs
+

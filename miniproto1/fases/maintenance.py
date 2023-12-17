@@ -3,11 +3,12 @@ Funció: Incorpora la nova experiència (cas d'ús actual) a la base de dades pe
 
 Components: Mecanismes per a l'actualització de la base de dades amb nous casos.
 """
-import random
 from miniproto1.cases import Cas, Indexacio, Problem
-from miniproto1.fases import *
+from miniproto1.fases import most_similar
 import random
 import timeit
+from datetime import timedelta
+from time import time
 
 def generate_new_problem():
     # Generar una llista de l'1 al 10 representant l'ordre de preferència dels gèneres
@@ -38,10 +39,13 @@ def calcular_temps(rs):
         newp = eval(newp_str)
         newcas = Cas(id=(rs.indexacio.ultim_id),descripcio=rs.scaler.transform([newp.array])[0])
         # Medir el tiempo de ejecución de most_similar para este new_case
-    time_taken = timeit.timeit(lambda: most_similar(rs.indexacio, newcas), number=1)
-    execution_times.append(time_taken)
-   
+        time_taken = timeit.timeit(lambda: most_similar(rs.indexacio, newcas), number=1)
+        execution_times.append(time_taken)
 
     media_tiempo = sum(execution_times) / len(execution_times)
     print('La mitjana del temps es:',media_tiempo)
     return media_tiempo
+
+
+init_time = time()
+print(f"Total Running time {timedelta(seconds=(time() - init_time))}")

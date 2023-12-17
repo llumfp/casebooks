@@ -48,19 +48,23 @@ def predict_evaluation(newcas:Cas): # Se pot canviar el paràmetre per un path f
     estimacio = np.clip(np.round(np.array(loaded_model.predict(dataset))), 0, 5).astype(int).tolist()
     newcas.avaluacio = estimacio
 
-def valorate(new_case:Cas, idx:int):
+def valorate(new_case:Cas, idx:int, rs):
     '''
     Si val == 0, semanticament indica que no ha comprat el llibre recomanat
     '''
     val = float('-inf')
     while val not in list(range(6)):
         val = int(input(f"Què t'ha semblat el llibre {new_case.solucio[idx]}, quantes estrelles li dones? (1-5): "))
+        
+        rs.n_correct += val
+        rs.n_predictons += 1
+
     return val
 
-def user_evaluation(newcas:Cas):
+def user_evaluation(newcas:Cas, rs):
     print("Recorda que si no has comprat un llibre has d'escriure '0' estrelles")
     for idx in range(3):
-        newcas.avaluacio.append(valorate(newcas, idx))
+        newcas.avaluacio.append(valorate(newcas, idx, rs))
 
 # Calcul Utilitat Normalitzada
 def recompte_valors_utilitzats(newcas:Cas, llista_casos_similars:List[Cas], dic_casos_utilitzats):
@@ -93,7 +97,7 @@ def recompte_valors_utilitzats(newcas:Cas, llista_casos_similars:List[Cas], dic_
         cas.actualitzar_Utilitat_normalitzada()
 
 # Calcul Error Absoluto Medio Normalizado
-def calcAE(indexacio: Indexacio, newcas: Cas, dic_casos_utilitzats):
+def calcAE(newcas: Cas, dic_casos_utilitzats,rs):
     """"
     new:
 
@@ -104,7 +108,7 @@ def calcAE(indexacio: Indexacio, newcas: Cas, dic_casos_utilitzats):
     for index, llibre in enumerate(newcas.solucio):
         if newcas.avaluacio[index] is not None and dic_casos_utilitzats[llibre][0] is not None:
             num_punt += abs(newcas.avaluacio[index] - dic_casos_utilitzats[llibre][0])
-            indexacio.num_casos_valorats += 1
+            rs.num_casos_valorats += 1
 
     if num_punt > 0:
-        indexacio.AE += num_punt
+        rs.AE += num_punt

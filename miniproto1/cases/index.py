@@ -16,7 +16,9 @@ class Indexacio(BinTree):
         #Calcualr com de real es la prediccio
         NMAE: int = None,  # Error Absoluto Medio Normalizado
         AE:int = 0, # Sumatorio de las diferencias absolutas entre las puntuaciones predichas y las reales para todos los libros y todos los usuarios
-        num_casos_valorats: int=0 # Numero de casos valorats
+        num_casos_valorats: int=0, # Numero de casos valorats
+
+
 
     ) -> None: # type - str, per a determinar quin tipus de creacio s'executa.
         '''
@@ -29,8 +31,7 @@ class Indexacio(BinTree):
         self.ultim_id = len(casesbase)
         self.type = type
         self.casesxleaf = casesxleaf
-        self.AE = AE
-        self.num_casos_valorats = num_casos_valorats
+
         self.creacio(casos=casesbase)
         self.r_max = 5
         self.r_min = 1
@@ -150,9 +151,6 @@ class Indexacio(BinTree):
     '''
     MANTENIMENT DE LA BASE DE CASOS
     '''
-    @property
-    def NMAE(self):
-        return (self.AE/self.num_casos_valorats)/(self.r_max - self.r_min)
 
     def llista_casos(self,llindar_utilitat=0): 
         """Retorna la llista de casos. 
@@ -160,30 +158,37 @@ class Indexacio(BinTree):
             els casos amb una utilitat superior a aquesta
         """
         def dfs(node):
-            # Si el árbol está vacío, no hacer nada
             if node.empty():
-                print('I got empty')
                 return []
 
-            # Si es un nodo hoja, procesar los casos
             if node.leaf():
-                return [cas for cas in node.get_root() if (cas.UM >= llindar_utilitat) and (not cas.ultim)]
-            # Si no es un nodo hoja, continuar con el recorrido
+                return [cas for cas in node.get_root() if (cas.UM >= llindar_utilitat) or cas.ultim]
+            
             return dfs(node.get_left()) + dfs(node.get_right())
         return dfs(self)
 
     def find_casos_utils(self):
-        llindar_utilitat = 0.00000001
+        llindar_utilitat = 0
         return self.llista_casos(llindar_utilitat)
 
     def refer_base(self):
-        '''TODO # I què li passa a la llista? ps q ha de ser un cas, i de vegades es cas i de vegades es llista xdd
-        self.casebase = funció(self.casebase): JAJAJA vale emmm node.get_root() hauria de ser sempre una llista
-            retorna la llista de casos utils
-        '''
         llista_casos_utils = self.find_casos_utils()
         self.creacio(llista_casos_utils)
 
     @property
     def space(self):
-        return sys.getsizeof(self)
+        def calculate_space(node):
+            if node is None or node.empty():
+                return 0
+
+            size = sys.getsizeof(node)
+            size += calculate_space(node.get_left())
+            size += calculate_space(node.get_right())
+
+            if node.leaf():
+                for cas in node.get_root():
+                    size += sys.getsizeof(cas)
+
+            return size
+
+        return calculate_space(self)

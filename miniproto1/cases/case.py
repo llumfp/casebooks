@@ -127,24 +127,16 @@ def redundant_optim(similar_cases: List[Cas], indices_cases:List[int]):
     return redundant_cases
 
 
-def redundant_clustering(clustering_cases: List[Cas]):
+def redundant_clustering(clustering_cases: List[Cas], distance_threshold):
     """crea un clustering amb totes les dades inicials. Aquest clustering
         servirà per a eliminar aquells casos redundants"""
     numeric_data = [case.descripcio for case in clustering_cases]
 
-    # Z = linkage(numeric_data, method='ward')
-    # plt.figure(figsize=(10, 7))
-    # dendrogram(Z, truncate_mode='lastp', p=15, show_contracted=True)
-    # plt.title("Dendrogram")
-    # plt.xlabel("Cluster Size")
-    # plt.ylabel("Distance")
-    # plt.show()
-    # estimated_distance_threshold = float(input("Veient el dendograma, per quina distància vols retallar l'arbre per a fer clusters?"))
 
     # Creem un arbre jerarquic a partir d'obserbar el dendograma
     final_model_adjusted = AgglomerativeClustering(n_clusters=None,  
-                                                    distance_threshold= 2,
-                                                linkage='ward')
+                                                    distance_threshold= distance_threshold,
+                                                    linkage='ward')
     final_model_adjusted.fit(numeric_data)
 
     #indica a quin cluster pertany cada cas. Llista de etiquetes
@@ -155,18 +147,16 @@ def redundant_clustering(clustering_cases: List[Cas]):
     for cluster in range(len(cluster_counts[1])):
         cluster_indices = np.where(clusters_adjusted == cluster)[0]
         cluster_data = [clustering_cases[idx] for idx in cluster_indices]
-        #print(f'En el cluster {cluster} hi ha {len(cluster_indices)} casos')
         delete_index = redundant_optim(cluster_data, cluster_indices)
-        #print(f'En el cluster {cluster} hi ha {len(cluster_indices)- len(delete_index)} casos')
         delete_indexes += delete_index
     
 
-    print('Abans de la eliminació de redundants hi ha', len(clustering_cases), 'casos')
+    #print('Abans de la eliminació de redundants hi ha', len(clustering_cases), 'casos')
     new_cases = []
     for idx, case in enumerate(clustering_cases):
         if idx not in delete_indexes:
             new_cases.append(case)
 
-    print('Després de la eliminació de redundants hi ha', len(new_cases), 'casos')
+    #print('Després de la eliminació de redundants hi ha', len(new_cases), 'casos')
     return new_cases
 
