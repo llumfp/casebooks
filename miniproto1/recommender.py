@@ -10,7 +10,7 @@ class RecommenderSystem:
             casebase:pd.DataFrame=None,
             
             #Experimentacio redundant
-            distance_threshold: float = 2.0,
+            parametres: List = [],
             # Calcular Eval
             n_correct: int = 0, #numero de prediccions correctes
             n_predictons: int = 0, #numero de casos evaluats
@@ -22,7 +22,7 @@ class RecommenderSystem:
         ) -> None:
         
         db, self.scaler = createDB(casebase)
-        self.casebase = redundant_clustering(db, distance_threshold)
+        self.casebase = redundant_clustering(db, parametres)
         self.indexacio = Indexacio(casesbase=db, casesxleaf=maxcasesxleaf)
         
         # Eval
@@ -61,14 +61,14 @@ class RecommenderSystem:
         recompte_valors_utilitzats(cas, casos, diccion)
         calcAE(cas,diccion,self)
 
-    def retain(self, cas, cas_dist:List[Tuple[float, Cas]], list_path:List[int]):
+    def retain(self, cas, cas_dist:List[Tuple[float, Cas]], list_path:List[int], T: int):
         '''
         Per una banda necesitem "Tuple[List[Tuple[float, Cas]" per "redundant_optim", 
         pero per l'altre banda "add" necesita el path que realmet esta calula en 
         "List[Tuple[float, Cas, path]]"
         '''
         # CALCUL DE REDUNDANCIA
-        if redundant_cas(cas, cas_dist):
+        if redundant_cas(cas, cas_dist, T):
             print("Cas redundant")
         else:
             print("Cas no redundant i s'ha indexat")
@@ -91,14 +91,17 @@ class RecommenderSystem:
         return (self.AE/self.num_casos_valorats)/(self.r_max - self.r_min)
 
 
-def createRS(from_model:bool, path:str = None, maxcasesxleaf:int = 10, dist_threshold:float = 2.0, casebase:pd.DataFrame = None):
+def createRS(from_model:bool, path:str = None, maxcasesxleaf:int = 10, params:List = [5,2,0.5,0.1], casebase:pd.DataFrame = None):
+    print('parametres1', params)
     if from_model:
         rs = RecommenderSystem.load(path)
     else:
+        print('parametres2', params)
         try:
             casebase.drop('Unnamed: 0',axis=1,inplace=True)
         except:
             pass
-        rs = RecommenderSystem(maxcasesxleaf=maxcasesxleaf,casebase=casebase, distance_threshold=dist_threshold)
+        print('parametres3', params)
+        rs = RecommenderSystem(maxcasesxleaf=maxcasesxleaf,casebase=casebase, parametres= params)
     return rs
 

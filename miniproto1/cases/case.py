@@ -100,7 +100,7 @@ def createDB(df:pd.DataFrame) -> List[Cas]:
     
     return db, scaler
 
-def redundant_optim(similar_cases: List[Cas], indices_cases:List[int]):
+def redundant_optim(similar_cases: List[Cas], indices_cases:List[int], T_common_books, T_common_recom, T_common_rating, T_distance):
     
     pairwise_distances = pdist([i.descripcio for i in similar_cases], metric='euclidean')
     distance_matrix = squareform(pairwise_distances)
@@ -115,27 +115,28 @@ def redundant_optim(similar_cases: List[Cas], indices_cases:List[int]):
             common_read_books = len(set(similar_cases[i].historial) & set(similar_cases[j].historial))
             common_recom = len(set(similar_cases[i].solucio) & set(similar_cases[j].solucio))
             common_rating = (abs(np.mean(similar_cases[i].avaluacio) - np.mean(similar_cases[j].avaluacio))) 
-            if common_read_books >= 5:
+            if common_read_books >= T_common_books:
                 punt += 1
-            if common_recom >= 2:
+            if common_recom >= T_common_recom:
                 punt += 1
-            if common_rating <= 0.5:
+            if common_rating <= T_common_rating:
                 punt += 1
-            if distance_matrix[i, j] < 0.1:
+            if distance_matrix[i, j] < T_distance:
                 punt += 1
             if punt >= 3: redundant_cases.add(index)
     return redundant_cases
 
 
-def redundant_clustering(clustering_cases: List[Cas], distance_threshold):
+def redundant_clustering(clustering_cases: List[Cas], parametres):
     """crea un clustering amb totes les dades inicials. Aquest clustering
         servirà per a eliminar aquells casos redundants"""
     numeric_data = [case.descripcio for case in clustering_cases]
+    T_common_books, T_common_recom, T_common_rating, T_distance = parametres
 
 
     # Creem un arbre jerarquic a partir d'obserbar el dendograma
     final_model_adjusted = AgglomerativeClustering(n_clusters=None,  
-                                                    distance_threshold= distance_threshold,
+                                                    distance_threshold= 2,
                                                     linkage='ward')
     final_model_adjusted.fit(numeric_data)
 
@@ -147,7 +148,7 @@ def redundant_clustering(clustering_cases: List[Cas], distance_threshold):
     for cluster in range(len(cluster_counts[1])):
         cluster_indices = np.where(clusters_adjusted == cluster)[0]
         cluster_data = [clustering_cases[idx] for idx in cluster_indices]
-        delete_index = redundant_optim(cluster_data, cluster_indices)
+        delete_index = redundant_optim(cluster_data, cluster_indices, T_common_books, T_common_recom, T_common_rating, T_distance)
         delete_indexes += delete_index
     
 
