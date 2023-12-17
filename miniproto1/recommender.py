@@ -21,6 +21,7 @@ class RecommenderSystem:
 
         ) -> None:
         
+        print('hola')
         db, self.scaler = createDB(casebase)
         self.casebase = redundant_clustering(db, parametres)
         self.indexacio = Indexacio(casesbase=db, casesxleaf=maxcasesxleaf)
@@ -91,17 +92,17 @@ class RecommenderSystem:
         return (self.AE/self.num_casos_valorats)/(self.r_max - self.r_min)
 
 
-def createRS(from_model:bool, path:str = None, maxcasesxleaf:int = 10, params:List = [5,2,0.5,0.1], casebase:pd.DataFrame = None):
-    print('parametres1', params)
+def createRS(from_model:bool, path:str = None, maxcasesxleaf:int = 10, params:List = [5, 2, 0.5, 0.1], casebase:pd.DataFrame = None):
+    print('parametres1')
     if from_model:
         rs = RecommenderSystem.load(path)
     else:
-        print('parametres2', params)
+        print('parametres2')
         try:
             casebase.drop('Unnamed: 0',axis=1,inplace=True)
         except:
             pass
-        print('parametres3', params)
+        print('parametres3')
         rs = RecommenderSystem(maxcasesxleaf=maxcasesxleaf,casebase=casebase, parametres= params)
     return rs
 
