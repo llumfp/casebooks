@@ -17,7 +17,7 @@ df_problemes = pd.read_csv('./data/problems4000(real).csv')
 from_model = eval(input('Precarregar RecommenderSystem? (True/False):  '))
 rs = createRS(from_model, path="", maxcasesxleaf=10, casebase=df_problemes)
 
-newp = Problem(5,8,9,7,10,1,3,6,4,2,140,70,4.897)
+newp = Problem(8,5,9,10,2,1,3,6,4,7,10,70,4.897)
 newcas = Cas(id=(len(rs.indexacio)),descripcio=rs.scaler.transform([newp.array])[0])
 
 # Retrieve
@@ -26,17 +26,20 @@ most_similar_cases = rs.retrieve(newp)
 
 # Reuse
 distancies, casos, paths = zip(*most_similar_cases)
+
 cas_dists = list(zip(distancies, casos))
 
 
 dicc_most_sim = rs.reuse(cas_dists, newcas)
 
 
-rs.revise(newcas, casos, dicc_most_sim, False)
+rs.revise(newcas, casos, dicc_most_sim, True)
 print(f"La teva recmanacio es: {newcas.solucio}")
 
 rs.retain(newcas, cas_dists,paths[0])
 
+tempo = calcular_temps(rs.indexacio)
+print(tempo)
 """# Revise
 rs.revise(newcas,3,4,5,metode=False)
 

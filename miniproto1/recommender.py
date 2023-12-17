@@ -29,33 +29,37 @@ class RecommenderSystem:
         return most_similar(self.indexacio, newcase)
     
     def reuse(self, casos_sim, newc):
-        result = calcular_valor_confianza(casos_sim, newc)
+        result = confianza(casos_sim, newc)
         return result
 
     def revise(self, cas, casos, diccion, metode:bool = True):
         if metode:
-            assign(cas) # Forma manual
+            user_evaluation(cas)  # Forma manual
         else:
-            predict_valoration(cas) # Usant predictiu
-        recompte_valors_utilitxats(cas,casos,diccion)
-        calcul__Sum_Dif_Abs__num_casos_valorats(self.indexacio,cas,diccion)
+            predict_evaluation(cas) # Usant predictiu
+        recompte_valors_utilitzats(cas, casos, diccion)
+        calcAE(self.indexacio,cas,diccion)
 
-
-    def retain(self, cas, cas_dist:  List[Tuple[float, Cas]], list_path: List[int]):
+    def retain(self, cas, cas_dist:List[Tuple[float, Cas]], list_path:List[int]):
         '''
-        Per una banda necesitem "Tuple[List[Tuple[float, Cas]" per "redundant_optim", pero per l'altre banda "delete" necesita el path que realmet esta calula en " List[Tuple[float, Cas, path]]"
-
-        E
+        Per una banda necesitem "Tuple[List[Tuple[float, Cas]" per "redundant_optim", 
+        pero per l'altre banda "add" necesita el path que realmet esta calula en 
+        "List[Tuple[float, Cas, path]]"
         '''
         # CALCUL DE REDUNDANCIA
         if redundant_cas(cas, cas_dist):
             print("Cas redundant")
-
         else:
             print("Cas no redundant i s'ha indexat")
             self.indexacio.add(cas,list_path)
 
-
+    def maintenance(self, T = 999, E = 999):
+        '''
+        T -> timesteps
+        E -> spacesteps
+        '''
+        if calcular_temps(self.indexacio) >= T or self.indexacio.space >= E:
+            refer_base(self.indexacio)
 
 def createRS(from_model:bool, path:str = None, maxcasesxleaf:int = 10, casebase:pd.DataFrame = None):
     if from_model:

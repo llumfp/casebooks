@@ -13,7 +13,7 @@ class Cas:
         self,
         id: str,
         descripcio: ndarray[Any], # El nostre problema ja preprocessat
-        derivacio = None,
+        derivacio = set(),
         historial = [],
         solucio: List[int] = [],
         avaluacio: List[int] = [],
@@ -123,6 +123,7 @@ def redundant_optim(similar_cases: List[Cas], indices_cases:List[int]):
                 punt += 1
             if punt >= 3: redundant_cases.add(index)
     return redundant_cases
+
 
 def redundant_clustering(clustering_cases: List[Cas]):
     """crea un clustering amb totes les dades inicials. Aquest clustering

@@ -13,13 +13,11 @@ import pickle
 import xgboost as xgb
 import numpy as np
 
-def assign(cas):
-        vals = [int(input(f'Valoració {i+1}: ')) for i in range(3)]
-        cas.avaluacio = [int(vals[0]), int(vals[1]), int(vals[2])]
-
-
 # Funció per convertir un Cas a una representació vàlida per a obtenir la predicció del model xgboost
-def convert_case_to_data(newcas):
+def convert_case_to_data(newcas:Cas):
+    '''
+    Roar roar
+    '''
     non_important = ['Fantasy_x', 'Poetry_x']
     newcas = [newcas]
     problems = [list(cas.descripcio) + [str(cas.solucio)] for i, cas in enumerate(newcas)]
@@ -43,7 +41,7 @@ def convert_case_to_data(newcas):
     final_dataset.drop(['book_id'],axis=1,inplace=True)
     return final_dataset
 
-def predict_valoration(newcas): # Se pot canviar el paràmetre per un path fixe si decidim quedarnos amb un model
+def predict_evaluation(newcas:Cas): # Se pot canviar el paràmetre per un path fixe si decidim quedarnos amb un model
     with open('xgb_model.pkl', 'rb') as file:
         loaded_model = pickle.load(file)
     dataset = convert_case_to_data(newcas)
@@ -56,48 +54,57 @@ def valorate(new_case:Cas, idx:int):
     '''
     val = float('-inf')
     while val not in list(range(6)):
-        val = int(input(f"Què t'ha semblat el llibre {new_case.solucio[int]}, quantes estrelles li dones? (1-5): "))
+        val = int(input(f"Què t'ha semblat el llibre {new_case.solucio[idx]}, quantes estrelles li dones? (1-5): "))
     return val
 
-def user_evaluation(new_case:Cas):
-    for i in range(3):
-        new_case.avaluacio = valorate(new_case, i)
+def user_evaluation(newcas:Cas):
+    print("Recorda que si no has comprat un llibre has d'escriure '0' estrelles")
+    for idx in range(3):
+        newcas.avaluacio.append(valorate(newcas, idx))
 
-
-# CALCUL Utilitat Normalitzada
-def recompte_valors_utilitxats(cas, llista_casos_similars, dic_casos_utilitzats):
+# Calcul Utilitat Normalitzada
+def recompte_valors_utilitzats(newcas:Cas, llista_casos_similars:List[Cas], dic_casos_utilitzats):
+    '''
+    newcas -> Cas:
+        Cas nou introduït.
+    
+    llista_casos_similars -> List[Cas]:
+        Llista ordenada dels casos més similars. Extreta de most_similiar() del retrieve
+    
+    dic_casos_utilitzats -> dict[str:List[int|Cas]]:
+        {id_llibre: [valoracions_predita,[casos_similar_que_contenen_el_llibre]]}
+    '''
     pos, neg = 0, 0
     for i, key in enumerate(dic_casos_utilitzats.keys()):
-        if cas.avaluacio[i] > 3.5:
+        if newcas.avaluacio[i] > 3.5:
             pos += 1
-            for cas in dic_casos_utilitzats[key][1]:
-                cas.UaS += 1
-            
+            for cas_pos in dic_casos_utilitzats[key][1]:
+                cas_pos.UaS += 1
+
         else:
             neg += 1
-            for cas in dic_casos_utilitzats[key][1]:
-                cas.UaF += 1
+            for cas_neg in dic_casos_utilitzats[key][1]:
+                cas_neg.UaF += 1
 
     for cas in llista_casos_similars:
         cas.S += pos
         cas.F += neg
- 
+
         cas.actualitzar_Utilitat_normalitzada()
 
+# Calcul Error Absoluto Medio Normalizado
+def calcAE(indexacio: Indexacio, newcas: Cas, dic_casos_utilitzats):
+    """"
+    new:
 
-# CALCUL Error Absoluto Medio Normalizado
-def calcul__Sum_Dif_Abs__num_casos_valorats(indexacio: Indexacio, new: Cas, dic_casos_utilitzats):
+    dic_casos_utilitzats:
+    """
     
     num_punt = 0
-    for index, llibre in enumerate(new.solucio):
-        if new.avaluacio[index] is not None and dic_casos_utilitzats[llibre][0] is not None:
-            num_punt += abs(new.avaluacio[index] - dic_casos_utilitzats[llibre][0])
+    for index, llibre in enumerate(newcas.solucio):
+        if newcas.avaluacio[index] is not None and dic_casos_utilitzats[llibre][0] is not None:
+            num_punt += abs(newcas.avaluacio[index] - dic_casos_utilitzats[llibre][0])
             indexacio.num_casos_valorats += 1
 
     if num_punt > 0:
-        indexacio.Sum_Dif_Abs += num_punt
-
-
-def actualixar_NMAE(indexacio: Indexacio):
-    indexacio.NMAE = (indexacio.Sum_Dif_Abs/indexacio.num_casos_valorats)/4
-
+        indexacio.AE += num_punt
