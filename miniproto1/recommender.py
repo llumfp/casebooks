@@ -21,14 +21,13 @@ class RecommenderSystem:
 
         ) -> None:
         
-        print('hola')
         db, self.scaler = createDB(casebase)
         self.casebase = redundant_clustering(db, parametres)
         self.indexacio = Indexacio(casesbase=db, casesxleaf=maxcasesxleaf)
         
         # Eval
-        self.n_correct: n_correct
-        self.n_predictons: n_predictons
+        self.n_correct  = n_correct
+        self.n_predictons =  n_predictons
         
 
         
@@ -62,7 +61,7 @@ class RecommenderSystem:
         recompte_valors_utilitzats(cas, casos, diccion)
         calcAE(cas,diccion,self)
 
-    def retain(self, cas, cas_dist:List[Tuple[float, Cas]], list_path:List[int], T: int):
+    def retain(self, cas, cas_dist:List[Tuple[float, Cas]], list_path:List[int], T: int = 1):
         '''
         Per una banda necesitem "Tuple[List[Tuple[float, Cas]" per "redundant_optim", 
         pero per l'altre banda "add" necesita el path que realmet esta calula en 
@@ -93,16 +92,13 @@ class RecommenderSystem:
 
 
 def createRS(from_model:bool, path:str = None, maxcasesxleaf:int = 10, params:List = [5, 2, 0.5, 0.1], casebase:pd.DataFrame = None):
-    print('parametres1')
     if from_model:
         rs = RecommenderSystem.load(path)
     else:
-        print('parametres2')
         try:
             casebase.drop('Unnamed: 0',axis=1,inplace=True)
         except:
             pass
-        print('parametres3')
         rs = RecommenderSystem(maxcasesxleaf=maxcasesxleaf,casebase=casebase, parametres= params)
     return rs
 
