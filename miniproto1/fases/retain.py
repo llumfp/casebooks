@@ -10,10 +10,9 @@ from typing import Tuple, List
 from scipy.spatial.distance import euclidean
 
 
-#Retain
 
 # Retain
-def redundant_cas(new: Cas, most_similars: List[Tuple[float, Cas]], T=1):
+def redundant_cas(new: Cas, most_similars: List[Tuple[float, Cas]], T=2):
     dicc = {new.solucio[i]: new.avaluacio[i] for i in range(3)}
     dicc_keys_set = set(dicc.keys())  # Convertir las claves en un conjunto
 

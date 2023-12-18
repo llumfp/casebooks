@@ -13,18 +13,8 @@ class Indexacio(BinTree):
         left=None, right=None, 
         type:str='', 
         casesxleaf:int = 10,
-        #Calcualr com de real es la prediccio
-        NMAE: int = None,  # Error Absoluto Medio Normalizado
-        AE:int = 0, # Sumatorio de las diferencias absolutas entre las puntuaciones predichas y las reales para todos los libros y todos los usuarios
-        num_casos_valorats: int=0, # Numero de casos valorats
-
-
 
     ) -> None: # type - str, per a determinar quin tipus de creacio s'executa.
-        '''
-        r_max -> maxim d'estrelles a la valoració
-        r_min -> minim d'estrelles a la valoració
-        '''
 
         super().__init__(casesbase, left, right)
         
@@ -33,8 +23,6 @@ class Indexacio(BinTree):
         self.casesxleaf = casesxleaf
 
         self.creacio(casos=casesbase)
-        self.r_max = 5
-        self.r_min = 1
         self.ultims_casos = []
 
     def __len__(self):
@@ -95,13 +83,12 @@ class Indexacio(BinTree):
             kmeans = KMeans(n_clusters=2, random_state=0, n_init='auto')
             kmeans.fit([cas.descripcio for cas in leafcases])
             
-            kmeans.labels_[0]
             # Dividir els casos segons les etiquetes del clustering.
-            for i in range(2):
-                if kmeans.labels_[i] == 0:
-                    cluster1 = [leafcases[i]]
+            for idx, i in enumerate(kmeans.labels_):
+                if i == 0:
+                    cluster1 = [leafcases[idx]]
                 else:
-                    cluster2 = [leafcases[i]]
+                    cluster2 = [leafcases[idx]]
             
             # Crear els nous subarbres.
             subarbre1 = Indexacio(casesbase=cluster1, casesxleaf=self.casesxleaf) 

@@ -19,8 +19,15 @@ class RecommenderSystem:
             AE:int = 0, # Sumatorio de las diferencias absolutas entre las puntuaciones predichas y las reales para todos los libros y todos los usuarios
             num_casos_valorats: int=0, # Numero de casos valorats
 
+            r_min = 1,
+            r_max = 5
+
         ) -> None:
-        
+        '''
+        r_max -> maxim d'estrelles a la valoració
+        r_min -> minim d'estrelles a la valoració
+        '''
+
         db, self.scaler = createDB(casebase)
         self.casebase = redundant_clustering(db, parametres)
         self.indexacio = Indexacio(casesbase=db, casesxleaf=maxcasesxleaf)
@@ -29,8 +36,9 @@ class RecommenderSystem:
         self.n_correct  = n_correct
         self.n_predictons =  n_predictons
         
-
-        
+        self.r_max = r_max
+        self.r_min = r_min
+             
         self.AE = AE
         self.num_casos_valorats = num_casos_valorats
 
@@ -57,7 +65,7 @@ class RecommenderSystem:
         if metode:
             user_evaluation(cas, self)  # Forma manual
         else:
-            predict_evaluation(cas) # Usant predictiu
+            predict_evaluation(cas, self) # Usant predictiu
         recompte_valors_utilitzats(cas, casos, diccion)
         calcAE(cas,diccion,self)
 
@@ -70,9 +78,11 @@ class RecommenderSystem:
         # CALCUL DE REDUNDANCIA
         if redundant_cas(cas, cas_dist, T):
             print("Cas redundant")
+            return False
         else:
             print("Cas no redundant i s'ha indexat")
             self.indexacio.add(cas,list_path)
+            return True
 
     def maintenance(self, T = 0.1, E = 999):
         '''

@@ -20,6 +20,7 @@ def confianza(casos_similars: List[Tuple[float, Cas]], new_case: Cas) -> dict[st
     # confxlibro = {}  # {id llibre: [valor, dis,[casos]]}
 
     confxlibro = defaultdict(lambda: [0, 0, []])
+
     for distancia, caso in casos_similars:
         
         similitud = 1 / (distancia+1) 
@@ -31,19 +32,17 @@ def confianza(casos_similars: List[Tuple[float, Cas]], new_case: Cas) -> dict[st
                 confxlibro[libro][0] += valor
                 confxlibro[libro][1] += similitud
                 confxlibro[libro][2].append(caso)
-
+    
     sortedconf = sorted(
         ((id_llibre, [ valor / simil, cases])
          for id_llibre, (valor, simil, cases) in confxlibro.items()),
         key=lambda item: item[1][0], reverse=True
     )
-    
-    tres_primers = dict(sortedconf[:3])
 
+    tres_primers = dict(sortedconf[:3])
     for _, casos in tres_primers.values():
         for cas in casos:
             new_case.derivacio.add(cas.id)
     new_case.solucio = list(tres_primers.keys())
 
     return tres_primers
-

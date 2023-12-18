@@ -41,12 +41,15 @@ def convert_case_to_data(newcas:Cas):
     final_dataset.drop(['book_id'],axis=1,inplace=True)
     return final_dataset
 
-def predict_evaluation(newcas:Cas): # Se pot canviar el paràmetre per un path fixe si decidim quedarnos amb un model
+def predict_evaluation(newcas:Cas,rs): # Se pot canviar el paràmetre per un path fixe si decidim quedarnos amb un model
     with open('xgb_model.pkl', 'rb') as file:
         loaded_model = pickle.load(file)
     dataset = convert_case_to_data(newcas)
     estimacio = np.clip(np.round(np.array(loaded_model.predict(dataset))), 0, 5).astype(int).tolist()
     newcas.avaluacio = estimacio
+    for val in estimacio:
+        rs.n_correct += val
+        rs.n_predictons += 1    
 
 def valorate(new_case:Cas, idx:int, rs):
     '''
@@ -55,7 +58,6 @@ def valorate(new_case:Cas, idx:int, rs):
     val = float('-inf')
     while val not in list(range(6)):
         val = int(input(f"Què t'ha semblat el llibre {new_case.solucio[idx]}, quantes estrelles li dones? (1-5): "))
-        
         rs.n_correct += val
         rs.n_predictons += 1
 
