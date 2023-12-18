@@ -69,7 +69,7 @@ class RecommenderSystem:
         recompte_valors_utilitzats(cas, casos, diccion)
         calcAE(cas,diccion,self)
 
-    def retain(self, cas, cas_dist:List[Tuple[float, Cas]], list_path:List[int], T: int = 1):
+    def retain(self, cas, cas_dist:List[Tuple[float, Cas]], list_path:List[int], T: int = 2):
         '''
         Per una banda necesitem "Tuple[List[Tuple[float, Cas]" per "redundant_optim", 
         pero per l'altre banda "add" necesita el path que realmet esta calula en 
@@ -78,11 +78,9 @@ class RecommenderSystem:
         # CALCUL DE REDUNDANCIA
         if redundant_cas(cas, cas_dist, T):
             print("Cas redundant")
-            return False
         else:
             print("Cas no redundant i s'ha indexat")
             self.indexacio.add(cas,list_path)
-            return True
 
     def maintenance(self, T = 0.1, E = 999):
         '''

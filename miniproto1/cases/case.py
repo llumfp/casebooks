@@ -36,50 +36,24 @@ class Cas:
         self.historial = historial
         self.cops_us = cops_us
         self.mesura_utilitat = utilitat # mirar els altres casos que tenim i valorar si val la pena
-        
+
         #Calcul utilitat
         self.UM =UM # Utilitat normalitzada
         self.UaS = UaS #el nombre de vegades que es va utilitzar el cas i hi vahaver un èxit, quan el cas es trobava entre els casos recuperats
         self.S = S #quantitat total d'èxits quan el cas es trobava entre els casos recuperats
         self.UaF = UaF #número de vegades que s’ha utilitzat el cas i va ser un fracàs, quan el cas es trobava entre els casos recuperats
         self.F = F #número total de fracassos quan el cas es trobava entre els casos recuperats
-        
-        
+
         self.ultim = False
     
     def __repr__(self) -> str:
         return f"Cas(id={self.id}, descripcio={self.descripcio}, solucio={self.solucio}, avaluacio={self.avaluacio})"
     
-
     def actualitzar_Utilitat_normalitzada(self):
-
         s_div = 0 if self.S==0 else self.UaS/self.S
         f_div = 0 if self.F==0 else  self.UaF/self.F
         self.UM = ((s_div)-(f_div)+1)/2
     
-    
-    def validate(self, casos): 
-        # Òscar: potser seria millor això posar-ho al RecommenderSystem, 
-        # llavors la funció seria def validate(self, cas:Cas) i ja 
-        # tindriem accés a la base de casos
-        '''
-        mirar tots els casos que tenim a la base de casos
-        - Si hi ha un cas molt similar amb mateix resultat no guardem
-        - Si el self.avaluacio es molt intermedi (2.5) no ens està aportant 
-            informació útil sobre si esta bé o no
-        '''
-
-    def obtenir_solucio(self):
-        assert self.derivacio != []
-        #Quan ja es tenen els casos similars, generar la resposta
-        pass
-    
-    def evaluate(self):
-        assert self.solucio != []
-        '''
-        un cop tenim la solució, preguntar a l'usuari, qunant de bona ha sigut la recomanació
-        '''
-        pass
 
 def createDB(df:pd.DataFrame) -> List[Cas]:
     '''

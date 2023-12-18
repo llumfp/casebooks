@@ -102,39 +102,6 @@ class Indexacio(BinTree):
         else:
             node_actual.set_root(leafcases)
 
-
-    def delete(self, cas, ruta):
-        """
-        Elimina un caso del árbol de casos. Si al eliminar el caso, el nodo hoja correspondiente
-        queda vacío, el árbol se reestructura para eliminar dicho nodo hoja.
-        """
-        node_padre = self
-        for label in ruta[:-1]:  # Ir al nodo padre del nodo hoja
-            if label == 0:
-                node_padre = node_padre.get_left()
-            else:
-                node_padre = node_padre.get_right()
-
-        # Nodo hoja donde se encuentra el caso
-        node_hoja = node_padre.get_left(
-        ) if ruta[-1] == 0 else node_padre.get_right()
-
-        # Eliminar el caso
-        casos = node_hoja.get_root()
-        casos.remove(cas)
-
-        # Si el nodo hoja queda vacío después de eliminar el caso
-        if not casos:
-            # Reestructurar el árbol
-            if ruta[-1] == 0:
-                node_padre._root._left = None
-            else:
-                node_padre._root._right = None
-
-            # Si el nodo padre ahora es una hoja, reemplazarlo por su nodo padre
-            if node_padre.leaf():
-                self._root = node_padre.get_root()
-
     '''
     MANTENIMENT DE LA BASE DE CASOS
     '''
