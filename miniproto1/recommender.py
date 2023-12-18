@@ -55,7 +55,7 @@ class RecommenderSystem:
 
     def retrieve(self, newp:Problem) -> List[Tuple[float, Cas, List[int]]]:
         newcase = Cas(id=self.indexacio.ultim_id,descripcio=self.scaler.transform([newp.array])[0])
-        return most_similar(self.indexacio, newcase)
+        return most_similar(self.indexacio, newcase), newcase
     
     def reuse(self, casos_sim, newc):
         result = confianza(casos_sim, newc)
@@ -70,17 +70,18 @@ class RecommenderSystem:
         calcAE(cas,diccion,self)
 
     def retain(self, cas, cas_dist:List[Tuple[float, Cas]], list_path:List[int], T: int = 2):
-        '''
-        Per una banda necesitem "Tuple[List[Tuple[float, Cas]" per "redundant_optim", 
-        pero per l'altre banda "add" necesita el path que realmet esta calula en 
-        "List[Tuple[float, Cas, path]]"
-        '''
-        # CALCUL DE REDUNDANCIA
-        if redundant_cas(cas, cas_dist, T):
-            print("Cas redundant")
-        else:
-            print("Cas no redundant i s'ha indexat")
+        
+        redundancia = redundant_cas(cas, cas_dist, T)
+        if redundancia == 0:
+            # print("Cas no redundant i s'ha indexat")
             self.indexacio.add(cas,list_path)
+            return 0
+        elif redundancia == 1:
+            # print("Cas redundant")
+            return 1
+        elif redundancia == 2:
+            # print("Cas redundant i ÚTIL")
+            return 2
 
     def maintenance(self, T = 0.1, E = 999):
         '''

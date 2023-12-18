@@ -12,6 +12,12 @@ from statistics import mean
 
 # Retain
 def redundant_cas(new: Cas, most_similars: List[Tuple[float, Cas]], T=2):
+    '''
+    Retorna:
+        0 si NO és redundant
+        1 si SÍ és redundant
+        2 si SÍ és redundant però ÚTIL (Swap)
+    '''
     dicc = {new.solucio[i]: new.avaluacio[i] for i in range(3)}
     dicc_keys_set = set(dicc.keys())  # Convertir las claves en un conjunto
     for dist, case in most_similars:
@@ -25,11 +31,12 @@ def redundant_cas(new: Cas, most_similars: List[Tuple[float, Cas]], T=2):
                         # APRENENTATGE
                         # if better(old=case, new=new):
                         #     swap(old=case,new=new)
+                            # return 2
 
-                        return True
+                        return 1
         else:
-            return False, None
-    return False, None
+            return 0
+    return 0
 
 def better(old:Cas, new:Cas):
     return mean(new.solucio) > mean(old.solucio)
