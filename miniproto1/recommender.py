@@ -20,7 +20,10 @@ class RecommenderSystem:
             num_casos_valorats: int=0, # Numero de casos valorats
 
             r_min = 1,
-            r_max = 5
+            r_max = 5,
+
+            cas_nr = 0,
+            cas_r_u = 0
 
         ) -> None:
         '''
@@ -41,6 +44,9 @@ class RecommenderSystem:
              
         self.AE = AE
         self.num_casos_valorats = num_casos_valorats
+
+        self.cas_nr = cas_nr
+        self.cas_r_u = cas_r_u
 
     def save(self, nombre_archivo_sin_extension):
         nombre_archivo_completo = f"{nombre_archivo_sin_extension}.pkl"
@@ -75,12 +81,14 @@ class RecommenderSystem:
         if redundancia == 0:
             # print("Cas no redundant i s'ha indexat")
             self.indexacio.add(cas,list_path)
+            self.cas_nr += 1
             return 0
         elif redundancia == 1:
             # print("Cas redundant")
             return 1
         elif redundancia == 2:
             # print("Cas redundant i ÚTIL")
+            self.cas_r_u += 1
             return 2
 
     def maintenance(self, T = 0.1, E = 999):
@@ -90,6 +98,8 @@ class RecommenderSystem:
         '''
         if calcular_temps(self) >= T or self.indexacio.space >= E:
             self.indexacio.refer_base()
+            self.cas_r_u = 0
+            self.cas_nr = 0
 
     @property
     def evaluation(self):

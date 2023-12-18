@@ -12,7 +12,7 @@ def exp_retain(parametres):
     avaluacio, qualitat = [], []
     redundants = 0
 
-    for _ in range(num_cases):
+    for _ in range(num_cases): 
         newp_str = generate_new_problem()
         newp = eval(newp_str)
         newcas = Cas(id=(rs.indexacio.ultim_id),descripcio=rs.scaler.transform([newp.array])[0])    
