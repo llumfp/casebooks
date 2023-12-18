@@ -36,3 +36,11 @@ for b in range(num_blocks):
     rate = block(rs)
     rates.append(rate)
     print(f'Rati en el block {b} = {rate}')
+
+plt.plot(range(num_blocks), rates, marker='o')  # 'o' adds dots at each point
+plt.xlabel('Quantitat de Blocs Afegits')
+plt.ylabel('Rati de Casos Redundants per bloc')
+plt.title('Evolució del Rati de Casos Redundants') 
+plt.savefig('./images/espaidecasos1')
+plt.show()
+plt.close() 
