@@ -183,7 +183,6 @@ class Indexacio(BinTree):
             # Crear un nou KMeans amb tots els casos.
             kmeans = KMeans(n_clusters=2, random_state=0, n_init='auto')
             kmeans.fit([cas.descripcio for cas in leafcases])
-            
             kmeans.labels_[0]
             # Dividir els casos segons les etiquetes del clustering.
             for i in range(2):
@@ -193,7 +192,8 @@ class Indexacio(BinTree):
                     cluster2 = [leafcases[i]]
             
             # Crear els nous subarbres.
-            subarbre1 = Indexacio(casesbase=cluster1, casesxleaf=self.casesxleaf) 
+            subarbre1 = Indexacio(casesbase=cluster1, casesxleaf=self.casesxleaf)
+            print(kmeans.labels_)
             subarbre2 = Indexacio(casesbase=cluster2, casesxleaf=self.casesxleaf)
 
             # Actualitzar el node actual amb el nou cluster i subarbres.

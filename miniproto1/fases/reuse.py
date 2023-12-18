@@ -10,7 +10,7 @@ from miniproto1.cases.case import Cas
 from typing import Tuple, List
 from scipy.spatial.distance import euclidean
 
-def confianza(casos_similars: List[Tuple[float, Cas]], new_case: Cas) -> dict[str:List[int|Cas]]:
+def confianza(casos_similars: List[Tuple[float, Cas]], new_case: Cas) -> dict[str:List[int]]:
     """
 
     A partir d'una llista de casos similars i un nou cas, retorna un diccionari amb la informació dels 3 llibres a recomanar
