@@ -15,10 +15,9 @@ def exp_retain(casesxfulla):
     for _ in range(num_cases):
         init_time = time()
         newp_str = generate_new_problem()
-        newp = eval(newp_str)
-        newcas = Cas(id=(rs.indexacio.ultim_id),descripcio=rs.scaler.transform([newp.array])[0])    
+        newp = eval(newp_str)  
         
-        most_similar_cases = rs.retrieve(newp) # Retrieve
+        most_similar_cases, newcas = rs.retrieve(newp) # Retrieve
 
         distancies, casos, paths = zip(*most_similar_cases) # Reuse
         cas_dists = list(zip(distancies, casos))
@@ -28,7 +27,7 @@ def exp_retain(casesxfulla):
 
         r = rs.retain(newcas, cas_dists, paths[0]) # Retain
         t_noucas.append(float(time() - init_time))
-        redundants += 1 if r else 0
+        redundants += 1 if r==1 else 0
 
         avaluacio.append(rs.evaluation)
         qualitat.append(rs.NMAE)

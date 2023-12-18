@@ -1,9 +1,3 @@
-"""
-Funció: Incorpora la nova experiència (cas d'ús actual) a la base de dades per a futurs usos.
-
-Components: Mecanismes per a l'actualització de la base de dades amb nous casos.
-"""
-
 from miniproto1.cases.index import Indexacio
 from miniproto1.cases.case import Cas
 from typing import Tuple, List
@@ -11,7 +5,7 @@ from scipy.spatial.distance import euclidean
 from statistics import mean
 
 # Retain
-def redundant_cas(new: Cas, most_similars: List[Tuple[float, Cas]], T=2):
+def redundant_cas(new:Cas, most_similars:List[Tuple[float, Cas]], T:int = 2, learn:bool = True):
     '''
     Retorna:
         0 si NO és redundant
@@ -29,9 +23,9 @@ def redundant_cas(new: Cas, most_similars: List[Tuple[float, Cas]], T=2):
                     if coincident_books >= 2:
                         
                         # APRENENTATGE
-                        # if better(old=case, new=new):
-                        #     swap(old=case,new=new)
-                            # return 2
+                        if learn and better(old=case, new=new):
+                            swap(old=case,new=new)
+                            return 2
 
                         return 1
         else:

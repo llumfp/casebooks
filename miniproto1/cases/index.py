@@ -24,6 +24,7 @@ class Indexacio(BinTree):
 
         self.creacio(casos=casesbase)
         self.ultims_casos = []
+        self.casesbase = casesbase
 
     def __len__(self):
         return self.__length
@@ -56,6 +57,8 @@ class Indexacio(BinTree):
         """
         Afegeix un nou cas a l'arbre utilitzant la ruta del cas més similar.
         """
+        self.casesbase.append(new)
+
         # Recórrer l'arbre fins al node més similar.
         new.ultim = True
         if len(self.ultims_casos) == 50:
@@ -63,7 +66,6 @@ class Indexacio(BinTree):
             self.ultims_casos = self.ultims_casos[1:] + [new]
         else:
             self.ultims_casos = self.ultims_casos + [new]
-
 
         self.__length += 1
         self.ultim_id += 1

@@ -59,7 +59,7 @@ class RecommenderSystem:
             instancia = pickle.load(archivo)
         return instancia
 
-    def retrieve(self, newp:Problem) -> List[Tuple[float, Cas, List[int]]]:
+    def retrieve(self, newp:Problem) -> Tuple[List[Tuple[float, Cas, List[int]]],Cas]:
         newcase = Cas(id=self.indexacio.ultim_id,descripcio=self.scaler.transform([newp.array])[0])
         return most_similar(self.indexacio, newcase), newcase
     
@@ -67,8 +67,8 @@ class RecommenderSystem:
         result = confianza(casos_sim, newc)
         return result
 
-    def revise(self, cas, casos, diccion, metode:bool = True):
-        if metode:
+    def revise(self, cas, casos, diccion, user_eval:bool = False):
+        if user_eval:
             user_evaluation(cas, self)  # Forma manual
         else:
             predict_evaluation(cas, self) # Usant predictiu
