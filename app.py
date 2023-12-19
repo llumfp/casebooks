@@ -19,8 +19,7 @@ def mapejar_ordre_usuari(generes_bd, ordre_usuari):
 with st.form("Introdueix el teu perfil"):
     # Ordenació de gèneres
     
-    generes_seleccionats = st.multiselect("Afegeix gèneres en l'ordre que prefereixis", [''] + generes)
-
+    generes_seleccionats = st.multiselect("Afegeix gèneres en l'ordre que prefereixis", generes)
     st.write('Tenint en compte que es consideren el següents rangs de pàgines de llibres:')
     st.write(f"{str(longituds)[1:-1]}")
 

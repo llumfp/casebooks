@@ -64,7 +64,6 @@ def valorate(new_case:Cas, idx:int, rs):
     return val
 
 def user_evaluation(newcas:Cas, rs, evaluation):
-    print("Recorda que si no has comprat un llibre has d'escriure '0' estrelles")
     newcas.avaluacio = evaluation
 
 # Calcul Utilitat Normalitzada

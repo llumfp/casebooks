@@ -48,4 +48,4 @@ def calcular_temps(rs):
 
 
 init_time = time()
-print(f"Total Running time {timedelta(seconds=(time() - init_time))}")
+#print(f"Total Running time {timedelta(seconds=(time() - init_time))}")

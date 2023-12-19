@@ -8,7 +8,7 @@ def recomana(user):
     """
     user = 'Problem('+' ,'.join(user)+')'
     newp = eval(user)
-    rs = createRS(from_model=True,path='./recomanador.pkl')
+    rs = createRS(from_model=True,path='recomanador.pkl')
     
     most_similar_cases, newcas = rs.retrieve(newp)
 

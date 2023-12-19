@@ -91,7 +91,7 @@ class RecommenderSystem:
             self.cas_r_u += 1
             return 2
 
-    def maintenance(self, T = 0.1, E = 999):
+    def maintenance(self, T = 0.002, E = 350000):
         '''
         T -> timesteps
         E -> spacesteps
