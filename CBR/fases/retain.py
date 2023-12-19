@@ -12,6 +12,8 @@ def redundant_cas(new:Cas, most_similars:List[Tuple[float, Cas]], T:int = 2, lea
         1 si SÍ és redundant
         2 si SÍ és redundant però MILLOR (Swap)
     '''
+    if len(new.solucio):
+        print('most_similars', most_similars)
     if len(new.solucio) < 3 or len(new.avaluacio) < 3:
         print(new.__dict__)
     
@@ -27,7 +29,7 @@ def redundant_cas(new:Cas, most_similars:List[Tuple[float, Cas]], T:int = 2, lea
                         
                         # APRENENTATGE
 
-                        # Tipus Normal
+                        #Tipus Normal
                         # if learn and better(old=case, new=new):
                         #     swap(old=case,new=new)
                         #     return 2

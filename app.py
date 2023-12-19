@@ -69,11 +69,11 @@ else:
         st.write(f':green[{llibres[1]}]')
         st.write(f':orange[{llibres[2]}]')
         
-        on = st.toggle('Vols valorar els llibres?')
+        on = st.toggle('Vols valorar els llibres? (tindràs un 5% de descompte a la nostra web)')
         
         if on:
             missatge_boto = 'Enviar valoració'
-            st.write('Tingues en compte que si no has llegit ell llibre pots valorar 0')
+            st.write("Valora els llibres del 0 al 5 tenint en compte que si no has llegit el llibre has de valorar 0")
             v1 = st.number_input(f"Valora el llibre :blue[{llibres[0]}]", min_value=0, max_value=5, step=1)
             v2 = st.number_input(f"Valora el llibre :green[{llibres[1]}]", min_value=0, max_value=5, step=1)
             v3 = st.number_input(f"Valora el llibre :orange[{llibres[2]}]", min_value=0, max_value=5, step=1)
@@ -96,7 +96,7 @@ else:
         rs, newcas, casos, dicc_most_sim, cas_dists, paths = st.session_state.parametres
         if on:
             st.write("## Moltes gràcies per la seva valoració!")
-            st.write(f"    Amb el codi {codi} tindrà un 10% de descompte a la nostra web")
+            st.write(f"    Amb el codi {codi} tindrà un 5% de descompte a la nostra web")
             revise_retain(rs, newcas, casos, dicc_most_sim, cas_dists, paths,True,st.session_state.valoracions)
         else:
             st.write("## Moltes gràcies per confiar en nosaltres!")

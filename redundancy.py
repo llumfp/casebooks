@@ -13,10 +13,9 @@ def exp_retain(threshold):
 
     for _ in range(num_cases):
         newp_str = generate_new_problem()
-        newp = eval(newp_str)
-        newcas = Cas(id=(rs.indexacio.ultim_id),descripcio=rs.scaler.transform([newp.array])[0])    
+        newp = eval(newp_str)  
         
-        most_similar_cases = rs.retrieve(newp) # Retrieve
+        most_similar_cases, newcas = rs.retrieve(newp) # Retrieve
 
         distancies, casos, paths = zip(*most_similar_cases) # Reuse
         cas_dists = list(zip(distancies, casos))
@@ -25,7 +24,7 @@ def exp_retain(threshold):
         rs.revise(newcas, casos, dicc_most_sim, False) # Revise
 
         r = rs.retain(newcas, cas_dists, paths[0], threshold) # Retain
-        redundants += 1 if r else 0
+        redundants += 1 if r==1 else 0
 
         avaluacio.append(rs.evaluation)
         qualitat.append(rs.NMAE)
@@ -33,20 +32,23 @@ def exp_retain(threshold):
     redundancy_rate = redundants/num_cases
     return avaluacio, qualitat, redundancy_rate
 
-def plot_data(data, title, thresholds):
+
+def plot_data(data, title, file, cases, xlabel, ylabel):
     for i, sublist in enumerate(data):
-        plt.plot(sublist, label=f'Threshold {thresholds[i]}')
+        plt.plot(sublist, label=f'{cases[i]} casos per fulla')
 
     plt.title(title)
-    plt.xlabel('Índex de cas')
-    plt.ylabel('Valor')
-    plt.legend()
-    plt.savefig(f'./images/{title}')
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    # Situar la leyenda fuera del área de trazado, a la izquierda y con un tamaño de letra más pequeño.
+    plt.legend(loc='upper left', bbox_to_anchor=(1, 1), fontsize='small')
+
+    plt.savefig(f'./images/{file}')
     plt.show()
     plt.close()
 
 
-distance_thresholds = [0]+[round(i*0.5,1) for i in range(1,9)]
+distance_thresholds = [0]+[round(i*0.5,1) for i in range(1,11)]
 avaluacions, nmaes, rrate = [], [], []
 
 for threshold in distance_thresholds:
@@ -55,8 +57,8 @@ for threshold in distance_thresholds:
     nmaes.append(qual)
     rrate.append(r)
 
-plot_data(avaluacions, 'Avaluacions per a diferents valors de Thresholds', distance_thresholds)
-plot_data(nmaes, 'Resultats de NMAE per a diferents valors de Thresholds', distance_thresholds)
+plot_data(avaluacions, 'Avaluacions per a diferents valors de Thresholds', 'redundancy_aval', distance_thresholds, 'Nous casos afegits' , 'Qualitat de la avaluació')
+plot_data(nmaes, 'Resultats de NMAE per a diferents valors de Thresholds', 'redundancy_nmaes', distance_thresholds, 'Nous casos afegits', 'Quantitat de Mnae')
 
 
 rates = rrate
@@ -64,12 +66,12 @@ rates = rrate
 
 # Crear el gráfico de barras
 plt.bar(range(len(rates)), rates, tick_label=[str(l) for l in distance_thresholds])
-plt.xlabel('Tasas')
-plt.ylabel('Valores')
-plt.title('Gráfico de Barras para Tasas')
+plt.xlabel('Percentatge de casos redundants')
+plt.ylabel('Num de nous casos afegits')
+plt.title('Gráfic de Barras per estudiar la distància de redundancia' )
 
 # Mostrar el gráfico
-plt.savefig('./images/Redundancy_rates_2')
+plt.savefig('./images/redundancy_rate')
 plt.show()
 plt.close()
 
