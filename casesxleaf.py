@@ -13,6 +13,7 @@ def exp_retain(casesxfulla):
     redundants = 0
 
     for _ in range(num_cases):
+        print('ja')
         init_time = time()
         newp_str = generate_new_problem()
         newp = eval(newp_str)  
@@ -48,7 +49,7 @@ def plot_data(data, title, cases):
     plt.close()
 
 
-num_casos = [i for i in range(3,31,2)] 
+num_casos = [i for i in range(3,50,2)] 
 avaluacions, nmaes, t_inici, t_afegir, rrate = [], [], [], [], []
 
 for casos in num_casos:

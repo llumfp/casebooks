@@ -34,8 +34,6 @@ class Cas:
         self.solucio = solucio # llista de 3 llibres recomanats
         self.avaluacio = avaluacio # num del 1-5
         self.historial = historial
-        self.cops_us = cops_us
-        self.mesura_utilitat = utilitat # mirar els altres casos que tenim i valorar si val la pena
 
         #Calcul utilitat
         self.UM =UM # Utilitat normalitzada
