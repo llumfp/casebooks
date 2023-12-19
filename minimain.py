@@ -1,10 +1,5 @@
 from miniCBR import *
-import numpy as np
-import random
 import pandas as pd
-import time
-import matplotlib.pyplot as plt
-import ast
 
 df_problemes = pd.read_csv('./data/problems4000(real).csv')
 df_problemes.drop('Unnamed: 0',axis=1,inplace=True)

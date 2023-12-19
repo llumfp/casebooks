@@ -67,9 +67,9 @@ class RecommenderSystem:
         result = confianza(casos_sim, newc)
         return result
 
-    def revise(self, cas, casos, diccion, user_eval:bool = False):
+    def revise(self, cas, casos, diccion, user_eval:bool = False,evaluation=[]):
         if user_eval:
-            user_evaluation(cas, self)  # Forma manual
+            user_evaluation(cas, self,evaluation)  # Forma manual
         else:
             predict_evaluation(cas, self) # Usant predictiu
         recompte_valors_utilitzats(cas, casos, diccion)

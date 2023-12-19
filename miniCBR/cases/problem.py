@@ -3,8 +3,6 @@ from sklearn.preprocessing import MinMaxScaler
 from collections import namedtuple
 import numpy as np
 
-from miniCBR.constants import *
-
 class Problem:
     '''
     Classe Abstracta de Lector i altres components del problema:

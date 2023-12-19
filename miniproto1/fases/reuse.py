@@ -45,4 +45,9 @@ def confianza(casos_similars: List[Tuple[float, Cas]], new_case: Cas) -> dict[st
             new_case.derivacio.add(cas.id)
     new_case.solucio = list(tres_primers.keys())
 
+    if len(new_case.solucio) < 3:
+        print(tres_primers)
+        print(sortedconf)
+        print(casos_similars)
+
     return tres_primers
