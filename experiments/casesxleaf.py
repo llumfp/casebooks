@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from time import time
 
 def exp_retain(casesxfulla):
-    num_cases = 30
+    num_cases = 20
     df_problemes = pd.read_csv('./data/problems4000_not_0_0_0.csv')
     init_time = time()
     rs = createRS(from_model= False, casebase=df_problemes, maxcasesxleaf=casesxfulla)
@@ -13,7 +13,6 @@ def exp_retain(casesxfulla):
     redundants = 0
 
     for _ in range(num_cases):
-        print('ja')
         init_time = time()
         newp_str = generate_new_problem()
         newp = eval(newp_str)  
@@ -43,6 +42,7 @@ def plot_data(data, title, file, cases, xlabel, ylabel):
     plt.title(title)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
+    plt. xticks(rotation=90)
     # Situar la leyenda fuera del área de trazado, a la izquierda y con un tamaño de letra más pequeño.
     plt.legend(loc='upper left', bbox_to_anchor=(1, 1), fontsize='small')
 
@@ -51,7 +51,7 @@ def plot_data(data, title, file, cases, xlabel, ylabel):
     plt.close()
 
 
-num_casos = [i for i in range(3,60,2)] 
+num_casos = [i for i in range(10,60,2)] 
 avaluacions, nmaes, t_inici, t_afegir, rrate = [], [], [], [], []
 
 for casos in num_casos:
@@ -72,6 +72,7 @@ plot_data(t_afegir, 'Temps en afegir un nou cas per a diferents valors de casesx
 plt.bar(range(len(rrate)), rrate, tick_label=[str(l) for l in num_casos])
 plt.xlabel('Percentatge de redundants')
 plt.ylabel('Num de nous casos afegits')
+plt.xticks(rotation=90)
 plt.title('Gràfic de Barres per a la redundància')
 
 # Mostrar el gráfico
@@ -84,6 +85,7 @@ plt.close()
 plt.bar(range(len(t_inici)), t_inici, tick_label=[str(l) for l in num_casos])
 plt.xlabel('Percentatge de casos redundants')
 plt.ylabel('Num de nous casos afegits')
+plt.xticks(rotation=90)
 plt.title('Gàfic de Barres per al temps de generació de la indexació')
 
 # Mostrar el gráfico
@@ -91,3 +93,6 @@ plt.savefig('./images/Casesxleaf_init_time')
 plt.show()
 plt.close()
 
+################################
+# Conclusió -> maxcasesleaf = 44#
+################################

@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 from time import time
 
 def exp_retain(threshold):
-    num_cases = 30
-    df_problemes = pd.read_csv('./data/problems8000.csv')
+    print('ja')
+    num_cases = 20
+    df_problemes = pd.read_csv('./data/problems4000_not_0_0_0.csv')
     rs = createRS(from_model= False, casebase=df_problemes)
 
     avaluacio, qualitat = [], []
@@ -35,11 +36,12 @@ def exp_retain(threshold):
 
 def plot_data(data, title, file, cases, xlabel, ylabel):
     for i, sublist in enumerate(data):
-        plt.plot(sublist, label=f'{cases[i]} casos per fulla')
+        plt.plot(sublist, label=f'{cases[i]} distance threshold')
 
     plt.title(title)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
+    plt. xticks(rotation=90)
     # Situar la leyenda fuera del área de trazado, a la izquierda y con un tamaño de letra más pequeño.
     plt.legend(loc='upper left', bbox_to_anchor=(1, 1), fontsize='small')
 
@@ -68,6 +70,7 @@ rates = rrate
 plt.bar(range(len(rates)), rates, tick_label=[str(l) for l in distance_thresholds])
 plt.xlabel('Percentatge de casos redundants')
 plt.ylabel('Num de nous casos afegits')
+plt. xticks(rotation=90)
 plt.title('Gráfic de Barras per estudiar la distància de redundancia' )
 
 # Mostrar el gráfico
@@ -76,5 +79,5 @@ plt.show()
 plt.close()
 
 #############################
-# CONCLUSIÓ: quants més casos per fulla millor (hem provat fins a 21)
+#        CONCLUSIÓ: T = 1   #
 #############################

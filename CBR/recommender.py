@@ -75,7 +75,7 @@ class RecommenderSystem:
         recompte_valors_utilitzats(cas, casos, diccion)
         calcAE(cas,diccion,self)
 
-    def retain(self, cas, cas_dist:List[Tuple[float, Cas]], list_path:List[int], T: int = 2):
+    def retain(self, cas, cas_dist:List[Tuple[float, Cas]], list_path:List[int], T: int = 1):
         
         redundancia = redundant_cas(cas, cas_dist, T)
         if redundancia == 0:
@@ -110,7 +110,7 @@ class RecommenderSystem:
         return (self.AE/self.num_casos_valorats)/(self.r_max - self.r_min)
 
 
-def createRS(from_model:bool, path:str = None, maxcasesxleaf:int = 10, params:List = [5, 2, 0.5, 0.1], casebase:pd.DataFrame = None):
+def createRS(from_model:bool, path:str = None, maxcasesxleaf:int = 44, params:List = [5, 2, 0.5, 0.1], casebase:pd.DataFrame = None):
     if from_model:
         rs = RecommenderSystem.load(path)
     else:

@@ -5,14 +5,14 @@ from scipy.spatial.distance import euclidean
 from statistics import mean
 
 # Retain
-def redundant_cas(new:Cas, most_similars:List[Tuple[float, Cas]], T:int = 2, learn:bool = True):
+def redundant_cas(new:Cas, most_similars:List[Tuple[float, Cas]], T:int = 1, learn:bool = True):
     '''
     Retorna:
         0 si NO és redundant
         1 si SÍ és redundant
         2 si SÍ és redundant però MILLOR (Swap)
     '''
-    if len(new.solucio):
+    if len(new.solucio) == 1:
         print('most_similars', most_similars)
     if len(new.solucio) < 3 or len(new.avaluacio) < 3:
         print(new.__dict__)
