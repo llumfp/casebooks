@@ -1,4 +1,4 @@
-from miniproto1 import *
+from CBR import *
 import pandas as pd
 import matplotlib.pyplot as plt
 from time import time

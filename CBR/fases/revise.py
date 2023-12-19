@@ -4,8 +4,8 @@ Funció: Revisa i modifica les recomanacions proposades abans de presentar-les a
 Components: Funcions per a la validació i ajust de recomanacions.
 """
 
-from miniproto1.cases.index import Indexacio
-from miniproto1.cases.case import Cas
+from CBR.cases.index import Indexacio
+from CBR.cases.case import Cas
 from typing import Tuple, List
 from scipy.spatial.distance import euclidean
 import pandas as pd

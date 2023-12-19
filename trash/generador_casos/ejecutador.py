@@ -1,7 +1,7 @@
 import subprocess
 import sys
 import re
-from miniproto1 import *
+from CBR import *
 
 def run_clips_with_commands(input_file,output_file):
     # Iniciar el proceso CLIPS.

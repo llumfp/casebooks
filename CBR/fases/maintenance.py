@@ -3,8 +3,8 @@ Funció: Incorpora la nova experiència (cas d'ús actual) a la base de dades pe
 
 Components: Mecanismes per a l'actualització de la base de dades amb nous casos.
 """
-from miniproto1.cases import Cas, Indexacio, Problem
-from miniproto1.fases import most_similar
+from CBR.cases import Cas, Indexacio, Problem
+from CBR.fases import most_similar
 import random
 import timeit
 from datetime import timedelta

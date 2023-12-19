@@ -1,4 +1,4 @@
-from miniproto1 import *
+from CBR import *
 
 def recomana(user):
     """

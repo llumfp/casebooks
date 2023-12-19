@@ -2,8 +2,8 @@
 RETRIEVE CYCLE PART 
 """
 
-from miniproto1.cases.index import Indexacio
-from miniproto1.cases.case import Cas
+from CBR.cases.index import Indexacio
+from CBR.cases.case import Cas
 from typing import Tuple, List
 from scipy.spatial.distance import euclidean
 

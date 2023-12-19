@@ -3,7 +3,7 @@ from sklearn.preprocessing import MinMaxScaler
 from collections import namedtuple
 import numpy as np
 
-from miniproto1.constants import *
+from CBR.constants import *
 
 class Problem:
     '''

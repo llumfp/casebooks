@@ -1,19 +1,20 @@
-from miniproto1 import *
+from CBR import *
 import pandas as pd
 import matplotlib.pyplot as plt
 from time import time
+import itertools
 
-def exp_retain(casesxfulla):
-    num_cases = 10
-    df_problemes = pd.read_csv('./data/problems4000_not_0_0_0.csv')
+def exp_retain(parametres):
+    num_cases = 30
+    df_problemes = pd.read_csv('./data/problems8000.csv')
     init_time = time()
-    rs = createRS(from_model= False, casebase=df_problemes, maxcasesxleaf=casesxfulla)
+    rs = createRS(from_model= False, casebase=df_problemes, params=parametres)
     t_creacio = float(time() - init_time)
+
     avaluacio, qualitat, t_noucas = [], [], []
     redundants = 0
 
-    for _ in range(num_cases):
-        print('ja')
+    for _ in range(num_cases): 
         init_time = time()
         newp_str = generate_new_problem()
         newp = eval(newp_str)  
@@ -36,9 +37,9 @@ def exp_retain(casesxfulla):
     redundancy_rate = redundants/num_cases
     return t_creacio, avaluacio, qualitat, t_noucas, redundancy_rate
 
-def plot_data(data, title, cases):
+def plot_data(data, title, thresholds):
     for i, sublist in enumerate(data):
-        plt.plot(sublist, label=f'{cases[i]} casos per fulla')
+        plt.plot(sublist, label=f'Threshold {thresholds[i]}')
 
     plt.title(title)
     plt.xlabel('Índex de cas')
@@ -48,44 +49,34 @@ def plot_data(data, title, cases):
     plt.show()
     plt.close()
 
-
-num_casos = [i for i in range(3,50,2)] 
 avaluacions, nmaes, t_inici, t_afegir, rrate = [], [], [], [], []
+common_books = [2,6]
+common_recom = [2,3]
+common_rating = [0.2,0.6]
+min_distance = [0.2, 0.3]
 
-for casos in num_casos:
-    t_creacio, aval, qual, temps, r = exp_retain(casos)
+combinacions = list(itertools.product(common_books, common_recom, common_rating, min_distance))
+
+for parametres in combinacions:
+    t_creacio, aval, qual, temps, r = exp_retain(parametres)
     t_inici.append(t_creacio)
     avaluacions.append(aval)
     nmaes.append(qual)
     t_afegir.append(temps)
     rrate.append(r)
 
-
-plot_data(avaluacions, 'Avaluacions per a diferents valors de casesxleaf', num_casos)
-plot_data(nmaes, 'Resultats de NMAE per a diferents valors de casesxleaf', num_casos)
-plot_data(t_afegir, 'Temps en afegir un nou cas per a diferents valors de casesxleaf', num_casos)
-
-
-# GRÀFIC DEL RATE
-plt.bar(range(len(rrate)), rrate, tick_label=[str(l) for l in num_casos])
-plt.xlabel('Percentatge de redundants')
-plt.ylabel('Num de casos')
-plt.title('Gràfico de Barres per a la redundància')
-
-# Mostrar el gráfico
-plt.savefig('./images/Casesxleaf_redundancy')
-plt.show()
-plt.close()
+plot_data(avaluacions, 'Avaluacions per a diferents valors de casesxleaf', parametres)
+plot_data(nmaes, 'Resultats de NMAE per a diferents valors de casesxleaf', parametres)
+plot_data(t_afegir, 'Temps en afegir un nou cas per a diferents valors de casesxleaf', parametres)
 
 
-# GRÀFIC DEL RATE
-plt.bar(range(len(t_inici)), t_inici, tick_label=[str(l) for l in num_casos])
-plt.xlabel('Percentatge de redundants')
-plt.ylabel('Num de casos')
-plt.title('Gàfic de Barres per al temps')
+# Crear el gráfico de barras
+plt.bar(range(len(rrate)), rrate, tick_label=[str(l) for l in parametres])
+plt.xlabel('Tasas')
+plt.ylabel('Valores')
+plt.title('Gráfico de Barras para Tasas')
 
 # Mostrar el gráfico
-plt.savefig('./images/Casesxleaf_time')
+plt.savefig('./images/Redundancy_rates_2')
 plt.show()
 plt.close()
-

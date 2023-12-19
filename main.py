@@ -4,7 +4,7 @@ Funció: Punt d'entrada del programa. Gestiona la interacció amb l'usuari i coo
 Contingut: Inicialització, menú d'usuari, crides a altres mòduls.
 """
 
-from miniproto1 import *
+from CBR import *
 import numpy as np
 import random
 import pandas as pd

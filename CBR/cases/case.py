@@ -1,5 +1,5 @@
 from typing import Any, Tuple, List
-from miniproto1.cases.problem import Problem, scale_features
+from CBR.cases.problem import Problem, scale_features
 from numpy import ndarray
 import numpy as np
 import pandas as pd
