@@ -45,6 +45,8 @@ with st.form("Introdueix el teu perfil"):
 if 'recomanacions_fetes' not in st.session_state:
     st.session_state.recomanacions_fetes = False
     st.session_state.llibres = []
+    st.session_state.parametres = []
+    st.session_state.valoracions = []
 
 if len(generes_seleccionats) != len(generes):
     st.warning("Has d'afegir tots els gèneres per indicar l'ordre de preferència")
@@ -55,6 +57,7 @@ else:
 
         with st.spinner('Buscant els millors llibres per tu...'):
             recomanacions, rs, newcas, casos, dicc_most_sim, cas_dists, paths = recomana(usuari)
+            st.session_state.parametres = [rs, newcas, casos, dicc_most_sim, cas_dists, paths]
             diccion = cargar_diccionario()
             st.session_state.llibres = [diccion[i] for i in recomanacions]
 
@@ -75,7 +78,7 @@ else:
             v1 = st.number_input(f"Valora el llibre :blue[{llibres[0]}]", min_value=0, max_value=5, step=1)
             v2 = st.number_input(f"Valora el llibre :green[{llibres[1]}]", min_value=0, max_value=5, step=1)
             v3 = st.number_input(f"Valora el llibre :orange[{llibres[2]}]", min_value=0, max_value=5, step=1)
-            valoracions = [v1,v2,v3]
+            st.session_state.valoracions = [v1,v2,v3]
         else:
             missatge_boto = "Finalitzar sessió"
     if 'pagina_gracies' not in st.session_state:
@@ -91,10 +94,11 @@ else:
     if st.session_state.pagina_gracies:
         codi = random.randint(1000,9999)
         codi = f'BK{codi}'
+        rs, newcas, casos, dicc_most_sim, cas_dists, paths = st.session_state.parametres
         if on:
             st.write("## Moltes gràcies per la seva valoració!")
             st.write(f"    Amb el codi {codi} tindrà un 10% de descompte a la nostra web")
-            revise_retain(rs, newcas, casos, dicc_most_sim, cas_dists, paths,True,valoracions)
+            revise_retain(rs, newcas, casos, dicc_most_sim, cas_dists, paths,True,st.session_state.valoracions)
         else:
             st.write("## Moltes gràcies per confiar en nosaltres!")
             revise_retain(rs, newcas, casos, dicc_most_sim, cas_dists, paths,False)

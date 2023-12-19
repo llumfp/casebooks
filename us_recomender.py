@@ -8,7 +8,7 @@ def recomana(user):
     """
     user = 'Problem('+' ,'.join(user)+')'
     newp = eval(user)
-    rs = RecommenderSystem.load('recomanador.pkl')
+    rs = createRS(from_model=True,path='./recomanador.pkl')
     
     most_similar_cases, newcas = rs.retrieve(newp)
 
@@ -19,11 +19,13 @@ def recomana(user):
 
     return list(dicc_most_sim.keys()), rs, newcas, casos, dicc_most_sim, cas_dists,paths
 
-
-def revise_retain(rs,newcas,casos,dicc_most_sim,cas_dists,paths,user_avalua,evaluation):
-    rs.revise(newcas, casos, dicc_most_sim, user_avalua,evaluation)
-    
+def revise_retain(rs,newcas,casos,dicc_most_sim,cas_dists,paths,user_avalua,evaluation=[]):
+    if user_avalua:
+        rs.revise(newcas, casos, dicc_most_sim, user_avalua,evaluation)
+    else:
+        rs.revise(newcas, casos, dicc_most_sim, user_avalua)
     rs.retain(newcas, cas_dists, paths[0])
-
-    rs.save('recomanador2')
-
+    # Comprovar si s'ha de realitzar un manteniment de la base de casos:
+    if rs.cas_nr + rs.cas_r_u > 100:
+        rs.maintenance()
+    rs.save('recomanador')
