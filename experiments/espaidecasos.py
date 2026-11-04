@@ -22,7 +22,7 @@ def block(rs:RecommenderSystem, blocksize:int=100):
 
     return redundants/blocksize
 
-df_problemes = pd.read_csv('./data/problems4000_not_0_0_0.csv')
+df_problemes = pd.read_csv(DATA_DIR / 'problems4000_not_0_0_0.csv')
 rs = createRS(
     from_model= False, 
     casebase=df_problemes, 

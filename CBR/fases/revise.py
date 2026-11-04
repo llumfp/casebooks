@@ -6,6 +6,7 @@ Components: Funcions per a la validació i ajust de recomanacions.
 
 from CBR.cases.index import Indexacio
 from CBR.cases.case import Cas
+from CBR.constants import DATA_DIR, MODELS_DIR
 from typing import Tuple, List
 from scipy.spatial.distance import euclidean
 import pandas as pd
@@ -34,7 +35,7 @@ def convert_case_to_data(newcas:Cas):
     # Cambiar el nombre de la columna 'lista' a 'nuevo_nombre'
     df_exploded = df_exploded.rename(columns={'books_ids': 'book_id'})
     
-    bk_merge = pd.read_csv('data/genres_pages_x_books.csv')
+    bk_merge = pd.read_csv(DATA_DIR / 'genres_pages_x_books.csv')
     bk_merge.drop('Unnamed: 0',axis=1,inplace=True)
     final_dataset = df_exploded.merge(bk_merge, on='book_id', how='inner')
     final_dataset.drop(non_important,axis=1,inplace=True)
@@ -42,7 +43,7 @@ def convert_case_to_data(newcas:Cas):
     return final_dataset
 
 def predict_evaluation(newcas:Cas,rs): # Se pot canviar el paràmetre per un path fixe si decidim quedarnos amb un model
-    with open('xgb_model.pkl', 'rb') as file:
+    with open(MODELS_DIR / 'xgb_model.pkl', 'rb') as file:
         loaded_model = pickle.load(file)
     dataset = convert_case_to_data(newcas)
     estimacio = np.clip(np.round(np.array(loaded_model.predict(dataset))), 0, 5).astype(int).tolist()

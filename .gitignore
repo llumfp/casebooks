@@ -12,10 +12,11 @@ env/
 # Notebooks
 .ipynb_checkpoints/
 
-# Models: only the base model (models/recomanador.pkl, 2.8 MB) is versioned so
-# the app works right after cloning. Anything else written to models/ is local.
+# Models: only the models the app needs (recommender 2.8 MB, XGBoost 6.9 MB) are
+# versioned so it works right after cloning. Anything else in models/ is local.
 models/*
 !models/recomanador.pkl
+!models/xgb_model.pkl
 
 # Streamlit
 .streamlit/secrets.toml

@@ -1,5 +1,7 @@
 from CBR import *
 
+MODEL_PATH = MODELS_DIR / 'recomanador.pkl'
+
 def recomana(user):
     """
        Donat un usuari, representat per una llista de strings, que contenen 
@@ -8,7 +10,7 @@ def recomana(user):
     """
     user = 'Problem('+' ,'.join(user)+')'
     newp = eval(user)
-    rs = createRS(from_model=True,path='recomanador.pkl')
+    rs = createRS(from_model=True,path=MODEL_PATH)
     
     most_similar_cases, newcas = rs.retrieve(newp)
 
@@ -28,4 +30,4 @@ def revise_retain(rs,newcas,casos,dicc_most_sim,cas_dists,paths,user_avalua,eval
     # Comprovar si s'ha de realitzar un manteniment de la base de casos:
     if rs.cas_nr + rs.cas_r_u > 100:
         rs.maintenance()
-    rs.save('recomanador')
+    rs.save(MODEL_PATH.with_suffix(''))
