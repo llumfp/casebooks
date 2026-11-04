@@ -75,6 +75,7 @@ python -m pytest
   scaler). It is versioned so the GUI works right after cloning; the GUI updates
   it as users give feedback (Revise / Retain), so after using it `git status`
   shows it as modified (`git restore models/recomanador.pkl` to go back).
+  To rebuild it from `data/`, run `python -m experiments.build_model`.
 - `models/xgb_model.pkl` — XGBoost model that predicts ratings; used as a
   simulated user in the experiments and when a GUI user does not rate the books.
 
