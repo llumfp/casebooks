@@ -1,3 +1,0 @@
-Afegir mesura d'accuracy: mitjana de les avaluacions de les prediccions
-
-Fer experimentacio
